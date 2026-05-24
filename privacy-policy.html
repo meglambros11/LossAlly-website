@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — Loss Ally</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --cream: #f6f1e6;
+      --warm-white: #FAF8F4;
+      --sage: #8D9D6A;
+      --forest: #5b6e5b;
+      --evergreen: #2D4D0C;
+      --charcoal: #2C2C28;
+      --mist: #E2DDD4;
+      --gold: #C9A870;
+      --sand: #E8C987;
+      --warm-ochre: #B4952A;
+      --deep-sage: #2D4D0C;
+      --terracotta: #C4724A;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--warm-white);
+      color: var(--charcoal);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.5;
+    }
+
+    .label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--sage);
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: var(--forest);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 0.875rem;
+      padding: 0.75rem 1.6rem;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
+      box-shadow: 0 2px 14px rgba(71,102,39,0.25);
+    }
+    .btn-primary:hover {
+      background: var(--evergreen);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 22px rgba(71,102,39,0.32);
+    }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+    .nav-link {
+      font-size: 0.875rem;
+      font-weight: 300;
+      color: var(--charcoal);
+      text-decoration: none;
+      opacity: 0.65;
+      transition: opacity 0.18s;
+      letter-spacing: 0.005em;
+    }
+    .nav-link:hover { opacity: 1; }
+    .nav-link:focus-visible { outline: 2px solid var(--gold); border-radius: 2px; }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.in { opacity: 1; transform: translateY(0); }
+
+    .pp-section {
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--mist);
+    }
+    .pp-section:last-of-type { border-bottom: none; }
+
+    .section-number {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: var(--mist);
+      letter-spacing: 0.04em;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(1.5rem, 2.5vw, 2rem);
+      font-weight: 400;
+      color: var(--charcoal);
+      letter-spacing: -0.02em;
+      line-height: 1.18;
+      margin-bottom: 1.25rem;
+    }
+
+    .pp-body {
+      font-size: 0.9rem;
+      line-height: 1.85;
+      color: var(--charcoal);
+      opacity: 0.72;
+      font-weight: 300;
+    }
+    .pp-body + .pp-body { margin-top: 1rem; }
+    .pp-body strong { font-weight: 500; opacity: 1; color: var(--charcoal); }
+    .pp-body a { color: var(--forest); text-decoration: underline; text-underline-offset: 2px; font-weight: 400; }
+    .pp-body a:hover { color: var(--evergreen); }
+
+    .pp-subhead {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--charcoal);
+      opacity: 0.5;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .pp-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-top: 1rem;
+    }
+    .pp-list li {
+      position: relative;
+      padding-left: 1rem;
+      font-size: 0.875rem;
+      line-height: 1.65;
+      color: rgba(44,44,40,0.62);
+      font-weight: 300;
+    }
+    .pp-list li strong { color: var(--charcoal); font-weight: 500; }
+    .pp-list li a { color: var(--forest); text-decoration: underline; text-underline-offset: 2px; }
+    .pp-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.65em;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--sage);
+    }
+
+    .callout-box {
+      background: var(--cream);
+      border: 1px solid var(--mist);
+      border-radius: 10px;
+      padding: 1.5rem 1.75rem;
+      margin-top: 1.25rem;
+    }
+    .callout-box.forest {
+      background: rgba(91,110,91,0.07);
+      border-color: rgba(91,110,91,0.2);
+    }
+    .callout-box.gold {
+      background: rgba(180,149,42,0.07);
+      border-color: rgba(180,149,42,0.2);
+    }
+
+    .toc-link {
+      font-size: 0.82rem;
+      color: var(--forest);
+      text-decoration: none;
+      font-weight: 300;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0;
+      transition: color 0.18s, opacity 0.18s;
+      opacity: 0.8;
+    }
+    .toc-link:hover { color: var(--evergreen); opacity: 1; }
+    .toc-link::before {
+      content: '↓';
+      font-size: 0.7rem;
+      opacity: 0.5;
+    }
+
+    @media (min-width: 768px) {
+      #desk-nav { display: flex !important; }
+      #mob-ham  { display: none  !important; }
+    }
+    @media (max-width: 767px) {
+      #desk-nav { display: none  !important; }
+      #mob-ham  { display: flex  !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAV ══════════════════════════════════════════════ -->
+<header id="site-nav" style="position:sticky;top:0;z-index:50;background:var(--warm-white);border-bottom:1px solid var(--mist);transition:box-shadow 0.2s;">
+  <div style="max-width:1200px;margin:0 auto;padding:0 1.75rem;height:64px;display:flex;align-items:center;justify-content:space-between;">
+
+    <a href="index.html" style="display:flex;align-items:center;gap:0.625rem;text-decoration:none;flex-shrink:0;">
+      <img src="brand_assets/logo.png" alt="Loss Ally" style="height:34px;width:auto;mix-blend-mode:multiply;" />
+      <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.2rem;font-weight:500;color:var(--charcoal);letter-spacing:0.01em;">Loss Ally</span>
+    </a>
+
+    <nav id="desk-nav" style="display:flex;align-items:center;gap:2.25rem;">
+      <a href="index.html#services"     class="nav-link">Services</a>
+      <a href="index.html#how-it-works" class="nav-link">How It Works</a>
+      <a href="index.html#pricing"      class="nav-link">Plans</a>
+      <a href="index.html#contact" class="btn-primary" style="padding:0.6rem 1.25rem;font-size:0.82rem;">Get Support</a>
+    </nav>
+
+    <button id="mob-ham" aria-label="Open menu" style="display:none;flex-direction:column;gap:5px;padding:8px;background:none;border:none;cursor:pointer;">
+      <span id="h1" style="display:block;width:20px;height:1.5px;background:var(--charcoal);border-radius:2px;transition:transform 0.2s,opacity 0.2s;"></span>
+      <span id="h2" style="display:block;width:20px;height:1.5px;background:var(--charcoal);border-radius:2px;transition:opacity 0.2s;"></span>
+      <span id="h3" style="display:block;width:20px;height:1.5px;background:var(--charcoal);border-radius:2px;transition:transform 0.2s;"></span>
+    </button>
+  </div>
+
+  <div id="mob-menu" style="display:none;border-top:1px solid var(--mist);background:var(--warm-white);">
+    <div style="max-width:1200px;margin:0 auto;padding:1.25rem 1.75rem;display:flex;flex-direction:column;gap:0.75rem;">
+      <a href="index.html#services"     class="nav-link" style="padding:0.4rem 0;" onclick="closeMob()">Services</a>
+      <a href="index.html#how-it-works" class="nav-link" style="padding:0.4rem 0;" onclick="closeMob()">How It Works</a>
+      <a href="index.html#pricing"      class="nav-link" style="padding:0.4rem 0;" onclick="closeMob()">Pricing</a>
+      <a href="index.html#contact" class="btn-primary" style="align-self:flex-start;margin-top:0.5rem;" onclick="closeMob()">Schedule a Call</a>
+    </div>
+  </div>
+</header>
+
+
+<!-- ══ PAGE HEADER ═══════════════════════════════════════ -->
+<section style="padding:4.5rem 1.75rem 3.5rem;background:var(--warm-white);position:relative;overflow:hidden;border-bottom:1px solid var(--mist);">
+  <div style="position:absolute;top:-140px;right:-100px;width:560px;height:560px;background:radial-gradient(ellipse,rgba(138,158,140,0.07) 0%,transparent 65%);pointer-events:none;"></div>
+  <div style="position:absolute;bottom:-80px;left:-60px;width:400px;height:400px;background:radial-gradient(ellipse,rgba(180,149,42,0.05) 0%,transparent 65%);pointer-events:none;"></div>
+
+  <div style="max-width:800px;margin:0 auto;position:relative;z-index:1;">
+    <span class="label" style="display:block;margin-bottom:1.25rem;">— Legal</span>
+    <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.75rem,5vw,4.25rem);font-weight:400;line-height:1.06;letter-spacing:-0.025em;color:var(--charcoal);margin-bottom:1.25rem;">
+      Privacy<br><em style="font-style:italic;color:var(--warm-ochre);">Policy</em>
+    </h1>
+    <p style="font-size:0.9rem;line-height:1.8;color:var(--charcoal);opacity:0.55;max-width:520px;margin-bottom:1.75rem;font-weight:300;">
+      We handle some of the most personal information people ever share. This policy explains exactly what we collect, why we collect it, and how we protect it.
+    </p>
+    <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <div style="width:6px;height:6px;border-radius:50%;background:var(--sage);"></div>
+        <span style="font-size:0.72rem;color:var(--charcoal);opacity:0.45;font-weight:300;letter-spacing:0.02em;">Last updated: May 24, 2026</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <div style="width:6px;height:6px;border-radius:50%;background:var(--sage);"></div>
+        <span style="font-size:0.72rem;color:var(--charcoal);opacity:0.45;font-weight:300;letter-spacing:0.02em;">Applies to: lossally.com and all Loss Ally services</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ CONTENT BODY ══════════════════════════════════════ -->
+<div style="max-width:1100px;margin:0 auto;padding:0 1.75rem;">
+  <div id="pp-layout" style="display:grid;grid-template-columns:1fr;gap:0;align-items:start;">
+
+    <!-- SIDEBAR -->
+    <aside id="pp-sidebar" style="padding:2.5rem 0 2rem;">
+      <div style="background:var(--cream);border:1px solid var(--mist);border-radius:12px;padding:1.75rem;">
+        <p style="font-size:0.62rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--charcoal);opacity:0.4;margin-bottom:1.1rem;">Contents</p>
+        <nav style="display:flex;flex-direction:column;gap:0.1rem;" id="toc-links">
+          <a href="#summary"       class="toc-link">Summary</a>
+          <a href="#collect"       class="toc-link">1. What We Collect</a>
+          <a href="#process"       class="toc-link">2. How We Use It</a>
+          <a href="#share"         class="toc-link">3. When We Share It</a>
+          <a href="#cookies"       class="toc-link">4. Cookies</a>
+          <a href="#retention"     class="toc-link">5. How Long We Keep It</a>
+          <a href="#security"      class="toc-link">6. How We Protect It</a>
+          <a href="#minors"        class="toc-link">7. Minors</a>
+          <a href="#rights"        class="toc-link">8. Your Privacy Rights</a>
+          <a href="#dnt"           class="toc-link">9. Do-Not-Track</a>
+          <a href="#us-residents"  class="toc-link">10. US Residents</a>
+          <a href="#updates"       class="toc-link">11. Policy Updates</a>
+          <a href="#contact-pp"    class="toc-link">12. Contact Us</a>
+          <a href="#data-requests" class="toc-link">13. Data Requests</a>
+        </nav>
+        <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--mist);">
+          <p style="font-size:0.72rem;color:var(--charcoal);opacity:0.42;line-height:1.65;font-weight:300;">
+            Questions about your privacy? Email us anytime.
+          </p>
+          <a href="mailto:support@lossally.com" class="btn-primary" style="margin-top:1rem;font-size:0.8rem;padding:0.6rem 1.1rem;">
+            Contact Us
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main style="padding:2.5rem 0 5rem;">
+
+      <!-- Intro -->
+      <div class="fade-up callout-box forest" style="margin-bottom:2rem;">
+        <p style="font-size:0.875rem;line-height:1.75;color:var(--charcoal);opacity:0.75;font-weight:300;">
+          This Privacy Notice applies to <strong style="font-weight:500;opacity:1;">Loss Ally LLC</strong> ("we," "us," or "our") and describes how we collect, store, use, and protect your personal information when you use our website at lossally.com or engage our services. Questions? Email us at <a href="mailto:support@lossally.com" style="color:var(--forest);font-weight:400;">support@lossally.com</a>.
+        </p>
+      </div>
+
+      <!-- ── SUMMARY ── -->
+      <div class="pp-section fade-up" id="summary">
+        <span class="section-number">—</span>
+        <h2 class="section-title">Summary of Key Points</h2>
+        <p class="pp-body">Here is a plain-language overview of what this policy covers. Each point links to the full section below.</p>
+
+        <div style="display:flex;flex-direction:column;gap:0.875rem;margin-top:1.25rem;">
+          <div class="callout-box" style="margin-top:0;">
+            <p style="font-size:0.82rem;line-height:1.7;color:var(--charcoal);opacity:0.72;font-weight:300;"><strong style="font-weight:500;opacity:1;">What we collect.</strong> We collect information you give us directly — your name, contact details, and estate-related documents — and some information automatically, like your IP address and how you use our site. <a href="#collect" style="color:var(--forest);">Learn more →</a></p>
+          </div>
+          <div class="callout-box" style="margin-top:0;">
+            <p style="font-size:0.82rem;line-height:1.7;color:var(--charcoal);opacity:0.72;font-weight:300;"><strong style="font-weight:500;opacity:1;">Sensitive information.</strong> Given the nature of our work, we may handle sensitive data including financial records, government IDs, health information, and bereavement details. We only process this when necessary and with your consent. <a href="#collect" style="color:var(--forest);">Learn more →</a></p>
+          </div>
+          <div class="callout-box" style="margin-top:0;">
+            <p style="font-size:0.82rem;line-height:1.7;color:var(--charcoal);opacity:0.72;font-weight:300;"><strong style="font-weight:500;opacity:1;">We don't collect from third parties.</strong> All information we have about you comes directly from you.</p>
+          </div>
+          <div class="callout-box" style="margin-top:0;">
+            <p style="font-size:0.82rem;line-height:1.7;color:var(--charcoal);opacity:0.72;font-weight:300;"><strong style="font-weight:500;opacity:1;">How we use it.</strong> We use your information to provide and improve our services, communicate with you, and comply with the law. We never sell it. <a href="#process" style="color:var(--forest);">Learn more →</a></p>
+          </div>
+          <div class="callout-box" style="margin-top:0;">
+            <p style="font-size:0.82rem;line-height:1.7;color:var(--charcoal);opacity:0.72;font-weight:300;"><strong style="font-weight:500;opacity:1;">Who we share it with.</strong> We share information only in specific, limited circumstances — with service providers who help us operate, or when the law requires it. <a href="#share" style="color:var(--forest);">Learn more →</a></p>
+          </div>
+          <div class="callout-box" style="margin-top:0;">
+            <p style="font-size:0.82rem;line-height:1.7;color:var(--charcoal);opacity:0.72;font-weight:300;"><strong style="font-weight:500;opacity:1;">Your rights.</strong> Depending on where you live, you may have the right to access, correct, or delete your personal information. <a href="#rights" style="color:var(--forest);">Learn more →</a></p>
+          </div>
+          <div class="callout-box" style="margin-top:0;">
+            <p style="font-size:0.82rem;line-height:1.7;color:var(--charcoal);opacity:0.72;font-weight:300;"><strong style="font-weight:500;opacity:1;">How to exercise your rights.</strong> Email us at <a href="mailto:support@lossally.com" style="color:var(--forest);">support@lossally.com</a>. We will respond in accordance with applicable law.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 1. WHAT WE COLLECT ── -->
+      <div class="pp-section fade-up" id="collect">
+        <span class="section-number">01</span>
+        <h2 class="section-title">What Information Do We Collect?</h2>
+
+        <p class="pp-subhead">Information you give us directly</p>
+        <p class="pp-body">We collect personal information that you voluntarily provide when you contact us, register for our services, or engage with us in any way. This may include:</p>
+        <ul class="pp-list">
+          <li>Names (yours and, where relevant, your loved one's)</li>
+          <li>Phone numbers</li>
+          <li>Email addresses</li>
+          <li>Mailing addresses</li>
+          <li>Usernames and passwords (if you create an account)</li>
+          <li>Contact preferences</li>
+          <li>Billing addresses</li>
+          <li>Payment information (processed securely through Stripe — see below)</li>
+          <li>Financial account information provided in connection with estate administration</li>
+          <li>Death certificates and related estate documents</li>
+          <li>Family information relevant to the estate</li>
+        </ul>
+        <p class="pp-body" style="margin-top:1rem;">All personal information you provide must be true, complete, and accurate. Please notify us of any changes.</p>
+
+        <p class="pp-subhead">Sensitive information</p>
+        <p class="pp-body">Given the nature of estate administration, we may process sensitive categories of information with your consent or as otherwise permitted by applicable law, including:</p>
+        <ul class="pp-list">
+          <li>Financial data (account statements, asset records)</li>
+          <li>Social Security numbers or other government-issued identifiers</li>
+          <li>Health information (where relevant to estate or benefit claims)</li>
+          <li>Death and bereavement information</li>
+        </ul>
+        <p class="pp-body" style="margin-top:1rem;">We handle all sensitive information with heightened care and use it only to the extent necessary to provide the services you've engaged us for.</p>
+
+        <p class="pp-subhead">Payment data</p>
+        <p class="pp-body">Payment transactions are handled and stored by <strong>Stripe</strong>. We do not store your full card number or payment credentials on our systems. You can review Stripe's privacy practices at <a href="https://stripe.com/privacy" target="_blank">stripe.com/privacy</a>.</p>
+
+        <p class="pp-subhead">Information collected automatically</p>
+        <p class="pp-body">When you visit our website, we automatically collect certain technical information that does not directly identify you, including:</p>
+        <ul class="pp-list">
+          <li>IP address and approximate location</li>
+          <li>Browser type and version</li>
+          <li>Device type and operating system</li>
+          <li>Pages visited and time spent on each page</li>
+          <li>Referring URLs (how you arrived at our site)</li>
+          <li>Log and usage data (date/time stamps, error reports)</li>
+        </ul>
+        <p class="pp-body" style="margin-top:1rem;">This information is used to maintain the security and performance of our website and for internal analytics. We also collect information through cookies — see Section 4 for details.</p>
+
+        <p class="pp-subhead">No third-party collection</p>
+        <p class="pp-body">We do not purchase, rent, or otherwise obtain personal information from third-party data sources. Everything we know about you comes directly from you.</p>
+      </div>
+
+      <!-- ── 2. HOW WE USE IT ── -->
+      <div class="pp-section fade-up" id="process">
+        <span class="section-number">02</span>
+        <h2 class="section-title">How Do We Use Your Information?</h2>
+        <p class="pp-body">We use your information only for legitimate purposes tied to providing our services and running our business. Specifically, we process your information to:</p>
+        <ul class="pp-list">
+          <li>Deliver, manage, and improve the estate administration services you've engaged us for</li>
+          <li>Communicate with you about your engagement, including status updates, requests for information, and scheduling</li>
+          <li>Process payments and maintain billing records</li>
+          <li>Respond to your inquiries and provide customer support</li>
+          <li>Send you information about our services that you've requested or that may be relevant to your situation</li>
+          <li>Comply with legal obligations, including tax and record-keeping requirements</li>
+          <li>Protect against fraud, unauthorized access, and other harmful activity</li>
+          <li>Analyze how our website is used so we can improve it</li>
+        </ul>
+        <p class="pp-body" style="margin-top:1rem;">We will only process your information when we have a valid legal basis to do so — typically because you've consented, because processing is necessary to fulfill our contract with you, or because we are required to do so by law.</p>
+        <div class="callout-box gold" style="margin-top:1.25rem;">
+          <p style="font-size:0.8rem;line-height:1.75;color:var(--charcoal);opacity:0.75;font-weight:300;"><strong style="font-weight:500;opacity:1;">We do not sell your data.</strong> We have never sold personal information to third parties for advertising or any other purpose, and we have no intention of doing so.</p>
+        </div>
+      </div>
+
+      <!-- ── 3. WHEN WE SHARE IT ── -->
+      <div class="pp-section fade-up" id="share">
+        <span class="section-number">03</span>
+        <h2 class="section-title">When and With Whom Do We Share Your Information?</h2>
+        <p class="pp-body">We share your personal information only in the following limited circumstances:</p>
+        <ul class="pp-list">
+          <li><strong>Service providers.</strong> We may share information with third-party vendors who help us operate our business — such as payment processors (Stripe), document storage providers, and email platforms — under strict confidentiality agreements. These providers may only use your information to perform services for us.</li>
+          <li><strong>With your explicit consent.</strong> We may share information with third parties (such as attorneys, CPAs, or government agencies) when you have specifically authorized us to do so as part of your estate administration engagement.</li>
+          <li><strong>Legal requirements.</strong> We may disclose your information if required to do so by law, court order, or regulatory authority, or to protect the rights, safety, or property of Loss Ally or others.</li>
+          <li><strong>Business transfers.</strong> If Loss Ally is involved in a merger, acquisition, or sale of assets, your information may be transferred as part of that transaction. We will notify you before your information becomes subject to a different privacy policy.</li>
+        </ul>
+        <p class="pp-body" style="margin-top:1rem;">We do not share your personal information with advertisers, data brokers, or any party for marketing purposes.</p>
+      </div>
+
+      <!-- ── 4. COOKIES ── -->
+      <div class="pp-section fade-up" id="cookies">
+        <span class="section-number">04</span>
+        <h2 class="section-title">Do We Use Cookies?</h2>
+        <p class="pp-body">Yes. Like most websites, we use cookies and similar tracking technologies to improve your experience on our site and to understand how it is being used.</p>
+
+        <p class="pp-subhead">What are cookies?</p>
+        <p class="pp-body">Cookies are small text files stored on your device when you visit a website. They help us remember your preferences, keep you logged in, and analyze traffic patterns.</p>
+
+        <p class="pp-subhead">What cookies do we use?</p>
+        <ul class="pp-list">
+          <li><strong>Essential cookies.</strong> Necessary for the website to function. These cannot be disabled without affecting site functionality.</li>
+          <li><strong>Analytics cookies.</strong> Help us understand how visitors interact with our site (e.g., which pages are visited most often). This data is aggregated and anonymous.</li>
+          <li><strong>Preference cookies.</strong> Remember your settings and choices to improve your experience on return visits.</li>
+        </ul>
+
+        <p class="pp-subhead">How to control cookies</p>
+        <p class="pp-body">Most browsers allow you to control cookies through their settings. You can typically choose to block all cookies, block third-party cookies, or delete existing cookies. Note that disabling cookies may affect some features of our website. For more information, visit <a href="https://www.allaboutcookies.org" target="_blank">allaboutcookies.org</a>.</p>
+      </div>
+
+      <!-- ── 5. RETENTION ── -->
+      <div class="pp-section fade-up" id="retention">
+        <span class="section-number">05</span>
+        <h2 class="section-title">How Long Do We Keep Your Information?</h2>
+        <p class="pp-body">We retain personal information only for as long as necessary to fulfill the purposes described in this policy, unless a longer retention period is required or permitted by law.</p>
+        <ul class="pp-list">
+          <li><strong>Client records.</strong> We retain engagement records, correspondence, and documents related to your estate administration for a minimum of seven (7) years after the close of your engagement, consistent with standard business and tax record-keeping requirements.</li>
+          <li><strong>Payment records.</strong> Retained as required by tax and financial regulations — typically seven (7) years.</li>
+          <li><strong>Website analytics.</strong> Aggregated and anonymized after 26 months.</li>
+          <li><strong>Marketing communications.</strong> If you have opted in to receive communications from us, we retain your contact information until you opt out or request deletion.</li>
+        </ul>
+        <p class="pp-body" style="margin-top:1rem;">When information is no longer needed and no legal obligation requires us to keep it, we securely delete or anonymize it.</p>
+      </div>
+
+      <!-- ── 6. SECURITY ── -->
+      <div class="pp-section fade-up" id="security">
+        <span class="section-number">06</span>
+        <h2 class="section-title">How Do We Keep Your Information Safe?</h2>
+        <p class="pp-body">We take the security of your personal information seriously and have implemented appropriate technical and organizational measures to protect it, including:</p>
+        <ul class="pp-list">
+          <li>Encrypted transmission of data (HTTPS/TLS) for all communications involving personal information</li>
+          <li>Secure, access-controlled document storage</li>
+          <li>Limited internal access — only advisors directly involved in your engagement can access your files</li>
+          <li>Regular review of our security practices</li>
+        </ul>
+        <p class="pp-body" style="margin-top:1rem;">However, no method of electronic transmission or storage is 100% secure. While we do everything reasonable to protect your information, we cannot guarantee absolute security. In the event of a data breach that affects your rights, we will notify you as required by applicable law.</p>
+      </div>
+
+      <!-- ── 7. MINORS ── -->
+      <div class="pp-section fade-up" id="minors">
+        <span class="section-number">07</span>
+        <h2 class="section-title">Do We Collect Information From Minors?</h2>
+        <p class="pp-body">Our services are intended for adults (18 years and older). We do not knowingly collect personal information from children under 18. If you believe we have inadvertently collected information from a minor, please contact us at <a href="mailto:support@lossally.com">support@lossally.com</a> and we will promptly delete it.</p>
+        <p class="pp-body">In some estate administration contexts, information about minor beneficiaries may be collected as part of estate documents. This information is handled with the same care as all other sensitive data and is used solely for the purpose of administering the estate.</p>
+      </div>
+
+      <!-- ── 8. YOUR RIGHTS ── -->
+      <div class="pp-section fade-up" id="rights">
+        <span class="section-number">08</span>
+        <h2 class="section-title">What Are Your Privacy Rights?</h2>
+        <p class="pp-body">Depending on where you are located, you may have certain rights regarding your personal information. These may include:</p>
+        <ul class="pp-list">
+          <li><strong>Right to access.</strong> You may request a copy of the personal information we hold about you.</li>
+          <li><strong>Right to correction.</strong> You may ask us to correct inaccurate or incomplete information.</li>
+          <li><strong>Right to deletion.</strong> You may request that we delete your personal information, subject to certain exceptions (e.g., where we are required by law to retain it).</li>
+          <li><strong>Right to restrict processing.</strong> You may ask us to limit how we use your information in certain circumstances.</li>
+          <li><strong>Right to data portability.</strong> You may request your information in a portable format where technically feasible.</li>
+          <li><strong>Right to withdraw consent.</strong> Where we rely on your consent to process information, you may withdraw that consent at any time without affecting the lawfulness of prior processing.</li>
+          <li><strong>Right to object.</strong> You may object to certain types of processing, including direct marketing.</li>
+        </ul>
+        <p class="pp-body" style="margin-top:1rem;">To exercise any of these rights, email us at <a href="mailto:support@lossally.com">support@lossally.com</a>. We will respond within a reasonable timeframe and in accordance with applicable law. We may need to verify your identity before fulfilling a request.</p>
+        <div class="callout-box" style="margin-top:1.25rem;">
+          <p style="font-size:0.8rem;line-height:1.75;color:var(--charcoal);opacity:0.7;font-weight:300;"><strong style="font-weight:500;opacity:1;">Opting out of marketing.</strong> If you have received marketing communications from us and wish to stop, simply reply to any email with "unsubscribe" or email us at <a href="mailto:support@lossally.com" style="color:var(--forest);">support@lossally.com</a>. Note that opting out of marketing does not affect communications related to an active engagement.</p>
+        </div>
+      </div>
+
+      <!-- ── 9. DO NOT TRACK ── -->
+      <div class="pp-section fade-up" id="dnt">
+        <span class="section-number">09</span>
+        <h2 class="section-title">Controls for Do-Not-Track Features</h2>
+        <p class="pp-body">Some browsers and mobile operating systems include a Do-Not-Track ("DNT") feature that signals to websites that you do not want your browsing activity tracked.</p>
+        <p class="pp-body">At this time, no uniform technology standard for recognizing and implementing DNT signals has been finalized. As a result, we do not currently respond to DNT signals. If a standard is adopted in the future, we will update this policy accordingly.</p>
+        <p class="pp-body">You can control tracking through your browser's cookie settings — see Section 4 for more detail.</p>
+      </div>
+
+      <!-- ── 10. US RESIDENTS ── -->
+      <div class="pp-section fade-up" id="us-residents">
+        <span class="section-number">10</span>
+        <h2 class="section-title">Do United States Residents Have Specific Privacy Rights?</h2>
+        <p class="pp-body">Certain US states provide residents with additional privacy rights. Below is a summary of rights that may apply to you depending on your state of residence.</p>
+
+        <p class="pp-subhead">California residents (CCPA / CPRA)</p>
+        <ul class="pp-list">
+          <li>Right to know what personal information we collect, use, disclose, and sell</li>
+          <li>Right to delete personal information we have collected</li>
+          <li>Right to opt out of the sale or sharing of personal information (we do not sell or share your information)</li>
+          <li>Right to non-discrimination for exercising your privacy rights</li>
+          <li>Right to correct inaccurate personal information</li>
+          <li>Right to limit the use of sensitive personal information</li>
+        </ul>
+
+        <p class="pp-subhead">Other states</p>
+        <p class="pp-body">Residents of Virginia, Colorado, Connecticut, Utah, Texas, and other states with comprehensive privacy laws may have similar rights, including the right to access, correct, delete, and port their data, and the right to opt out of certain types of processing. We honor these rights for all US residents regardless of state.</p>
+
+        <p class="pp-subhead">How to submit a request</p>
+        <p class="pp-body">Email us at <a href="mailto:support@lossally.com">support@lossally.com</a> with your name, the nature of your request, and your state of residence. We will verify your identity and respond within the timeframe required by applicable law (typically 45 days, with the possibility of a 45-day extension where permitted).</p>
+
+        <div class="callout-box" style="margin-top:1.25rem;">
+          <p style="font-size:0.8rem;line-height:1.75;color:var(--charcoal);opacity:0.7;font-weight:300;"><strong style="font-weight:500;opacity:1;">Categories of information collected.</strong> In the past 12 months, we have collected identifiers, financial information, sensitive personal information (as described in Section 1), and internet/electronic activity data. We have not sold any of this information.</p>
+        </div>
+      </div>
+
+      <!-- ── 11. UPDATES ── -->
+      <div class="pp-section fade-up" id="updates">
+        <span class="section-number">11</span>
+        <h2 class="section-title">Do We Make Updates to This Policy?</h2>
+        <p class="pp-body">We may update this Privacy Policy from time to time to reflect changes in our practices, technology, legal requirements, or other factors. When we do:</p>
+        <ul class="pp-list">
+          <li>We will update the "Last updated" date at the top of this page.</li>
+          <li>For material changes, we will notify active clients by email within 5 business days after the updated policy takes effect.</li>
+          <li>Your continued use of our services after an updated policy takes effect constitutes your acceptance of the changes.</li>
+        </ul>
+        <p class="pp-body" style="margin-top:1rem;">We encourage you to review this policy periodically to stay informed about how we protect your information.</p>
+      </div>
+
+      <!-- ── 12. CONTACT ── -->
+      <div class="pp-section fade-up" id="contact-pp">
+        <span class="section-number">12</span>
+        <h2 class="section-title">How Can You Contact Us About This Policy?</h2>
+        <p class="pp-body">If you have questions or concerns about this Privacy Policy or our data practices, please reach out:</p>
+
+        <div style="margin-top:1.5rem;">
+          <div class="callout-box" style="margin-top:0;max-width:380px;">
+            <p style="font-size:0.65rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.625rem;">Email</p>
+            <a href="mailto:support@lossally.com" style="font-size:0.9rem;color:var(--forest);text-decoration:none;font-weight:400;display:block;margin-bottom:0.3rem;transition:color 0.18s;" onmouseover="this.style.color='var(--evergreen)'" onmouseout="this.style.color='var(--forest)'">support@lossally.com</a>
+            <p style="font-size:0.75rem;color:var(--charcoal);opacity:0.45;font-weight:300;line-height:1.5;">We respond within 4 hours,<br>Monday–Friday, 8am–6pm</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 13. DATA REQUESTS ── -->
+      <div class="pp-section fade-up" id="data-requests">
+        <span class="section-number">13</span>
+        <h2 class="section-title">How Can You Review, Update, or Delete Your Data?</h2>
+        <p class="pp-body">You have the right to request access to, correction of, or deletion of the personal information we hold about you. To submit a request:</p>
+        <ul class="pp-list">
+          <li>Email us at <a href="mailto:support@lossally.com">support@lossally.com</a> with the subject line "Data Request."</li>
+          <li>Include your full name, the email address associated with your account or engagement, and a description of your request.</li>
+          <li>We may need to verify your identity before fulfilling your request.</li>
+          <li>We will respond within 45 days. If more time is needed, we will let you know and explain why.</li>
+        </ul>
+        <p class="pp-body" style="margin-top:1rem;">Please note that certain information may be retained even after a deletion request if we are legally required to keep it (for example, billing records for tax purposes). In those cases, we will let you know what information we are retaining and why.</p>
+
+        <p class="pp-body" style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--mist);font-size:0.8rem;opacity:0.45;">
+          By using our services, you acknowledge that you have read and understood this Privacy Policy. This policy, together with our <a href="terms-of-service.html" style="color:var(--forest);text-decoration:underline;text-underline-offset:2px;">Terms of Service</a>, governs your use of Loss Ally's services.
+        </p>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+
+<!-- ══ CTA BANNER ════════════════════════════════════════ -->
+<div style="background:var(--forest);padding:3.25rem 1.75rem;">
+  <div style="max-width:900px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1.5rem;" id="cta-banner">
+    <div>
+      <p style="font-size:0.68rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:0.6rem;">— Privacy questions?</p>
+      <h3 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.6rem,3vw,2.25rem);font-weight:400;color:#FAF8F4;letter-spacing:-0.02em;line-height:1.15;">
+        We're always happy to <em style="font-style:italic;color:var(--gold);">explain.</em>
+      </h3>
+    </div>
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap;flex-shrink:0;">
+      <a href="mailto:support@lossally.com" class="btn-primary" style="background:var(--gold);box-shadow:0 2px 12px rgba(191,160,106,0.3);" onmouseover="this.style.background='#a8894e'" onmouseout="this.style.background='var(--gold)'">
+        Email Us
+      </a>
+      <a href="terms-of-service.html" style="display:inline-flex;align-items:center;gap:0.45rem;background:transparent;color:rgba(250,248,244,0.8);font-family:'DM Sans',sans-serif;font-weight:300;font-size:0.875rem;padding:0.75rem 1.6rem;border-radius:6px;border:1px solid rgba(255,255,255,0.25);text-decoration:none;transition:border-color 0.18s,color 0.18s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.55)';this.style.color='#FAF8F4';" onmouseout="this.style.borderColor='rgba(255,255,255,0.25)';this.style.color='rgba(250,248,244,0.8)';">
+        Terms of Service
+      </a>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ FOOTER ══════════════════════════════════════════════ -->
+<footer style="background:#1a2218;padding:3.5rem 1.75rem 2rem;">
+  <div style="max-width:1200px;margin:0 auto;">
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:2.5rem;padding-bottom:2rem;border-bottom:1px solid rgba(255,255,255,0.06);" id="footer-grid">
+
+      <div>
+        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.875rem;">
+          <img src="brand_assets/logo.png" alt="Loss Ally" style="height:30px;width:auto;" />
+          <span style="font-size:0.95rem;font-weight:400;color:rgba(250,248,244,0.8);">Loss Ally</span>
+        </div>
+        <p style="font-size:0.78rem;color:rgba(250,248,244,0.3);line-height:1.75;max-width:200px;font-weight:300;">
+          Estate and life administration support. Compassionate. Practical. Always here.
+        </p>
+      </div>
+
+      <div>
+        <p style="font-size:0.62rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(250,248,244,0.28);margin-bottom:0.875rem;">Services</p>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:0.5rem;">
+          <li><a href="index.html#services" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Legal &amp; Probate</a></li>
+          <li><a href="index.html#services" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Financial Closure</a></li>
+          <li><a href="index.html#services" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Government Records</a></li>
+          <li><a href="index.html#services" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Digital Estate</a></li>
+          <li><a href="index.html#services" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Property &amp; Home</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p style="font-size:0.62rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(250,248,244,0.28);margin-bottom:0.875rem;">Company</p>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:0.5rem;">
+          <li><a href="#" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Our Story</a></li>
+          <li><a href="#" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Meet the Team</a></li>
+          <li><a href="#" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Partners &amp; Advisors</a></li>
+          <li><a href="#" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Press</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p style="font-size:0.62rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(250,248,244,0.28);margin-bottom:0.875rem;">Support</p>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:0.5rem;">
+          <li><a href="#" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Help Center</a></li>
+          <li><a href="#" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Grief Resources</a></li>
+          <li><a href="privacy-policy.html" style="font-size:0.8rem;color:rgba(250,248,244,0.6);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.6)'">Privacy Policy</a></li>
+          <li><a href="terms-of-service.html" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Terms of Service</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;padding-top:1.5rem;flex-wrap:wrap;gap:0.75rem;">
+      <p style="font-size:0.72rem;color:rgba(250,248,244,0.22);font-weight:300;">© 2026 Loss Ally LLC. All rights reserved.</p>
+      <p style="font-size:0.72rem;color:rgba(250,248,244,0.22);font-weight:300;">Not a legal services firm.</p>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ══ SCRIPTS ════════════════════════════════════════════ -->
+<script>
+  const ham = document.getElementById('mob-ham');
+  const mob = document.getElementById('mob-menu');
+  let open = false;
+  ham.addEventListener('click', () => {
+    open = !open;
+    mob.style.display = open ? 'block' : 'none';
+    document.getElementById('h1').style.transform = open ? 'translateY(6.5px) rotate(45deg)' : '';
+    document.getElementById('h2').style.opacity   = open ? '0' : '1';
+    document.getElementById('h3').style.transform = open ? 'translateY(-6.5px) rotate(-45deg)' : '';
+  });
+  function closeMob() {
+    open = false;
+    mob.style.display = 'none';
+    document.getElementById('h1').style.transform = '';
+    document.getElementById('h2').style.opacity   = '1';
+    document.getElementById('h3').style.transform = '';
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.06, rootMargin: '0px 0px -20px 0px' });
+  document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+
+  const nav = document.getElementById('site-nav');
+  window.addEventListener('scroll', () => {
+    nav.style.boxShadow = window.scrollY > 10 ? '0 1px 20px rgba(44,44,42,0.06)' : 'none';
+  }, { passive: true });
+
+  const ppLayout  = document.getElementById('pp-layout');
+  const ppSidebar = document.getElementById('pp-sidebar');
+  const tocLinks  = document.getElementById('toc-links');
+  function layoutPp() {
+    if (window.innerWidth >= 1024) {
+      ppLayout.style.gridTemplateColumns = '280px 1fr';
+      ppLayout.style.gap = '3.5rem';
+      ppSidebar.style.position = 'sticky';
+      ppSidebar.style.top = '80px';
+      tocLinks.style.flexDirection = 'column';
+    } else {
+      ppLayout.style.gridTemplateColumns = '1fr';
+      ppLayout.style.gap = '0';
+      ppSidebar.style.position = 'static';
+      ppSidebar.style.top = 'auto';
+      tocLinks.style.flexDirection = 'row';
+      tocLinks.style.flexWrap = 'wrap';
+      tocLinks.style.gap = '0.25rem 1rem';
+    }
+  }
+  layoutPp();
+  window.addEventListener('resize', layoutPp, { passive: true });
+
+  const ftg = document.getElementById('footer-grid');
+  if (ftg) {
+    function layoutFooter() {
+      ftg.style.gridTemplateColumns = window.innerWidth >= 1024
+        ? '1.6fr 1fr 1fr 1fr'
+        : window.innerWidth >= 640 ? '1fr 1fr' : '1fr';
+    }
+    layoutFooter();
+    window.addEventListener('resize', layoutFooter, { passive: true });
+  }
+
+  const ctaBanner = document.getElementById('cta-banner');
+  if (ctaBanner) {
+    function layoutCta() {
+      ctaBanner.style.flexDirection = window.innerWidth < 640 ? 'column' : 'row';
+      ctaBanner.style.alignItems    = window.innerWidth < 640 ? 'flex-start' : 'center';
+    }
+    layoutCta();
+    window.addEventListener('resize', layoutCta, { passive: true });
+  }
+
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
