@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms of Service — Loss Ally</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --cream: #f6f1e6;
+      --warm-white: #FAF8F4;
+      --sage: #8D9D6A;
+      --forest: #5b6e5b;
+      --evergreen: #2D4D0C;
+      --charcoal: #2C2C28;
+      --mist: #E2DDD4;
+      --gold: #C9A870;
+      --sand: #E8C987;
+      --warm-ochre: #B4952A;
+      --deep-sage: #2D4D0C;
+      --terracotta: #C4724A;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--warm-white);
+      color: var(--charcoal);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.5;
+    }
+
+    .label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--sage);
+    }
+
+    .display-font {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: var(--forest);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 0.875rem;
+      padding: 0.75rem 1.6rem;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
+      box-shadow: 0 2px 14px rgba(71,102,39,0.25);
+    }
+    .btn-primary:hover {
+      background: var(--evergreen);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 22px rgba(71,102,39,0.32);
+    }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+    .nav-link {
+      font-size: 0.875rem;
+      font-weight: 300;
+      color: var(--charcoal);
+      text-decoration: none;
+      opacity: 0.65;
+      transition: opacity 0.18s;
+      letter-spacing: 0.005em;
+    }
+    .nav-link:hover { opacity: 1; }
+    .nav-link:focus-visible { outline: 2px solid var(--gold); border-radius: 2px; }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.in { opacity: 1; transform: translateY(0); }
+
+    /* Terms-specific */
+    .tos-section {
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--mist);
+    }
+    .tos-section:last-of-type {
+      border-bottom: none;
+    }
+
+    .section-number {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: var(--mist);
+      letter-spacing: 0.04em;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(1.5rem, 2.5vw, 2rem);
+      font-weight: 400;
+      color: var(--charcoal);
+      letter-spacing: -0.02em;
+      line-height: 1.18;
+      margin-bottom: 1.25rem;
+    }
+
+    .tos-body {
+      font-size: 0.9rem;
+      line-height: 1.85;
+      color: var(--charcoal);
+      opacity: 0.72;
+      font-weight: 300;
+    }
+    .tos-body + .tos-body { margin-top: 1rem; }
+    .tos-body strong {
+      font-weight: 500;
+      opacity: 1;
+      color: var(--charcoal);
+    }
+
+    .tos-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-top: 1rem;
+    }
+    .tos-list li {
+      position: relative;
+      padding-left: 1rem;
+      font-size: 0.875rem;
+      line-height: 1.65;
+      color: rgba(44,44,40,0.62);
+      font-weight: 300;
+    }
+    .tos-list li strong {
+      color: var(--charcoal);
+      font-weight: 500;
+    }
+    .tos-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.65em;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--sage);
+    }
+
+    .callout-box {
+      background: var(--cream);
+      border: 1px solid var(--mist);
+      border-radius: 10px;
+      padding: 1.5rem 1.75rem;
+      margin-top: 1.25rem;
+    }
+    .callout-box.forest {
+      background: rgba(91,110,91,0.07);
+      border-color: rgba(91,110,91,0.2);
+    }
+    .callout-box.gold {
+      background: rgba(180,149,42,0.07);
+      border-color: rgba(180,149,42,0.2);
+    }
+    .callout-box.terracotta {
+      background: rgba(196,114,74,0.07);
+      border-color: rgba(196,114,74,0.2);
+    }
+
+    .toc-link {
+      font-size: 0.82rem;
+      color: var(--forest);
+      text-decoration: none;
+      font-weight: 300;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0;
+      transition: color 0.18s, opacity 0.18s;
+      opacity: 0.8;
+    }
+    .toc-link:hover { color: var(--evergreen); opacity: 1; }
+    .toc-link::before {
+      content: '↓';
+      font-size: 0.7rem;
+      opacity: 0.5;
+    }
+
+    @media (min-width: 768px) {
+      #desk-nav { display: flex !important; }
+      #mob-ham  { display: none  !important; }
+    }
+    @media (max-width: 767px) {
+      #desk-nav { display: none  !important; }
+      #mob-ham  { display: flex  !important; }
+    }
+  </style>
+  <script src="https://app.termly.io/resource-blocker/e9fd6e24-20b3-49d3-b189-7e89d49afe42?autoBlock=on"></script>
+</head>
+<body>
+
+<!-- ══ NAV ══════════════════════════════════════════════ -->
+<header id="site-nav" style="position:sticky;top:0;z-index:50;background:var(--warm-white);border-bottom:1px solid var(--mist);transition:box-shadow 0.2s;">
+  <div style="max-width:1200px;margin:0 auto;padding:0 1.75rem;height:64px;display:flex;align-items:center;justify-content:space-between;">
+
+    <a href="index.html" style="display:flex;align-items:center;gap:0.625rem;text-decoration:none;flex-shrink:0;">
+      <img src="brand_assets/logo.png" alt="Loss Ally" style="height:34px;width:auto;mix-blend-mode:multiply;" />
+      <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.2rem;font-weight:500;color:var(--charcoal);letter-spacing:0.01em;">Loss Ally</span>
+    </a>
+
+    <nav id="desk-nav" style="display:flex;align-items:center;gap:2.25rem;">
+      <a href="index.html#services"     class="nav-link">Services</a>
+      <a href="index.html#how-it-works" class="nav-link">How It Works</a>
+      <a href="index.html#pricing"      class="nav-link">Plans</a>
+      <a href="index.html#contact" class="btn-primary" style="padding:0.6rem 1.25rem;font-size:0.82rem;">Get Support</a>
+    </nav>
+
+    <button id="mob-ham" aria-label="Open menu" style="display:none;flex-direction:column;gap:5px;padding:8px;background:none;border:none;cursor:pointer;">
+      <span id="h1" style="display:block;width:20px;height:1.5px;background:var(--charcoal);border-radius:2px;transition:transform 0.2s,opacity 0.2s;"></span>
+      <span id="h2" style="display:block;width:20px;height:1.5px;background:var(--charcoal);border-radius:2px;transition:opacity 0.2s;"></span>
+      <span id="h3" style="display:block;width:20px;height:1.5px;background:var(--charcoal);border-radius:2px;transition:transform 0.2s;"></span>
+    </button>
+  </div>
+
+  <div id="mob-menu" style="display:none;border-top:1px solid var(--mist);background:var(--warm-white);">
+    <div style="max-width:1200px;margin:0 auto;padding:1.25rem 1.75rem;display:flex;flex-direction:column;gap:0.75rem;">
+      <a href="index.html#services"     class="nav-link" style="padding:0.4rem 0;" onclick="closeMob()">Services</a>
+      <a href="index.html#how-it-works" class="nav-link" style="padding:0.4rem 0;" onclick="closeMob()">How It Works</a>
+      <a href="index.html#pricing"      class="nav-link" style="padding:0.4rem 0;" onclick="closeMob()">Pricing</a>
+      <a href="index.html#contact" class="btn-primary" style="align-self:flex-start;margin-top:0.5rem;" onclick="closeMob()">Schedule a Call</a>
+    </div>
+  </div>
+</header>
+
+
+<!-- ══ PAGE HEADER ═══════════════════════════════════════ -->
+<section style="padding:4.5rem 1.75rem 3.5rem;background:var(--warm-white);position:relative;overflow:hidden;border-bottom:1px solid var(--mist);">
+  <div style="position:absolute;top:-140px;right:-100px;width:560px;height:560px;background:radial-gradient(ellipse,rgba(138,158,140,0.07) 0%,transparent 65%);pointer-events:none;"></div>
+  <div style="position:absolute;bottom:-80px;left:-60px;width:400px;height:400px;background:radial-gradient(ellipse,rgba(180,149,42,0.05) 0%,transparent 65%);pointer-events:none;"></div>
+
+  <div style="max-width:800px;margin:0 auto;position:relative;z-index:1;">
+    <span class="label" style="display:block;margin-bottom:1.25rem;">— Legal</span>
+    <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.75rem,5vw,4.25rem);font-weight:400;line-height:1.06;letter-spacing:-0.025em;color:var(--charcoal);margin-bottom:1.25rem;">
+      Terms of<br><em style="font-style:italic;color:var(--warm-ochre);">Service</em>
+    </h1>
+    <p style="font-size:0.9rem;line-height:1.8;color:var(--charcoal);opacity:0.55;max-width:520px;margin-bottom:1.75rem;font-weight:300;">
+      These terms govern your use of Loss Ally's services. We've written them in plain language because clarity and honesty are the foundation of everything we do.
+    </p>
+    <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <div style="width:6px;height:6px;border-radius:50%;background:var(--sage);"></div>
+        <span style="font-size:0.72rem;color:var(--charcoal);opacity:0.45;font-weight:300;letter-spacing:0.02em;">Effective date: January 1, 2026</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <div style="width:6px;height:6px;border-radius:50%;background:var(--sage);"></div>
+        <span style="font-size:0.72rem;color:var(--charcoal);opacity:0.45;font-weight:300;letter-spacing:0.02em;">Last updated: May 2026</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ CONTENT BODY ══════════════════════════════════════ -->
+<div style="max-width:1100px;margin:0 auto;padding:0 1.75rem;">
+  <div id="tos-layout" style="display:grid;grid-template-columns:1fr;gap:0;align-items:start;">
+
+    <!-- SIDEBAR / TABLE OF CONTENTS -->
+    <aside id="tos-sidebar" style="padding:2.5rem 0 2rem;">
+      <div style="background:var(--cream);border:1px solid var(--mist);border-radius:12px;padding:1.75rem 1.75rem;">
+        <p style="font-size:0.62rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--charcoal);opacity:0.4;margin-bottom:1.1rem;">Contents</p>
+        <nav style="display:flex;flex-direction:column;gap:0.1rem;" id="toc-links">
+          <a href="#scope"           class="toc-link">1. Scope of Services</a>
+          <a href="#exclusions"      class="toc-link">2. What We Don't Provide</a>
+          <a href="#no-acr"          class="toc-link">3. No Attorney-Client Relationship</a>
+          <a href="#client-resp"     class="toc-link">4. Client Responsibilities</a>
+          <a href="#payment"         class="toc-link">5. Payment Terms</a>
+          <a href="#overage"         class="toc-link">6. Overage Policy</a>
+          <a href="#refund"          class="toc-link">7. Refund Policy</a>
+          <a href="#referrals"       class="toc-link">8. Third-Party Referrals</a>
+          <a href="#liability"       class="toc-link">9. Limitation of Liability</a>
+          <a href="#confidentiality" class="toc-link">10. Confidentiality</a>
+          <a href="#relationship"    class="toc-link">11. Independent Contractor</a>
+          <a href="#termination"     class="toc-link">12. Termination</a>
+          <a href="#changes"         class="toc-link">13. Changes to These Terms</a>
+          <a href="#governing-law"   class="toc-link">14. Governing Law</a>
+          <a href="#contact-us"      class="toc-link">15. Contact Us</a>
+        </nav>
+        <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--mist);">
+          <p style="font-size:0.72rem;color:var(--charcoal);opacity:0.42;line-height:1.65;font-weight:300;">
+            Questions about these terms? We're happy to explain anything in plain language.
+          </p>
+          <a href="index.html#contact" class="btn-primary" style="margin-top:1rem;font-size:0.8rem;padding:0.6rem 1.1rem;">
+            Contact Us
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main style="padding:2.5rem 0 5rem;">
+
+      <!-- Intro notice -->
+      <div class="fade-up callout-box forest" style="margin-bottom:1rem;">
+        <p style="font-size:0.875rem;line-height:1.75;color:var(--charcoal);opacity:0.75;font-weight:300;">
+          <strong style="font-weight:500;opacity:1;">Please read these terms carefully.</strong> By scheduling a consultation, signing a service agreement, or using any Loss Ally services, you agree to be bound by these Terms of Service. If you have questions about anything here, please reach out before engaging our services — we're always happy to talk through it.
+        </p>
+      </div>
+
+      <div style="font-size:0.82rem;line-height:1.75;color:var(--charcoal);opacity:0.55;font-weight:300;padding:0.5rem 0 2rem;">
+        These Terms of Service ("Terms") constitute a binding agreement between you ("Client") and <strong style="font-weight:500;opacity:1;">Loss Ally LLC</strong>, a single-member limited liability company ("Loss Ally," "we," "us," or "our"). Loss Ally provides estate and life administration coordination services to individuals and families in the United States.
+      </div>
+
+      <!-- ── 1. SCOPE OF SERVICES ── -->
+      <div class="tos-section fade-up" id="scope">
+        <span class="section-number">01</span>
+        <h2 class="section-title">Scope of Services</h2>
+        <p class="tos-body">
+          Loss Ally provides <strong>administrative coordination and organizational support</strong> to families and individuals navigating the practical tasks that follow a death or major life transition. Our services are defined in the service agreement or statement of work you receive at the time of engagement. Services may include, but are not limited to:
+        </p>
+        <ul class="tos-list">
+          <li>Preparation and organization of administrative task lists and estate checklists</li>
+          <li>Coordination with government agencies (Social Security Administration, IRS, DMV, and similar bodies) on your behalf</li>
+          <li>Drafting and sending notification letters to financial institutions, employers, and service providers</li>
+          <li>Liaison and scheduling support with attorneys, accountants, and other licensed professionals you have retained</li>
+          <li>Guidance and support for closing or transferring bank accounts, insurance policies, subscriptions, and digital accounts</li>
+          <li>Digital estate management, including social media memorialization or removal requests</li>
+          <li>Document organization, record-keeping, and secure file archiving</li>
+          <li>Grief support referrals and resource matching</li>
+        </ul>
+        <p class="tos-body" style="margin-top:1.25rem;">
+          The specific services included in your engagement are detailed in your individual service agreement. Services are provided within the United States only. Loss Ally reserves the right to decline any engagement that falls outside the scope of our expertise or that we are unable to fulfill at our standard of care.
+        </p>
+        <div class="callout-box" style="margin-top:1.25rem;">
+          <p style="font-size:0.8rem;line-height:1.75;color:var(--charcoal);opacity:0.7;font-weight:300;">
+            <strong style="font-weight:500;opacity:1;">Your role.</strong> To perform our services effectively, we rely on you to provide accurate information, respond to reasonable requests in a timely manner, and notify us of any changes to your situation. We are not responsible for delays or incomplete outcomes caused by information we were not given.
+          </p>
+        </div>
+      </div>
+
+      <!-- ── 2. EXCLUSIONS ── -->
+      <div class="tos-section fade-up" id="exclusions">
+        <span class="section-number">02</span>
+        <h2 class="section-title">What We Don't Provide</h2>
+        <p class="tos-body">
+          Loss Ally is not a law firm, accounting firm, financial advisory firm, or licensed healthcare provider. The following services are <strong>expressly outside the scope</strong> of what we offer, and nothing we say or do should be interpreted as a substitute for professional licensed advice in these areas:
+        </p>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-top:1.25rem;">
+          <div class="callout-box terracotta">
+            <p style="font-size:0.7rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--terracotta);margin-bottom:0.625rem;">Not Legal Advice</p>
+            <p style="font-size:0.82rem;line-height:1.65;color:var(--charcoal);opacity:0.72;font-weight:300;">
+              We do not practice law, interpret wills or trust documents, advise on probate strategy, or represent you in any legal proceeding. We can help you <em>organize</em> documents and connect you with qualified attorneys — but legal judgment rests with licensed lawyers.
+            </p>
+          </div>
+          <div class="callout-box terracotta">
+            <p style="font-size:0.7rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--terracotta);margin-bottom:0.625rem;">Not Financial Advice</p>
+            <p style="font-size:0.82rem;line-height:1.65;color:var(--charcoal);opacity:0.72;font-weight:300;">
+              We do not provide investment guidance, tax strategy, or financial planning. We can coordinate with financial institutions and assist with the administrative steps of account closure — but financial decisions require a licensed financial advisor or CPA.
+            </p>
+          </div>
+          <div class="callout-box terracotta">
+            <p style="font-size:0.7rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--terracotta);margin-bottom:0.625rem;">Not Therapy or Counseling</p>
+            <p style="font-size:0.82rem;line-height:1.65;color:var(--charcoal);opacity:0.72;font-weight:300;">
+              We are not grief therapists or licensed counselors. We approach our work with deep compassion and can connect you with professional grief support resources, but emotional or clinical care is outside our scope.
+            </p>
+          </div>
+          <div class="callout-box terracotta">
+            <p style="font-size:0.7rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--terracotta);margin-bottom:0.625rem;">No Guarantee of Outcomes</p>
+            <p style="font-size:0.82rem;line-height:1.65;color:var(--charcoal);opacity:0.72;font-weight:300;">
+              We cannot guarantee how third parties — institutions, government agencies, or courts — will respond or how long their processes will take. Our role is to advocate and coordinate; ultimate outcomes depend on factors outside our control.
+            </p>
+          </div>
+        </div>
+
+        <p class="tos-body" style="margin-top:1.25rem;">
+          When legal, financial, or other licensed professional services are needed, we will let you know clearly, provide referrals where possible, and work alongside those professionals — but not in place of them. <strong>No communication from Loss Ally constitutes legal or financial advice.</strong>
+        </p>
+      </div>
+
+      <!-- ── 3. NO ATTORNEY-CLIENT RELATIONSHIP ── -->
+      <div class="tos-section fade-up" id="no-acr">
+        <span class="section-number">03</span>
+        <h2 class="section-title">No Attorney-Client Relationship</h2>
+        <p class="tos-body">
+          Engaging Loss Ally does not create an attorney-client relationship of any kind. Loss Ally is not a law firm and is not licensed to practice law in any jurisdiction. No communication from Loss Ally — written, verbal, or otherwise — constitutes legal advice or legal counsel.
+        </p>
+        <p class="tos-body">
+          Nothing Loss Ally does on your behalf constitutes legal representation. We do not file court documents, appear in any legal proceeding, or act as your legal agent. For all legal matters related to your estate, probate, trusts, or personal circumstances, you must retain a licensed attorney independently.
+        </p>
+        <div class="callout-box terracotta" style="margin-top:1.25rem;">
+          <p style="font-size:0.8rem;line-height:1.75;color:var(--charcoal);opacity:0.75;font-weight:300;">
+            <strong style="font-weight:500;opacity:1;">Why this matters.</strong> Estate and probate matters often involve legal rights and deadlines that only a licensed attorney can advise on. We will always tell you when something requires legal counsel and connect you with a qualified attorney — but we cannot serve as a substitute for one.
+          </p>
+        </div>
+      </div>
+
+      <!-- ── 4. CLIENT RESPONSIBILITIES ── -->
+      <div class="tos-section fade-up" id="client-resp">
+        <span class="section-number">04</span>
+        <h2 class="section-title">Client Responsibilities</h2>
+        <p class="tos-body">
+          A successful engagement depends on active collaboration. By engaging our services, you agree to the following responsibilities:
+        </p>
+        <ul class="tos-list">
+          <li>Provide accurate, complete, and timely information about the estate and your circumstances, including relevant documents such as death certificates, the will, account statements, and any existing legal filings.</li>
+          <li>Respond to advisor requests within a reasonable timeframe — typically within 3 to 5 business days — to avoid delays in completing tasks on your behalf.</li>
+          <li>Understand that certain actions require your direct authorization and cannot be completed by Loss Ally on your behalf. These include signing legal documents, authorizing financial transfers, making binding decisions about the estate, and any action that requires an executor's or administrator's legal signature.</li>
+          <li>Notify us promptly of any changes to your situation — including changes to the estate's scope, new legal filings, or a change in your role as executor or administrator — that may affect the services being provided.</li>
+          <li>Ensure that anyone acting on your behalf in communications with Loss Ally has authority to do so.</li>
+        </ul>
+        <p class="tos-body" style="margin-top:1rem;">
+          Loss Ally is not responsible for delays, missed deadlines, or incomplete outcomes that result from information you did not provide, documents you did not share, or authorizations you did not give in a timely manner.
+        </p>
+      </div>
+
+      <!-- ── 5. PAYMENT TERMS ── -->
+      <div class="tos-section fade-up" id="payment">
+        <span class="section-number">05</span>
+        <h2 class="section-title">Payment Terms</h2>
+        <p class="tos-body">
+          Loss Ally offers flat-fee service packages, the prices of which are set out on our website and in your individual service agreement. By engaging our services, you agree to the following payment terms:
+        </p>
+        <ul class="tos-list">
+          <li>Payment is due in full at the time of service agreement execution, unless a separate written payment schedule has been agreed upon.</li>
+          <li>Accepted payment methods include credit card, debit card, and ACH bank transfer. All payments are processed securely through our payment processor.</li>
+          <li>For Full Service or custom-scoped engagements, a deposit of 50% may be required to begin work, with the remainder due upon completion of the first project milestone.</li>
+          <li>All fees are stated in U.S. dollars. Loss Ally is not responsible for any currency conversion fees or bank charges on your end.</li>
+          <li>Invoices not paid within 14 days of the due date may result in a pause in services until the balance is settled.</li>
+          <li>Third-party costs — such as court filing fees, notary fees, postage, or document retrieval charges — are not included in our service fees and will be passed through to you at cost with advance notice.</li>
+        </ul>
+        <div class="callout-box gold" style="margin-top:1.25rem;">
+          <p style="font-size:0.8rem;line-height:1.75;color:var(--charcoal);opacity:0.75;font-weight:300;">
+            <strong style="font-weight:500;opacity:1;">Flat-fee promise.</strong> We believe you should never worry about the clock running while we work on your behalf. Our flat-fee pricing means the time we spend is our concern, not yours — you'll never receive an unexpected hourly bill unless a scope change has been agreed to in writing.
+          </p>
+        </div>
+      </div>
+
+      <!-- ── 6. OVERAGE POLICY ── -->
+      <div class="tos-section fade-up" id="overage">
+        <span class="section-number">06</span>
+        <h2 class="section-title">Overage Policy</h2>
+        <p class="tos-body">
+          Each service package includes a defined number of advisor support hours, as specified in your service agreement. If your engagement requires time beyond what is included, the following applies:
+        </p>
+        <ul class="tos-list">
+          <li>Your advisor will notify you before any overage occurs and will provide a written estimate of additional hours needed before proceeding.</li>
+          <li>No overage charges will be applied without your explicit written approval. We will never bill you for additional time you have not agreed to in advance.</li>
+          <li>Approved overage hours are billed at the hourly rate specified in your service agreement.</li>
+          <li>In some cases, the scope of an engagement may make upgrading to the next service tier more cost-effective than billing overage hours. Where this applies, your advisor will present both options for your consideration.</li>
+          <li>Overage hours are invoiced separately and are due within 5 days of the invoice date.</li>
+        </ul>
+        <div class="callout-box gold" style="margin-top:1.25rem;">
+          <p style="font-size:0.8rem;line-height:1.75;color:var(--charcoal);opacity:0.75;font-weight:300;">
+            <strong style="font-weight:500;opacity:1;">No surprises.</strong> We will always tell you before we exceed your included hours and always get your approval before continuing. You will never receive an unexpected bill for time you didn't authorize.
+          </p>
+        </div>
+      </div>
+
+      <!-- ── 7. REFUND POLICY ── -->
+      <div class="tos-section fade-up" id="refund">
+        <span class="section-number">07</span>
+        <h2 class="section-title">Refund Policy</h2>
+        <p class="tos-body">
+          We want to be straightforward about our refund policy so there are no surprises:
+        </p>
+        <ul class="tos-list">
+          <li><strong>Within 48 hours of payment:</strong> Full refund, no questions asked. Simply contact us in writing within 48 hours of your payment and we will return the full amount.</li>
+          <li><strong>After 48 hours:</strong> All fees are non-refundable. Once the 48-hour window has passed, no refund will be issued regardless of whether services have commenced.</li>
+        </ul>
+        <p class="tos-body" style="margin-top:1rem;">
+          To request a refund within the 48-hour window, please email us at support@lossally.com. Refunds are processed within 10 business days and returned to the original payment method.
+        </p>
+        <div class="callout-box" style="margin-top:1.25rem;">
+          <p style="font-size:0.8rem;line-height:1.75;color:var(--charcoal);opacity:0.7;font-weight:300;">
+            <strong style="font-weight:500;opacity:1;">Hardship circumstances.</strong> We recognize that grief can bring unexpected financial or situational changes. If you find yourself in a genuine hardship situation, please reach out and speak with us directly — we will do our best to find a reasonable resolution.
+          </p>
+        </div>
+      </div>
+
+      <!-- ── 8. THIRD-PARTY REFERRALS ── -->
+      <div class="tos-section fade-up" id="referrals">
+        <span class="section-number">08</span>
+        <h2 class="section-title">Third-Party Referrals</h2>
+        <p class="tos-body">
+          In the course of our work, Loss Ally may refer you to third-party professionals, including but not limited to attorneys, certified public accountants, financial advisors, real estate agents, grief therapists, and other specialists.
+        </p>
+        <ul class="tos-list">
+          <li>Referrals are provided as a courtesy and do not constitute an endorsement, recommendation, or guarantee of any specific professional's services, qualifications, fees, or conduct.</li>
+          <li>Loss Ally has no control over and accepts no responsibility for the advice, actions, outcomes, or billing practices of any third-party professional you choose to engage.</li>
+          <li>Any agreement you enter into with a referred professional is solely between you and that professional. Loss Ally is not a party to that relationship.</li>
+          <li>You are always free to select your own professionals independent of any referral we provide. We do not receive compensation or referral fees in exchange for recommending any specific individual or firm.</li>
+        </ul>
+      </div>
+
+      <!-- ── 9. LIMITATION OF LIABILITY ── -->
+      <div class="tos-section fade-up" id="liability">
+        <span class="section-number">09</span>
+        <h2 class="section-title">Limitation of Liability</h2>
+        <p class="tos-body">
+          Loss Ally will perform all services with reasonable care, diligence, and compassion. However, to the maximum extent permitted by applicable law, we want to be transparent about the limits of our responsibility:
+        </p>
+        <ul class="tos-list">
+          <li>Loss Ally is not liable for any indirect, incidental, special, or consequential damages arising out of or related to our services, even if we were advised of the possibility of such damages.</li>
+          <li>Our total liability for any claim arising from our services shall not exceed the total amount you paid to Loss Ally in the three months preceding the event giving rise to the claim.</li>
+          <li>We are not responsible for delays, errors, or failures caused by third parties — including but not limited to government agencies, financial institutions, courts, attorneys, or digital platforms — whose actions or inactions are outside our control.</li>
+          <li>We are not liable for outcomes that result from incomplete, inaccurate, or withheld information provided to us by you or your representatives.</li>
+          <li>Loss Ally does not guarantee any specific result, timeline, or outcome from any administrative process or third-party interaction.</li>
+        </ul>
+        <p class="tos-body" style="margin-top:1rem;">
+          Nothing in these Terms limits our liability for fraud, gross negligence, or any other liability that cannot be excluded under applicable law.
+        </p>
+        <div class="callout-box forest" style="margin-top:1.25rem;">
+          <p style="font-size:0.8rem;line-height:1.75;color:var(--charcoal);opacity:0.75;font-weight:300;">
+            <strong style="font-weight:500;opacity:1;">In plain terms.</strong> We are not attorneys or financial advisors, and the decisions and outcomes of your estate process are ultimately in your hands and those of any licensed professionals you work with. We're here to make the journey clearer and lighter — and we will always work with integrity and care.
+          </p>
+        </div>
+      </div>
+
+      <!-- ── 10. CONFIDENTIALITY ── -->
+      <div class="tos-section fade-up" id="confidentiality">
+        <span class="section-number">10</span>
+        <h2 class="section-title">Confidentiality</h2>
+        <p class="tos-body">
+          We understand that the information you share with us is deeply personal. We treat everything you tell us — about your family, your loved one, your financial affairs, and your circumstances — with the utmost discretion and respect.
+        </p>
+        <ul class="tos-list">
+          <li>We do not sell, rent, or share your personal information with third parties for marketing purposes, ever.</li>
+          <li>Information you share will be used solely to provide the services you've engaged us for and to communicate with you about those services.</li>
+          <li>We may share your information with third parties <strong>only in the following limited circumstances:</strong> (a) with your explicit written consent; (b) with service providers who assist us in delivering our services, under strict confidentiality obligations; (c) as required by law, court order, or regulatory authority; or (d) to protect the rights, safety, or property of Loss Ally or others.</li>
+          <li>We take reasonable and appropriate measures to protect your information from unauthorized access, disclosure, or loss, including secure document storage and encrypted communications where available.</li>
+          <li>Our confidentiality obligations survive the termination of your engagement with us.</li>
+        </ul>
+        <p class="tos-body" style="margin-top:1rem;">
+          For full details on how we collect, store, and use your personal data, please review our <a href="privacy-policy.html" style="color:var(--forest);text-decoration:underline;text-underline-offset:2px;font-weight:400;">Privacy Policy</a>.
+        </p>
+      </div>
+
+      <!-- ── 11. INDEPENDENT CONTRACTOR ── -->
+      <div class="tos-section fade-up" id="relationship">
+        <span class="section-number">11</span>
+        <h2 class="section-title">Independent Contractor Relationship</h2>
+        <p class="tos-body">
+          Loss Ally operates as an independent contractor, not as your employee, partner, or agent in any legal or fiduciary capacity. Our relationship is defined solely by the service agreement between us.
+        </p>
+        <ul class="tos-list">
+          <li>We do not have authority to make legally binding decisions on your behalf unless you have provided explicit, written authorization for a specific action.</li>
+          <li>Nothing in these Terms creates any partnership, joint venture, employment, or agency relationship between you and Loss Ally.</li>
+          <li>We reserve the right to perform services for other clients simultaneously, provided doing so does not compromise the confidentiality or quality of services provided to you.</li>
+        </ul>
+      </div>
+
+      <!-- ── 12. TERMINATION ── -->
+      <div class="tos-section fade-up" id="termination">
+        <span class="section-number">12</span>
+        <h2 class="section-title">Termination</h2>
+        <p class="tos-body">
+          Either party may terminate the service engagement at any time, subject to the refund policy described in Section 7.
+        </p>
+        <ul class="tos-list">
+          <li><strong>By you:</strong> You may terminate at any time by emailing us at support@lossally.com. Refunds will be issued in accordance with Section 7.</li>
+          <li><strong>By us:</strong> We may terminate this engagement with written notice if: (a) we determine we are unable to continue services in good conscience or within our area of competence; (b) you have provided materially false or misleading information; (c) payment obligations have not been met after reasonable notice; or (d) the engagement has become abusive, threatening, or untenable for our team.</li>
+          <li>Upon termination, we will provide you with a summary of all work completed to date and return any documents or materials you provided to us.</li>
+        </ul>
+      </div>
+
+      <!-- ── 13. CHANGES ── -->
+      <div class="tos-section fade-up" id="changes">
+        <span class="section-number">13</span>
+        <h2 class="section-title">Changes to These Terms</h2>
+        <p class="tos-body">
+          We may update these Terms from time to time as our services evolve. When we do:
+        </p>
+        <ul class="tos-list">
+          <li>We will post the updated Terms on our website with the revised "Last updated" date at the top of this page.</li>
+          <li>For active clients, we will notify you of material changes by email within 5 business days after they take effect.</li>
+          <li>Your continued use of our services after updated Terms take effect constitutes acceptance of those changes.</li>
+          <li>If you do not agree with a material change, you may terminate your engagement in accordance with Section 12, and we will honor the Terms in effect at the time you engaged us for that agreement.</li>
+        </ul>
+      </div>
+
+      <!-- ── 14. GOVERNING LAW ── -->
+      <div class="tos-section fade-up" id="governing-law">
+        <span class="section-number">14</span>
+        <h2 class="section-title">Governing Law &amp; Dispute Resolution</h2>
+        <p class="tos-body">
+          These Terms are governed by the laws of the United States and the State of North Carolina, without regard to conflict-of-law principles.
+        </p>
+        <ul class="tos-list">
+          <li>We genuinely hope that any disagreement can be resolved through direct, honest conversation. Please contact us first — we are committed to working things out in good faith.</li>
+          <li>If a dispute cannot be resolved informally, the parties agree to attempt non-binding mediation before pursuing any formal legal action.</li>
+          <li>Any legal claim arising out of these Terms or our services must be brought within one (1) year of the date you first knew or should have known of the issue.</li>
+          <li>Nothing in this section prevents either party from seeking emergency injunctive relief where necessary to prevent irreparable harm.</li>
+        </ul>
+      </div>
+
+      <!-- ── 15. CONTACT ── -->
+      <div class="tos-section fade-up" id="contact-us">
+        <span class="section-number">15</span>
+        <h2 class="section-title">Contact Us</h2>
+        <p class="tos-body">
+          If you have questions about these Terms, want to discuss your service agreement, or need to submit a refund request, please email us — we're here to help.
+        </p>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:1.5rem;">
+          <div class="callout-box">
+            <p style="font-size:0.65rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.625rem;">Email</p>
+            <a href="mailto:support@lossally.com" style="font-size:0.9rem;color:var(--forest);text-decoration:none;font-weight:400;display:block;margin-bottom:0.3rem;transition:color 0.18s;" onmouseover="this.style.color='var(--evergreen)'" onmouseout="this.style.color='var(--forest)'">support@lossally.com</a>
+            <p style="font-size:0.75rem;color:var(--charcoal);opacity:0.45;font-weight:300;line-height:1.5;">We respond within 4 hours,<br>Monday–Friday, 8am–6pm</p>
+          </div>
+        </div>
+
+        <p class="tos-body" style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--mist);font-size:0.8rem;opacity:0.45;">
+          By using our services, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service. These Terms, together with your service agreement and our Privacy Policy, constitute the entire agreement between you and Loss Ally with respect to the services.
+        </p>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+
+<!-- ══ CTA BANNER ════════════════════════════════════════ -->
+<div style="background:var(--forest);padding:3.25rem 1.75rem;">
+  <div style="max-width:900px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1.5rem;" id="cta-banner">
+    <div>
+      <p style="font-size:0.68rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:0.6rem;">— Still have questions?</p>
+      <h3 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.6rem,3vw,2.25rem);font-weight:400;color:#FAF8F4;letter-spacing:-0.02em;line-height:1.15;">
+        We're here to help — <em style="font-style:italic;color:var(--gold);">on your terms.</em>
+      </h3>
+    </div>
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap;flex-shrink:0;">
+      <a href="index.html#contact" class="btn-primary" style="background:var(--gold);box-shadow:0 2px 12px rgba(191,160,106,0.3);" onmouseover="this.style.background='#a8894e'" onmouseout="this.style.background='var(--gold)'">
+        Request a Free Consultation
+      </a>
+      <a href="mailto:support@lossally.com" style="display:inline-flex;align-items:center;gap:0.45rem;background:transparent;color:rgba(250,248,244,0.8);font-family:'DM Sans',sans-serif;font-weight:300;font-size:0.875rem;padding:0.75rem 1.6rem;border-radius:6px;border:1px solid rgba(255,255,255,0.25);text-decoration:none;transition:border-color 0.18s,color 0.18s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.55)';this.style.color='#FAF8F4';" onmouseout="this.style.borderColor='rgba(255,255,255,0.25)';this.style.color='rgba(250,248,244,0.8)';">
+        Email Us
+      </a>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ FOOTER ══════════════════════════════════════════════ -->
+<footer style="background:#1a2218;padding:3.5rem 1.75rem 2rem;">
+  <div style="max-width:1200px;margin:0 auto;">
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:2.5rem;padding-bottom:2rem;border-bottom:1px solid rgba(255,255,255,0.06);" id="footer-grid">
+
+      <!-- Brand -->
+      <div>
+        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.875rem;">
+          <img src="brand_assets/logo.png" alt="Loss Ally" style="height:30px;width:auto;" />
+          <span style="font-size:0.95rem;font-weight:400;color:rgba(250,248,244,0.8);">Loss Ally</span>
+        </div>
+        <p style="font-size:0.78rem;color:rgba(250,248,244,0.3);line-height:1.75;max-width:200px;font-weight:300;">
+          Estate and life administration support. Compassionate. Practical. Always here.
+        </p>
+      </div>
+
+      <!-- Services -->
+      <div>
+        <p style="font-size:0.62rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(250,248,244,0.28);margin-bottom:0.875rem;">Services</p>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:0.5rem;">
+          <li><a href="index.html#services" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Legal &amp; Probate</a></li>
+          <li><a href="index.html#services" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Financial Closure</a></li>
+          <li><a href="index.html#services" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Government Records</a></li>
+          <li><a href="index.html#services" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Digital Estate</a></li>
+          <li><a href="index.html#services" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Property &amp; Home</a></li>
+        </ul>
+      </div>
+
+      <!-- Company -->
+      <div>
+        <p style="font-size:0.62rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(250,248,244,0.28);margin-bottom:0.875rem;">Company</p>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:0.5rem;">
+          <li><a href="#" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Our Story</a></li>
+          <li><a href="#" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Meet the Team</a></li>
+          <li><a href="#" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Partners &amp; Advisors</a></li>
+          <li><a href="#" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Press</a></li>
+          <li><a href="#" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Careers</a></li>
+        </ul>
+      </div>
+
+      <!-- Support -->
+      <div>
+        <p style="font-size:0.62rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(250,248,244,0.28);margin-bottom:0.875rem;">Support</p>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:0.5rem;">
+          <li><a href="#" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Help Center</a></li>
+          <li><a href="#" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">State-by-State Guide</a></li>
+          <li><a href="#" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Grief Resources</a></li>
+          <li><a href="#" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Privacy Policy</a></li>
+          <li><a href="terms-of-service.html" style="font-size:0.8rem;color:rgba(250,248,244,0.6);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.6)'">Terms of Service</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;padding-top:1.5rem;flex-wrap:wrap;gap:0.75rem;">
+      <p style="font-size:0.72rem;color:rgba(250,248,244,0.22);font-weight:300;">© 2026 Loss Ally LLC. All rights reserved.</p>
+      <p style="font-size:0.72rem;color:rgba(250,248,244,0.22);font-weight:300;">Not a legal services firm.</p>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ══ SCRIPTS ════════════════════════════════════════════ -->
+<script>
+  // Mobile nav
+  const ham = document.getElementById('mob-ham');
+  const mob = document.getElementById('mob-menu');
+  let open = false;
+  ham.addEventListener('click', () => {
+    open = !open;
+    mob.style.display = open ? 'block' : 'none';
+    document.getElementById('h1').style.transform = open ? 'translateY(6.5px) rotate(45deg)' : '';
+    document.getElementById('h2').style.opacity   = open ? '0' : '1';
+    document.getElementById('h3').style.transform = open ? 'translateY(-6.5px) rotate(-45deg)' : '';
+  });
+  function closeMob() {
+    open = false;
+    mob.style.display = 'none';
+    document.getElementById('h1').style.transform = '';
+    document.getElementById('h2').style.opacity   = '1';
+    document.getElementById('h3').style.transform = '';
+  }
+
+  // Fade-up on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.06, rootMargin: '0px 0px -20px 0px' });
+  document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+
+  // Sticky nav shadow
+  const nav = document.getElementById('site-nav');
+  window.addEventListener('scroll', () => {
+    nav.style.boxShadow = window.scrollY > 10 ? '0 1px 20px rgba(44,44,42,0.06)' : 'none';
+  }, { passive: true });
+
+  // Two-column layout (sidebar + main) at ≥1024px
+  const tosLayout = document.getElementById('tos-layout');
+  const sidebar   = document.getElementById('tos-sidebar');
+  function layoutTos() {
+    if (window.innerWidth >= 1024) {
+      tosLayout.style.gridTemplateColumns = '280px 1fr';
+      tosLayout.style.gap = '3.5rem';
+      tosLayout.style.alignItems = 'start';
+      sidebar.style.position = 'sticky';
+      sidebar.style.top = '80px';
+    } else {
+      tosLayout.style.gridTemplateColumns = '1fr';
+      tosLayout.style.gap = '0';
+      sidebar.style.position = 'static';
+      sidebar.style.top = 'auto';
+    }
+  }
+  layoutTos();
+  window.addEventListener('resize', layoutTos, { passive: true });
+
+  // TOC: sidebar displays as column on desktop, inline row on mobile
+  const tocLinks = document.getElementById('toc-links');
+  function layoutToc() {
+    if (window.innerWidth >= 1024) {
+      tocLinks.style.flexDirection = 'column';
+    } else {
+      tocLinks.style.flexDirection = 'row';
+      tocLinks.style.flexWrap = 'wrap';
+      tocLinks.style.gap = '0.25rem 1rem';
+    }
+  }
+  layoutToc();
+  window.addEventListener('resize', layoutToc, { passive: true });
+
+  // Footer four-column layout
+  const ftg = document.getElementById('footer-grid');
+  if (ftg) {
+    function layoutFooter() {
+      ftg.style.gridTemplateColumns = window.innerWidth >= 1024
+        ? '1.6fr 1fr 1fr 1fr'
+        : window.innerWidth >= 640
+          ? '1fr 1fr'
+          : '1fr';
+    }
+    layoutFooter();
+    window.addEventListener('resize', layoutFooter, { passive: true });
+  }
+
+  // CTA banner: stacked on mobile
+  const ctaBanner = document.getElementById('cta-banner');
+  if (ctaBanner) {
+    function layoutCta() {
+      ctaBanner.style.flexDirection = window.innerWidth < 640 ? 'column' : 'row';
+      ctaBanner.style.alignItems    = window.innerWidth < 640 ? 'flex-start' : 'center';
+    }
+    layoutCta();
+    window.addEventListener('resize', layoutCta, { passive: true });
+  }
+
+  // Smooth-scroll for TOC anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        const offset = 80;
+        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
