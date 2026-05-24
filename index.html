@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loss Ally — Estate &amp; Life Administration Support</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --cream: #f6f1e6;
+      --warm-white: #FAF8F4;
+      --sage: #8D9D6A;
+      --forest: #5b6e5b;
+      --evergreen: #2D4D0C;
+      --charcoal: #2C2C28;
+      --mist: #E2DDD4;
+      --gold: #C9A870;
+      --sand: #E8C987;
+      --warm-ochre: #B4952A;
+      /* legacy aliases kept for any remaining references */
+      --deep-sage: #2D4D0C;
+      --terracotta: #C4724A;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--warm-white);
+      color: var(--charcoal);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.5;
+    }
+
+    .label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--sage);
+    }
+
+    .display-font {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: var(--forest);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 0.875rem;
+      padding: 0.75rem 1.6rem;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
+      box-shadow: 0 2px 14px rgba(71,102,39,0.25);
+    }
+    .btn-primary:hover {
+      background: var(--evergreen);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 22px rgba(71,102,39,0.32);
+    }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: transparent;
+      color: var(--charcoal);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 0.875rem;
+      padding: 0.75rem 1.6rem;
+      border-radius: 6px;
+      border: 1px solid var(--mist);
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.18s ease, background 0.18s ease, transform 0.15s ease;
+    }
+    .btn-outline:hover {
+      border-color: var(--sage);
+      background: rgba(138,158,140,0.06);
+      transform: translateY(-1px);
+    }
+    .btn-outline:active { transform: translateY(0); }
+    .btn-outline:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+    .btn-gold {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: var(--gold);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 0.875rem;
+      padding: 0.75rem 1.6rem;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
+      box-shadow: 0 2px 12px rgba(191,160,106,0.28);
+    }
+    .btn-gold:hover {
+      background: #a8894e;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 22px rgba(191,160,106,0.38);
+    }
+    .btn-gold:active { transform: translateY(0); }
+
+    .nav-link {
+      font-size: 0.875rem;
+      font-weight: 300;
+      color: var(--charcoal);
+      text-decoration: none;
+      opacity: 0.65;
+      transition: opacity 0.18s;
+      letter-spacing: 0.005em;
+    }
+    .nav-link:hover { opacity: 1; }
+    .nav-link:focus-visible { outline: 2px solid var(--gold); border-radius: 2px; }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.in { opacity: 1; transform: translateY(0); }
+
+    .task-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      color: var(--charcoal);
+      opacity: 0.72;
+    }
+    .task-item::before {
+      content: '';
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--sage);
+      flex-shrink: 0;
+      margin-top: 0.5em;
+    }
+
+    .category-head {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      margin-bottom: 0.875rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--mist);
+    }
+
+    .pricing-card {
+      background: var(--cream);
+      border: 1px solid var(--mist);
+      border-radius: 14px;
+      padding: 2.25rem 2rem;
+      position: relative;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .pricing-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(44,44,42,0.08);
+    }
+
+    .stat-divider {
+      width: 1px;
+      height: 36px;
+      background: var(--mist);
+    }
+
+    @media (min-width: 1024px) {
+      #about-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (min-width: 768px) {
+      #desk-nav { display: flex !important; }
+      #mob-ham  { display: none  !important; }
+    }
+    @media (max-width: 767px) {
+      #desk-nav { display: none  !important; }
+      #mob-ham  { display: flex  !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAV ══════════════════════════════════════════════ -->
+<header id="site-nav" style="position:sticky;top:0;z-index:50;background:var(--warm-white);border-bottom:1px solid var(--mist);transition:box-shadow 0.2s;">
+  <div style="max-width:1200px;margin:0 auto;padding:0 1.75rem;height:64px;display:flex;align-items:center;justify-content:space-between;">
+
+    <a href="/" style="display:flex;align-items:center;gap:0.625rem;text-decoration:none;flex-shrink:0;">
+      <img src="brand_assets/logo.png" alt="Loss Ally" style="height:34px;width:auto;mix-blend-mode:multiply;" />
+      <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.2rem;font-weight:500;color:var(--charcoal);letter-spacing:0.01em;">Loss Ally</span>
+    </a>
+
+    <nav id="desk-nav" style="display:flex;align-items:center;gap:2.25rem;">
+      <a href="#services"     class="nav-link">Services</a>
+      <a href="#how-it-works" class="nav-link">How It Works</a>
+      <a href="#pricing"      class="nav-link">Plans</a>
+      <a href="#contact" class="btn-primary" style="padding:0.6rem 1.25rem;font-size:0.82rem;">Get Support</a>
+    </nav>
+
+    <button id="mob-ham" aria-label="Open menu" style="display:none;flex-direction:column;gap:5px;padding:8px;background:none;border:none;cursor:pointer;">
+      <span id="h1" style="display:block;width:20px;height:1.5px;background:var(--charcoal);border-radius:2px;transition:transform 0.2s,opacity 0.2s;"></span>
+      <span id="h2" style="display:block;width:20px;height:1.5px;background:var(--charcoal);border-radius:2px;transition:opacity 0.2s;"></span>
+      <span id="h3" style="display:block;width:20px;height:1.5px;background:var(--charcoal);border-radius:2px;transition:transform 0.2s;"></span>
+    </button>
+  </div>
+
+  <div id="mob-menu" style="display:none;border-top:1px solid var(--mist);background:var(--warm-white);">
+    <div style="max-width:1200px;margin:0 auto;padding:1.25rem 1.75rem;display:flex;flex-direction:column;gap:0.75rem;">
+      <a href="#services"     class="nav-link" style="padding:0.4rem 0;" onclick="closeMob()">Services</a>
+      <a href="#how-it-works" class="nav-link" style="padding:0.4rem 0;" onclick="closeMob()">How It Works</a>
+      <a href="#pricing"      class="nav-link" style="padding:0.4rem 0;" onclick="closeMob()">Pricing</a>
+      <a href="#contact" class="btn-primary" style="align-self:flex-start;margin-top:0.5rem;" onclick="closeMob()">Schedule a Call</a>
+    </div>
+  </div>
+</header>
+
+
+<!-- ══ HERO ══════════════════════════════════════════════ -->
+<section style="padding:4rem 1.75rem 7rem;background:var(--warm-white);position:relative;overflow:hidden;">
+  <div style="position:absolute;top:-120px;right:-80px;width:600px;height:600px;background:radial-gradient(ellipse,rgba(138,158,140,0.07) 0%,transparent 65%);pointer-events:none;"></div>
+
+  <div style="max-width:1100px;margin:0 auto;">
+
+    <!-- Two-column hero -->
+    <div style="display:grid;grid-template-columns:1fr;gap:2.5rem;align-items:flex-start;" id="hero-grid">
+
+      <!-- Left: heading + CTA -->
+      <div class="fade-up" style="max-width:620px;">
+        <span class="label" style="display:block;margin-bottom:1.25rem;">— Compassionate Estate Administration</span>
+
+        <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(3rem,5.5vw,5rem);font-weight:400;line-height:1.05;letter-spacing:-0.02em;color:var(--charcoal);margin-bottom:1.5rem;">
+          We carry the<br><em style="font-style:italic;color:var(--terracotta);">paperwork,</em><br>
+          so you can<br>carry each other.
+        </h1>
+
+        <p style="font-size:1rem;line-height:1.8;color:var(--charcoal);opacity:0.58;max-width:480px;margin-bottom:2.5rem;">
+          When a loved one passes, grief deserves your full attention. Loss Ally handles the overwhelming cascade of legal, financial, and administrative tasks — gently, thoroughly, and on your timeline.
+        </p>
+
+        <div id="hero-btns" style="display:flex;flex-wrap:wrap;gap:0.75rem;">
+          <a href="#contact" class="btn-primary">
+            Begin Your Journey
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a href="#services" class="btn-outline">See What We Handle</a>
+        </div>
+      </div>
+
+      <!-- Right: estate checklist card -->
+      <div class="fade-up" id="hero-right" style="transition-delay:0.12s;">
+        <div style="background:#fff;border-radius:14px;padding:1.75rem;box-shadow:0 8px 40px rgba(44,44,42,0.1),0 2px 12px rgba(44,44,42,0.06);max-width:360px;">
+          <div style="font-size:0.6rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--terracotta);margin-bottom:1.25rem;border-bottom:1px solid var(--mist);padding-bottom:0.875rem;">Your Estate Checklist</div>
+          <div style="display:flex;flex-direction:column;gap:0.625rem;">
+            <div style="display:flex;align-items:center;gap:0.625rem;">
+              <div style="width:16px;height:16px;border-radius:4px;background:var(--forest);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span style="font-size:0.8rem;color:var(--charcoal);opacity:0.38;text-decoration:line-through;font-weight:300;">Obtain certified death certificates</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.625rem;">
+              <div style="width:16px;height:16px;border-radius:4px;background:var(--forest);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span style="font-size:0.8rem;color:var(--charcoal);opacity:0.38;text-decoration:line-through;font-weight:300;">Notify Social Security Administration</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.625rem;">
+              <div style="width:16px;height:16px;border-radius:4px;background:var(--forest);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span style="font-size:0.8rem;color:var(--charcoal);opacity:0.38;text-decoration:line-through;font-weight:300;">Cancel recurring subscriptions</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.625rem;">
+              <div style="width:16px;height:16px;border-radius:4px;border:1.5px solid var(--mist);flex-shrink:0;"></div>
+              <span style="font-size:0.8rem;color:var(--charcoal);opacity:0.72;font-weight:300;">Contact probate attorney</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.625rem;">
+              <div style="width:16px;height:16px;border-radius:4px;border:1.5px solid var(--mist);flex-shrink:0;"></div>
+              <span style="font-size:0.8rem;color:var(--charcoal);opacity:0.72;font-weight:300;">Close bank &amp; investment accounts</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.625rem;">
+              <div style="width:16px;height:16px;border-radius:4px;border:1.5px solid var(--mist);flex-shrink:0;"></div>
+              <span style="font-size:0.8rem;color:var(--charcoal);opacity:0.72;font-weight:300;">Transfer property &amp; title deeds</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.625rem;">
+              <div style="width:16px;height:16px;border-radius:4px;border:1.5px solid var(--mist);flex-shrink:0;"></div>
+              <span style="font-size:0.8rem;color:var(--charcoal);opacity:0.72;font-weight:300;">File final tax return</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.625rem;">
+              <div style="width:16px;height:16px;border-radius:4px;border:1.5px solid var(--mist);flex-shrink:0;"></div>
+              <span style="font-size:0.8rem;color:var(--charcoal);opacity:0.72;font-weight:300;">Digital estate &amp; social media closure</span>
+            </div>
+          </div>
+          <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--mist);">
+            <p style="font-size:0.72rem;color:var(--charcoal);opacity:0.55;line-height:1.55;font-weight:300;">Sara E. — your assigned advisor — is managing <strong style="font-weight:500;">3 open items</strong> today.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ STATS BAND ════════════════════════════════════════ -->
+<div style="background:var(--forest);padding:2.75rem 1.75rem;">
+  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0;text-align:center;">
+    <div style="padding:0 2rem;border-right:1px solid rgba(255,255,255,0.15);">
+      <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:2.75rem;font-weight:400;color:#fff;line-height:1;letter-spacing:-0.03em;">150+</div>
+      <div style="font-size:0.68rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:0.6rem;line-height:1.5;">Tasks per estate,<br>on average</div>
+    </div>
+    <div style="padding:0 2rem;border-right:1px solid rgba(255,255,255,0.15);">
+      <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:2.75rem;font-weight:400;color:#fff;line-height:1;letter-spacing:-0.03em;">60h</div>
+      <div style="font-size:0.68rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:0.6rem;line-height:1.5;">Hours saved<br>per family</div>
+    </div>
+    <div style="padding:0 2rem;border-right:1px solid rgba(255,255,255,0.15);">
+      <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:2.75rem;font-weight:400;color:#fff;line-height:1;letter-spacing:-0.03em;">97%</div>
+      <div style="font-size:0.68rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:0.6rem;line-height:1.5;">Client satisfaction<br>score</div>
+    </div>
+    <div style="padding:0 2rem;">
+      <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:2.75rem;font-weight:400;color:#fff;line-height:1;letter-spacing:-0.03em;">72h</div>
+      <div style="font-size:0.68rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:0.6rem;line-height:1.5;">Average first task<br>completion</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ PURPOSE / STEPS ══════════════════════════════════ -->
+<section style="padding:6rem 1.75rem;background:var(--cream);">
+  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:5rem;align-items:start;" id="steps-grid">
+
+    <!-- Left: purpose statement -->
+    <div class="fade-up">
+      <span class="label" style="display:block;margin-bottom:1.25rem;">— Our Purpose</span>
+      <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.4rem,4.5vw,3.75rem);font-weight:400;line-height:1.1;letter-spacing:-0.02em;color:var(--charcoal);margin-bottom:2rem;">
+        Death leaves a mountain of <em style="font-style:italic;color:var(--warm-ochre);">to&#8209;dos.</em> You shouldn't climb it&nbsp;alone.
+      </h2>
+      <p style="font-size:0.95rem;line-height:1.85;color:var(--charcoal);opacity:0.62;max-width:460px;margin-bottom:1rem;">
+        When someone we love dies, the world doesn't pause. Bills arrive. Institutions demand paperwork. Strangers need to be called. Accounts need closing. Most families are completely unprepared for the administrative avalanche — and it falls at the worst possible moment.
+      </p>
+      <p style="font-size:0.95rem;line-height:1.85;color:var(--charcoal);opacity:0.62;max-width:460px;">
+        Loss Ally was founded by a daughter who watched her mother lose a sister and figure out the aftermath entirely alone. She created a service that sits beside families — not just at the legal level, but at the human one — guiding every step with clarity and warmth.
+      </p>
+    </div>
+
+    <!-- Right: timeline -->
+    <div class="fade-up" style="transition-delay:0.12s;">
+      <div style="display:flex;flex-direction:column;gap:0.75rem;">
+
+        <div style="background:var(--warm-white);border:1px solid var(--mist);border-radius:10px;padding:1.25rem 1.5rem;display:flex;gap:1.25rem;align-items:flex-start;">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--forest);flex-shrink:0;margin-top:0.45em;"></div>
+          <div>
+            <div style="font-size:0.72rem;font-weight:500;letter-spacing:0.09em;text-transform:uppercase;color:var(--forest);margin-bottom:0.3rem;">Day 1–3 — First Call</div>
+            <p style="font-size:0.875rem;line-height:1.65;color:var(--charcoal);opacity:0.65;font-weight:300;">Your dedicated advisor reaches out to listen, assess, and prioritize the immediate needs.</p>
+          </div>
+        </div>
+
+        <div style="background:var(--warm-white);border:1px solid var(--mist);border-radius:10px;padding:1.25rem 1.5rem;display:flex;gap:1.25rem;align-items:flex-start;">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--forest);flex-shrink:0;margin-top:0.45em;"></div>
+          <div>
+            <div style="font-size:0.72rem;font-weight:500;letter-spacing:0.09em;text-transform:uppercase;color:var(--forest);margin-bottom:0.3rem;">Week 1 — Urgent Tasks</div>
+            <p style="font-size:0.875rem;line-height:1.65;color:var(--charcoal);opacity:0.65;font-weight:300;">Death certificates, employer notification, stopping recurring charges, securing the home.</p>
+          </div>
+        </div>
+
+        <div style="background:var(--warm-white);border:1px solid var(--mist);border-radius:10px;padding:1.25rem 1.5rem;display:flex;gap:1.25rem;align-items:flex-start;">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--forest);flex-shrink:0;margin-top:0.45em;"></div>
+          <div>
+            <div style="font-size:0.72rem;font-weight:500;letter-spacing:0.09em;text-transform:uppercase;color:var(--forest);margin-bottom:0.3rem;">Month 1 — Financial</div>
+            <p style="font-size:0.875rem;line-height:1.65;color:var(--charcoal);opacity:0.65;font-weight:300;">Banks, insurance, pension, Social Security, investment accounts — all coordinated.</p>
+          </div>
+        </div>
+
+        <div style="background:var(--warm-white);border:1px solid var(--mist);border-radius:10px;padding:1.25rem 1.5rem;display:flex;gap:1.25rem;align-items:flex-start;">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--forest);flex-shrink:0;margin-top:0.45em;"></div>
+          <div>
+            <div style="font-size:0.72rem;font-weight:500;letter-spacing:0.09em;text-transform:uppercase;color:var(--forest);margin-bottom:0.3rem;">Months 2–6 — Estate</div>
+            <p style="font-size:0.875rem;line-height:1.65;color:var(--charcoal);opacity:0.65;font-weight:300;">Probate navigation, property transfer, tax filings, digital asset closure.</p>
+          </div>
+        </div>
+
+        <div style="background:rgba(180,149,42,0.07);border:1px solid rgba(180,149,42,0.2);border-radius:10px;padding:1.25rem 1.5rem;display:flex;gap:1.25rem;align-items:flex-start;">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--warm-ochre);flex-shrink:0;margin-top:0.45em;"></div>
+          <div>
+            <div style="font-size:0.72rem;font-weight:500;letter-spacing:0.09em;text-transform:uppercase;color:var(--warm-ochre);margin-bottom:0.3rem;">Closure — Peace of Mind</div>
+            <p style="font-size:0.875rem;line-height:1.65;color:var(--charcoal);opacity:0.65;font-weight:300;">Final estate summary, record-keeping package, and a clear declaration of completion.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══ WHAT WE HANDLE ════════════════════════════════════ -->
+<section id="services" style="padding:6rem 1.75rem;background:var(--warm-white);">
+  <div style="max-width:1200px;margin:0 auto;">
+
+    <div class="fade-up" style="margin-bottom:3.5rem;text-align:center;">
+      <span class="label" style="display:block;margin-bottom:0.75rem;">What We Handle</span>
+      <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.2rem,4vw,3.25rem);font-weight:400;letter-spacing:-0.02em;color:var(--charcoal);line-height:1.12;">
+        Every administrative burden,<br><em style="font-style:italic;color:var(--warm-ochre);">taken care of.</em>
+      </h2>
+    </div>
+
+    <div id="services-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:0;">
+
+      <div class="fade-up" style="background:var(--cream);border:1px solid var(--mist);border-radius:0;padding:2rem 2rem 2.25rem;margin:-1px 0 0 -1px;">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(71,102,39,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--forest)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <h3 style="font-size:1rem;font-weight:400;color:var(--charcoal);margin-bottom:0.5rem;">Legal &amp; Probate</h3>
+        <p style="font-size:0.82rem;line-height:1.65;color:var(--charcoal);opacity:0.6;font-weight:300;margin-bottom:1.1rem;">Guiding families through the court process without the fear of legalese.</p>
+        <div style="display:flex;flex-direction:column;gap:0.4rem;">
+          <div class="task-item">Probate court coordination</div>
+          <div class="task-item">Will &amp; trust interpretation support</div>
+          <div class="task-item">Beneficiary notification letters</div>
+          <div class="task-item">Attorney referral &amp; liaison service</div>
+          <div class="task-item">Property deed &amp; title transfer</div>
+        </div>
+      </div>
+
+      <div class="fade-up" style="background:var(--cream);border:1px solid var(--mist);border-radius:0;padding:2rem 2rem 2.25rem;margin:-1px 0 0 -1px;transition-delay:0.06s;">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(71,102,39,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--forest)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <h3 style="font-size:1rem;font-weight:400;color:var(--charcoal);margin-bottom:0.5rem;">Financial Closure</h3>
+        <p style="font-size:0.82rem;line-height:1.65;color:var(--charcoal);opacity:0.6;font-weight:300;margin-bottom:1.1rem;">Methodically closing, transferring, and documenting every account.</p>
+        <div style="display:flex;flex-direction:column;gap:0.4rem;">
+          <div class="task-item">Bank &amp; investment account notifications</div>
+          <div class="task-item">Credit card cancellations &amp; debt inquiry</div>
+          <div class="task-item">Insurance claims coordination</div>
+          <div class="task-item">Pension &amp; annuity survivor benefits</div>
+          <div class="task-item">Final tax return preparation support</div>
+        </div>
+      </div>
+
+      <div class="fade-up" style="background:var(--cream);border:1px solid var(--mist);border-radius:0;padding:2rem 2rem 2.25rem;margin:-1px 0 0 -1px;transition-delay:0.12s;">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(71,102,39,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--forest)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+        </div>
+        <h3 style="font-size:1rem;font-weight:400;color:var(--charcoal);margin-bottom:0.5rem;">Government &amp; Records</h3>
+        <p style="font-size:0.82rem;line-height:1.65;color:var(--charcoal);opacity:0.6;font-weight:300;margin-bottom:1.1rem;">Navigating bureaucracy so you never have to be put on hold again.</p>
+        <div style="display:flex;flex-direction:column;gap:0.4rem;">
+          <div class="task-item">Social Security Administration notification</div>
+          <div class="task-item">Medicare &amp; Medicaid closure</div>
+          <div class="task-item">Passport, license &amp; voter record updates</div>
+          <div class="task-item">Veterans Affairs benefit claims</div>
+          <div class="task-item">IRS &amp; state tax authority filing</div>
+        </div>
+      </div>
+
+      <div class="fade-up" style="background:var(--cream);border:1px solid var(--mist);border-radius:0;padding:2rem 2rem 2.25rem;margin:-1px 0 0 -1px;transition-delay:0.18s;">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(71,102,39,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--forest)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        </div>
+        <h3 style="font-size:1rem;font-weight:400;color:var(--charcoal);margin-bottom:0.5rem;">Digital Estate</h3>
+        <p style="font-size:0.82rem;line-height:1.65;color:var(--charcoal);opacity:0.6;font-weight:300;margin-bottom:1.1rem;">A compassionate and thorough approach to an entirely modern problem.</p>
+        <div style="display:flex;flex-direction:column;gap:0.4rem;">
+          <div class="task-item">Social media memorialization or removal</div>
+          <div class="task-item">Email &amp; cloud account closure</div>
+          <div class="task-item">Subscription &amp; streaming cancellations</div>
+          <div class="task-item">Cryptocurrency &amp; NFT asset inventory</div>
+          <div class="task-item">Online photo &amp; data archive service</div>
+        </div>
+      </div>
+
+      <div class="fade-up" style="background:var(--cream);border:1px solid var(--mist);border-radius:0;padding:2rem 2rem 2.25rem;margin:-1px 0 0 -1px;transition-delay:0.24s;">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(71,102,39,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--forest)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <h3 style="font-size:1rem;font-weight:400;color:var(--charcoal);margin-bottom:0.5rem;">Property &amp; Home</h3>
+        <p style="font-size:0.82rem;line-height:1.65;color:var(--charcoal);opacity:0.6;font-weight:300;margin-bottom:1.1rem;">From the front door to the final sale, handled with care and diligence.</p>
+        <div style="display:flex;flex-direction:column;gap:0.4rem;">
+          <div class="task-item">Utility transfer or cancellation</div>
+          <div class="task-item">Property review policy &amp; notifications</div>
+          <div class="task-item">Landlord or HOA notification</div>
+          <div class="task-item">Storage &amp; belongings coordination</div>
+          <div class="task-item">Real estate referral where needed</div>
+        </div>
+      </div>
+
+      <div class="fade-up" style="background:var(--cream);border:1px solid var(--mist);border-radius:0;padding:2rem 2rem 2.25rem;margin:-1px 0 0 -1px;transition-delay:0.30s;">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(71,102,39,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--forest)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <h3 style="font-size:1rem;font-weight:400;color:var(--charcoal);margin-bottom:0.5rem;">Grief Support Referrals</h3>
+        <p style="font-size:0.82rem;line-height:1.65;color:var(--charcoal);opacity:0.6;font-weight:300;margin-bottom:1.1rem;">Because navigating paperwork is only one part of the journey.</p>
+        <div style="display:flex;flex-direction:column;gap:0.4rem;">
+          <div class="task-item">Curated grief therapist directory</div>
+          <div class="task-item">Support group matching by location</div>
+          <div class="task-item">Links to family counselor referrals</div>
+          <div class="task-item">Faith-based grief resource connection</div>
+          <div class="task-item">6-month wellness check-in calls</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ HOW IT WORKS ══════════════════════════════════════ -->
+<section id="how-it-works" style="padding:6rem 1.75rem;background:var(--cream);border-top:1px solid var(--mist);">
+  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:5rem;align-items:start;" id="hiw-grid">
+
+    <!-- Left: heading + button -->
+    <div class="fade-up">
+      <span class="label" style="display:block;margin-bottom:1.25rem;">— The Process</span>
+      <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.4rem,4.5vw,3.75rem);font-weight:400;line-height:1.08;letter-spacing:-0.02em;color:var(--charcoal);margin-bottom:1.5rem;">
+        A steady hand<br>through <em style="font-style:italic;color:var(--warm-ochre);">every step.</em>
+      </h2>
+      <p style="font-size:0.95rem;line-height:1.8;color:var(--charcoal);opacity:0.62;max-width:400px;margin-bottom:2.25rem;">
+        No two estates are the same. We adapt to your timeline, your family, and your situation — with one dedicated advisor by your side from the first call to final closure.
+      </p>
+      <a href="#contact" class="btn-primary">Talk to an advisor →</a>
+    </div>
+
+    <!-- Right: numbered steps -->
+    <div class="fade-up" style="transition-delay:0.12s;">
+      <div style="display:flex;flex-direction:column;gap:0;">
+
+        <div style="display:flex;gap:1.5rem;align-items:flex-start;padding-bottom:1.75rem;border-bottom:1px solid var(--mist);">
+          <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:2.25rem;font-weight:400;color:var(--mist);line-height:1;flex-shrink:0;width:3rem;">01</div>
+          <div>
+            <h3 style="font-size:0.9rem;font-weight:400;color:var(--charcoal);margin-bottom:0.35rem;">A Gentle First Conversation</h3>
+            <p style="font-size:0.82rem;line-height:1.65;color:var(--charcoal);opacity:0.58;font-weight:300;">We listen without rushing. You share what's happened; we assess what's needed and map out the path ahead.</p>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:1.5rem;align-items:flex-start;padding:1.75rem 0;border-bottom:1px solid var(--mist);">
+          <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:2.25rem;font-weight:400;color:var(--mist);line-height:1;flex-shrink:0;width:3rem;">02</div>
+          <div>
+            <h3 style="font-size:0.9rem;font-weight:400;color:var(--charcoal);margin-bottom:0.35rem;">A Personal Estate Map</h3>
+            <p style="font-size:0.82rem;line-height:1.65;color:var(--charcoal);opacity:0.58;font-weight:300;">We build a prioritized, plain-language action plan tailored to your specific estate — no generic checklists.</p>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:1.5rem;align-items:flex-start;padding:1.75rem 0;border-bottom:1px solid var(--mist);">
+          <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:2.25rem;font-weight:400;color:var(--mist);line-height:1;flex-shrink:0;width:3rem;">03</div>
+          <div>
+            <h3 style="font-size:0.9rem;font-weight:400;color:var(--charcoal);margin-bottom:0.35rem;">We Do the Heavy Lifting</h3>
+            <p style="font-size:0.82rem;line-height:1.65;color:var(--charcoal);opacity:0.58;font-weight:300;">From making difficult calls to tracking down documents, we handle the administrative burden so you don't have to.</p>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:1.5rem;align-items:flex-start;padding:1.75rem 0;border-bottom:1px solid var(--mist);">
+          <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:2.25rem;font-weight:400;color:var(--mist);line-height:1;flex-shrink:0;width:3rem;">04</div>
+          <div>
+            <h3 style="font-size:0.9rem;font-weight:400;color:var(--charcoal);margin-bottom:0.35rem;">Transparent Progress Updates</h3>
+            <p style="font-size:0.82rem;line-height:1.65;color:var(--charcoal);opacity:0.58;font-weight:300;">You always know where things stand. Regular updates and a shared dashboard keep you informed, never in the dark.</p>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:1.5rem;align-items:flex-start;padding-top:1.75rem;">
+          <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:2.25rem;font-weight:400;color:var(--mist);line-height:1;flex-shrink:0;width:3rem;">05</div>
+          <div>
+            <h3 style="font-size:0.9rem;font-weight:400;color:var(--charcoal);margin-bottom:0.35rem;">Final Closure Package</h3>
+            <p style="font-size:0.82rem;line-height:1.65;color:var(--charcoal);opacity:0.58;font-weight:300;">A complete record of everything settled — organized, archived, and handed back to you with peace of mind.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══ ABOUT / WHO WE SERVE ══════════════════════════════ -->
+<section id="about" style="padding:6rem 1.75rem;background:var(--warm-white);">
+  <div id="about-grid" style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:5rem;align-items:center;">
+
+    <!-- Panel on LEFT -->
+    <div class="fade-up" id="about-panel" style="order:1;">
+      <div style="background:#1F3A2B;border-radius:16px;padding:2.75rem 2.5rem;position:relative;overflow:hidden;box-shadow:0 14px 50px rgba(74,107,78,0.18),0 4px 14px rgba(44,44,42,0.08);">
+        <div style="position:absolute;top:-60px;right:-60px;width:260px;height:260px;background:radial-gradient(circle,rgba(191,160,106,0.14) 0%,transparent 70%);pointer-events:none;"></div>
+        <div style="font-size:0.65rem;font-weight:500;letter-spacing:0.11em;text-transform:uppercase;color:var(--gold);margin-bottom:1.75rem;">Who we support</div>
+        <div style="display:flex;flex-direction:column;gap:1.1rem;">
+          <div style="display:flex;gap:0.75rem;align-items:flex-start;">
+            <div style="width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:0.55em;"></div>
+            <p style="font-size:0.9rem;color:rgba(250,248,244,0.85);line-height:1.65;font-weight:300;">Surviving spouses managing finances for the first time</p>
+          </div>
+          <div style="display:flex;gap:0.75rem;align-items:flex-start;">
+            <div style="width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:0.55em;"></div>
+            <p style="font-size:0.9rem;color:rgba(250,248,244,0.85);line-height:1.65;font-weight:300;">Adult children settling a parent's estate from a distance</p>
+          </div>
+          <div style="display:flex;gap:0.75rem;align-items:flex-start;">
+            <div style="width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:0.55em;"></div>
+            <p style="font-size:0.9rem;color:rgba(250,248,244,0.85);line-height:1.65;font-weight:300;">Executors and trustees who need a knowledgeable partner</p>
+          </div>
+          <div style="display:flex;gap:0.75rem;align-items:flex-start;">
+            <div style="width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:0.55em;"></div>
+            <p style="font-size:0.9rem;color:rgba(250,248,244,0.85);line-height:1.65;font-weight:300;">Anyone overwhelmed by the administrative weight of grief</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Text on RIGHT -->
+    <div class="fade-up" id="about-text" style="order:2;transition-delay:0.1s;">
+      <span class="label" style="display:block;margin-bottom:0.75rem;">Our Approach</span>
+      <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.75rem,3.2vw,2.6rem);font-weight:400;letter-spacing:-0.02em;color:var(--charcoal);line-height:1.18;margin-bottom:1.5rem;">
+        Calm, practical guidance —<br>not legal advice, not judgment
+      </h2>
+      <p style="font-size:0.95rem;line-height:1.8;color:var(--charcoal);opacity:0.6;margin-bottom:1rem;">
+        Loss Ally was founded on a simple belief: when someone dies, the people left behind deserve help with the mountain of practical tasks that follow — without being rushed, confused, or overcharged.
+      </p>
+      <p style="font-size:0.95rem;line-height:1.8;color:var(--charcoal);opacity:0.6;margin-bottom:2.25rem;">
+        We're not attorneys. We're organized, compassionate guides who know the system and walk alongside you every step of the way — at your pace, on your terms.
+      </p>
+      <a href="#contact" class="btn-primary">Get Guidance</a>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══ PRICING ═══════════════════════════════════════════ -->
+<section id="pricing" style="padding:6rem 1.75rem;background:#2A2620;position:relative;overflow:hidden;">
+  <div style="position:absolute;top:-120px;right:-80px;width:500px;height:500px;background:radial-gradient(circle,rgba(201,168,112,0.1) 0%,transparent 70%);pointer-events:none;"></div>
+  <div style="max-width:1200px;margin:0 auto;">
+
+    <div class="fade-up" style="text-align:center;margin-bottom:4rem;">
+      <span style="font-size:0.68rem;font-weight:500;letter-spacing:0.13em;text-transform:uppercase;color:rgba(255,255,255,0.45);display:block;margin-bottom:1rem;">Simple, Honest Pricing</span>
+      <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:400;letter-spacing:-0.02em;color:#FAF8F4;line-height:1.08;margin-bottom:1.25rem;">
+        One clear cost. <em style="font-style:italic;color:var(--gold);">No surprises.</em>
+      </h2>
+      <p style="font-size:0.9rem;color:rgba(250,248,244,0.55);max-width:420px;margin:0 auto;line-height:1.75;font-weight:300;">Flat-fee pricing means you never worry about the clock running while we're helping you.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;align-items:stretch;">
+
+      <!-- Guided -->
+      <div class="pricing-card fade-up" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12);display:flex;flex-direction:column;">
+        <div style="font-size:0.65rem;font-weight:500;letter-spacing:0.11em;text-transform:uppercase;color:rgba(250,248,244,0.45);margin-bottom:0.5rem;">Essential</div>
+        <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;font-weight:400;color:#FAF8F4;margin-bottom:1.25rem;letter-spacing:-0.01em;">Guided</div>
+        <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:3rem;font-weight:400;letter-spacing:-0.04em;color:#FAF8F4;line-height:1;margin-bottom:0.2rem;">$895</div>
+        <div style="font-size:0.78rem;color:rgba(250,248,244,0.35);margin-bottom:2rem;font-weight:300;">one-time flat fee</div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:2.5rem;flex:1;">
+          <div style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.8rem;line-height:1.5;color:rgba(250,248,244,0.72);font-weight:300;">
+            <span style="color:var(--gold);flex-shrink:0;">✓</span>Personalized estate checklist &amp; priority map
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.8rem;line-height:1.5;color:rgba(250,248,244,0.72);font-weight:300;">
+            <span style="color:var(--gold);flex-shrink:0;">✓</span>Government notifications (SSA, IRS, DMV)
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.8rem;line-height:1.5;color:rgba(250,248,244,0.72);font-weight:300;">
+            <span style="color:var(--gold);flex-shrink:0;">✓</span>3 hours of advisor support calls
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.8rem;line-height:1.5;color:rgba(250,248,244,0.72);font-weight:300;">
+            <span style="color:var(--gold);flex-shrink:0;">✓</span>Template letters &amp; forms library
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.8rem;line-height:1.5;color:rgba(250,248,244,0.72);font-weight:300;">
+            <span style="color:var(--gold);flex-shrink:0;">✓</span>60-day estate dashboard access
+          </div>
+        </div>
+        <a href="#contact" style="display:flex;align-items:center;justify-content:center;width:100%;padding:0.75rem;border:1px solid rgba(255,255,255,0.25);border-radius:6px;color:rgba(250,248,244,0.8);font-size:0.875rem;font-family:'DM Sans',sans-serif;font-weight:300;text-decoration:none;transition:border-color 0.18s,color 0.18s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.55)';this.style.color='#FAF8F4';" onmouseout="this.style.borderColor='rgba(255,255,255,0.25)';this.style.color='rgba(250,248,244,0.8)';">Get Started</a>
+      </div>
+
+      <!-- Supported (featured) -->
+      <div class="pricing-card fade-up" style="background:var(--forest);border-color:transparent;box-shadow:0 20px 60px rgba(0,0,0,0.3);transition-delay:0.1s;display:flex;flex-direction:column;padding:3rem 2rem;margin-top:-1rem;margin-bottom:-1rem;">
+        <div style="font-size:0.65rem;font-weight:500;letter-spacing:0.11em;text-transform:uppercase;color:rgba(250,248,244,0.65);margin-bottom:0.5rem;">★ Most Chosen</div>
+        <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;font-weight:400;color:#FAF8F4;margin-bottom:1.25rem;letter-spacing:-0.01em;">Supported</div>
+        <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:3rem;font-weight:400;letter-spacing:-0.04em;color:#FAF8F4;line-height:1;margin-bottom:0.2rem;">$1,895</div>
+        <div style="font-size:0.78rem;color:rgba(250,248,244,0.38);margin-bottom:2rem;font-weight:300;">one-time flat fee</div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:2.5rem;flex:1;">
+          <div style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.8rem;line-height:1.5;color:rgba(250,248,244,0.85);font-weight:300;">
+            <span style="color:var(--gold);flex-shrink:0;">✓</span>Everything in Guided, plus:
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.8rem;line-height:1.5;color:rgba(250,248,244,0.85);font-weight:300;">
+            <span style="color:var(--gold);flex-shrink:0;">✓</span>Dedicated named advisor, yours alone
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.8rem;line-height:1.5;color:rgba(250,248,244,0.85);font-weight:300;">
+            <span style="color:var(--gold);flex-shrink:0;">✓</span>We make the calls &amp; send the letters for you
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.8rem;line-height:1.5;color:rgba(250,248,244,0.85);font-weight:300;">
+            <span style="color:var(--gold);flex-shrink:0;">✓</span>Bank, insurance &amp; account closure coordination
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.8rem;line-height:1.5;color:rgba(250,248,244,0.85);font-weight:300;">
+            <span style="color:var(--gold);flex-shrink:0;">✓</span>Digital estate management
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.8rem;line-height:1.5;color:rgba(250,248,244,0.85);font-weight:300;">
+            <span style="color:var(--gold);flex-shrink:0;">✓</span>12-month dashboard &amp; document archive
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.8rem;line-height:1.5;color:rgba(250,248,244,0.85);font-weight:300;">
+            <span style="color:var(--gold);flex-shrink:0;">✓</span>Grief support referral matching
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.8rem;line-height:1.5;color:rgba(250,248,244,0.85);font-weight:300;">
+            <span style="color:var(--gold);flex-shrink:0;">✓</span>20 hours of advisor support calls
+          </div>
+        </div>
+        <a href="#contact" class="btn-gold" style="width:100%;justify-content:center;">Get Started</a>
+      </div>
+
+      <!-- Full Service -->
+      <div class="pricing-card fade-up" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12);transition-delay:0.2s;display:flex;flex-direction:column;">
+        <div style="font-size:0.65rem;font-weight:500;letter-spacing:0.11em;text-transform:uppercase;color:rgba(250,248,244,0.45);margin-bottom:0.5rem;">Complex Estates</div>
+        <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;font-weight:400;color:#FAF8F4;margin-bottom:1.25rem;letter-spacing:-0.01em;">Full Service</div>
+        <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:3rem;font-weight:400;letter-spacing:-0.04em;color:#FAF8F4;line-height:1;margin-bottom:0.2rem;">$3,500<span style="font-size:1.8rem;">+</span></div>
+        <div style="font-size:0.78rem;color:rgba(250,248,244,0.35);margin-bottom:2rem;font-weight:300;">quoted by estate size</div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:2.5rem;flex:1;">
+          <div style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.8rem;line-height:1.5;color:rgba(250,248,244,0.72);font-weight:300;">
+            <span style="color:var(--gold);flex-shrink:0;">✓</span>Everything in Supported, plus:
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.8rem;line-height:1.5;color:rgba(250,248,244,0.72);font-weight:300;">
+            <span style="color:var(--gold);flex-shrink:0;">✓</span>Probate navigation &amp; attorney liaison
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.8rem;line-height:1.5;color:rgba(250,248,244,0.72);font-weight:300;">
+            <span style="color:var(--gold);flex-shrink:0;">✓</span>Real estate transition coordination
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.8rem;line-height:1.5;color:rgba(250,248,244,0.72);font-weight:300;">
+            <span style="color:var(--gold);flex-shrink:0;">✓</span>Business asset &amp; ownership transfers
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.8rem;line-height:1.5;color:rgba(250,248,244,0.72);font-weight:300;">
+            <span style="color:var(--gold);flex-shrink:0;">✓</span>Multi-state estate management
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.8rem;line-height:1.5;color:rgba(250,248,244,0.72);font-weight:300;">
+            <span style="color:var(--gold);flex-shrink:0;">✓</span>Unlimited advisor hours, 18-month access
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.8rem;line-height:1.5;color:rgba(250,248,244,0.72);font-weight:300;">
+            <span style="color:var(--gold);flex-shrink:0;">✓</span>Quarterly family check-in calls
+          </div>
+        </div>
+        <a href="#contact" style="display:flex;align-items:center;justify-content:center;width:100%;padding:0.75rem;border:1px solid rgba(255,255,255,0.25);border-radius:6px;color:rgba(250,248,244,0.8);font-size:0.875rem;font-family:'DM Sans',sans-serif;font-weight:300;text-decoration:none;transition:border-color 0.18s,color 0.18s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.55)';this.style.color='#FAF8F4';" onmouseout="this.style.borderColor='rgba(255,255,255,0.25)';this.style.color='rgba(250,248,244,0.8)';">Talk to Us</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ TESTIMONIALS ════════════════════════════════════════ -->
+<section style="padding:5.5rem 1.75rem;background:var(--warm-white);border-top:1px solid var(--mist);">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="fade-up" style="margin-bottom:3.5rem;">
+      <span class="label" style="display:block;margin-bottom:0.75rem;">— Families We've Helped</span>
+      <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2rem,3.5vw,2.75rem);font-weight:400;line-height:1.12;letter-spacing:-0.02em;color:var(--charcoal);">
+        What families say about <em style="font-style:italic;color:var(--warm-ochre);">working with us.</em>
+      </h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;">
+
+      <div class="fade-up" style="background:var(--cream);border:1px solid var(--mist);border-radius:14px;padding:2rem 2rem 1.75rem;">
+        <div style="font-size:2rem;color:var(--mist);line-height:1;margin-bottom:1.25rem;font-family:'Georgia',serif;">"</div>
+        <blockquote style="font-size:0.88rem;line-height:1.75;color:var(--charcoal);opacity:0.72;font-weight:300;margin-bottom:1.5rem;font-style:italic;">
+          I didn't know where to start. After my husband passed, the paperwork felt endless and I was drowning. Loss Ally gave me a clear list and walked me through each step. I finally felt like I could breathe again.
+        </blockquote>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--sage);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <span style="font-size:0.75rem;font-weight:500;color:#fff;letter-spacing:0.02em;">MR</span>
+          </div>
+          <div>
+            <div style="font-size:0.82rem;font-weight:400;color:var(--charcoal);">Margaret R.</div>
+            <div style="font-size:0.72rem;color:var(--charcoal);opacity:0.45;font-weight:300;">Portland, OR</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fade-up" style="background:var(--cream);border:1px solid var(--mist);border-radius:14px;padding:2rem 2rem 1.75rem;transition-delay:0.08s;">
+        <div style="font-size:2rem;color:var(--mist);line-height:1;margin-bottom:1.25rem;font-family:'Georgia',serif;">"</div>
+        <blockquote style="font-size:0.88rem;line-height:1.75;color:var(--charcoal);opacity:0.72;font-weight:300;margin-bottom:1.5rem;font-style:italic;">
+          As executor for my father's estate, I was completely overwhelmed. The team at Loss Ally took the most complex tasks off my plate and kept me informed every step of the way. Worth every penny.
+        </blockquote>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <span style="font-size:0.75rem;font-weight:500;color:#fff;letter-spacing:0.02em;">DK</span>
+          </div>
+          <div>
+            <div style="font-size:0.82rem;font-weight:400;color:var(--charcoal);">David K.</div>
+            <div style="font-size:0.72rem;color:var(--charcoal);opacity:0.45;font-weight:300;">Chicago, IL</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fade-up" style="background:var(--cream);border:1px solid var(--mist);border-radius:14px;padding:2rem 2rem 1.75rem;transition-delay:0.16s;">
+        <div style="font-size:2rem;color:var(--mist);line-height:1;margin-bottom:1.25rem;font-family:'Georgia',serif;">"</div>
+        <blockquote style="font-size:0.88rem;line-height:1.75;color:var(--charcoal);opacity:0.72;font-weight:300;margin-bottom:1.5rem;font-style:italic;">
+          My siblings and I live in three different states and couldn't coordinate anything. Loss Ally became our single point of contact and sorted everything out. I don't know what we would have done without them.
+        </blockquote>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--terracotta);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <span style="font-size:0.75rem;font-weight:500;color:#fff;letter-spacing:0.02em;">SL</span>
+          </div>
+          <div>
+            <div style="font-size:0.82rem;font-weight:400;color:var(--charcoal);">Sarah L.</div>
+            <div style="font-size:0.72rem;color:var(--charcoal);opacity:0.45;font-weight:300;">Austin, TX</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ CONTACT ══════════════════════════════════════════════ -->
+<section id="contact" style="padding:6.5rem 1.75rem;background:#1F3A2B;position:relative;overflow:hidden;">
+  <div style="position:absolute;top:-120px;left:-80px;width:500px;height:500px;background:radial-gradient(circle,rgba(191,160,106,0.1) 0%,transparent 68%);pointer-events:none;"></div>
+  <div style="position:absolute;bottom:-100px;right:-60px;width:520px;height:520px;background:radial-gradient(circle,rgba(191,160,106,0.07) 0%,transparent 68%);pointer-events:none;"></div>
+
+  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:5rem;align-items:start;position:relative;z-index:1;" id="contact-grid">
+
+    <!-- Left: heading + copy -->
+    <div class="fade-up">
+      <span style="font-size:0.7rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:1.25rem;">— Take the First Step</span>
+      <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.4rem,4.5vw,3.75rem);font-weight:400;line-height:1.08;letter-spacing:-0.02em;color:#FAF8F4;margin-bottom:1.5rem;">
+        You don't have to figure this out <em style="font-style:italic;color:var(--warm-ochre);">alone.</em>
+      </h2>
+      <p style="font-size:0.95rem;color:rgba(250,248,244,0.6);line-height:1.8;max-width:400px;margin-bottom:2rem;font-weight:300;">
+        Reach out whenever you're ready — whether that's the day of passing or six months later. There's no wrong time to ask for help. We'll meet you exactly where you are.
+      </p>
+      <p style="font-size:0.75rem;color:rgba(250,248,244,0.3);line-height:1.65;max-width:360px;font-weight:300;">
+        Loss Ally is not a law firm. We provide administrative support and coordination services. For legal advice, we'll connect you with a qualified attorney in your area.
+      </p>
+    </div>
+
+    <!-- Right: contact form -->
+    <div class="fade-up" style="transition-delay:0.12s;">
+      <div style="background:var(--cream);border-radius:16px;padding:2.5rem 2.25rem;box-shadow:0 8px 40px rgba(0,0,0,0.18);">
+        <h3 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.75rem;font-weight:400;color:var(--charcoal);letter-spacing:-0.01em;margin-bottom:1.75rem;line-height:1.2;">Request a Free Consultation</h3>
+        <form onsubmit="return false;" style="display:flex;flex-direction:column;gap:1rem;">
+
+          <div>
+            <label style="display:block;font-size:0.68rem;font-weight:500;letter-spacing:0.07em;color:var(--charcoal);opacity:0.5;margin-bottom:0.4rem;text-transform:uppercase;">Your Name</label>
+            <input type="text" placeholder="First and last name" style="width:100%;background:#fff;border:1px solid var(--mist);border-radius:8px;padding:0.7rem 0.875rem;font-size:0.875rem;color:var(--charcoal);font-family:'DM Sans',sans-serif;font-weight:300;outline:none;transition:border-color 0.18s;" onfocus="this.style.borderColor='#8D9D6A'" onblur="this.style.borderColor=''" />
+          </div>
+
+          <div>
+            <label style="display:block;font-size:0.68rem;font-weight:500;letter-spacing:0.07em;color:var(--charcoal);opacity:0.5;margin-bottom:0.4rem;text-transform:uppercase;">Email Address</label>
+            <input type="email" placeholder="your@email.com" style="width:100%;background:#fff;border:1px solid var(--mist);border-radius:8px;padding:0.7rem 0.875rem;font-size:0.875rem;color:var(--charcoal);font-family:'DM Sans',sans-serif;font-weight:300;outline:none;transition:border-color 0.18s;" onfocus="this.style.borderColor='#8D9D6A'" onblur="this.style.borderColor=''" />
+          </div>
+
+          <div>
+            <label style="display:block;font-size:0.68rem;font-weight:500;letter-spacing:0.07em;color:var(--charcoal);opacity:0.5;margin-bottom:0.4rem;text-transform:uppercase;">Phone (Optional)</label>
+            <input type="tel" placeholder="(555) 000-0000" style="width:100%;background:#fff;border:1px solid var(--mist);border-radius:8px;padding:0.7rem 0.875rem;font-size:0.875rem;color:var(--charcoal);font-family:'DM Sans',sans-serif;font-weight:300;outline:none;transition:border-color 0.18s;" onfocus="this.style.borderColor='#8D9D6A'" onblur="this.style.borderColor=''" />
+          </div>
+
+          <div>
+            <label style="display:block;font-size:0.68rem;font-weight:500;letter-spacing:0.07em;color:var(--charcoal);opacity:0.5;margin-bottom:0.4rem;text-transform:uppercase;">How Can We Help?</label>
+            <select style="width:100%;background:#fff;border:1px solid #E2DDD4;border-radius:8px;padding:0.7rem 0.875rem;font-size:0.875rem;color:#2C2C28;font-family:'DM Sans',sans-serif;font-weight:300;outline:none;transition:border-color 0.18s;cursor:pointer;" onfocus="this.style.borderColor='#8D9D6A'" onblur="this.style.borderColor='#E2DDD4'">
+              <option value="">Select a situation…</option>
+              <option value="recent">A loved one recently passed</option>
+              <option value="planning">Planning ahead for myself</option>
+              <option value="past">A passing was several months ago</option>
+              <option value="unsure">I'm not sure yet</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn-primary" style="width:100%;justify-content:center;padding:0.85rem 1.6rem;margin-top:0.5rem;">
+            Request Consultation — No Obligation
+          </button>
+
+          <p style="font-size:0.72rem;color:var(--charcoal);opacity:0.4;text-align:center;line-height:1.5;font-weight:300;">We respond within 4 hours, Monday–Friday, 8am–6pm</p>
+
+        </form>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══ FOOTER ══════════════════════════════════════════════ -->
+<footer style="background:#1a2218;padding:3.5rem 1.75rem 2rem;">
+  <div style="max-width:1200px;margin:0 auto;">
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:2.5rem;padding-bottom:2rem;border-bottom:1px solid rgba(255,255,255,0.06);" id="footer-grid">
+
+      <!-- Brand -->
+      <div>
+        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.875rem;">
+          <img src="brand_assets/logo.png" alt="Loss Ally" style="height:30px;width:auto;" />
+          <span style="font-size:0.95rem;font-weight:400;color:rgba(250,248,244,0.8);">Loss Ally</span>
+        </div>
+        <p style="font-size:0.78rem;color:rgba(250,248,244,0.3);line-height:1.75;max-width:200px;font-weight:300;">
+          Estate and life administration support. Compassionate. Practical. Always here.
+        </p>
+      </div>
+
+      <!-- Services -->
+      <div>
+        <p style="font-size:0.62rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(250,248,244,0.28);margin-bottom:0.875rem;">Services</p>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:0.5rem;">
+          <li><a href="#services" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Legal &amp; Probate</a></li>
+          <li><a href="#services" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Financial Closure</a></li>
+          <li><a href="#services" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Government Records</a></li>
+          <li><a href="#services" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Digital Estate</a></li>
+          <li><a href="#services" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Property &amp; Home</a></li>
+        </ul>
+      </div>
+
+      <!-- Company -->
+      <div>
+        <p style="font-size:0.62rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(250,248,244,0.28);margin-bottom:0.875rem;">Company</p>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:0.5rem;">
+          <li><a href="#" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Our Story</a></li>
+          <li><a href="#" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Meet the Team</a></li>
+          <li><a href="#" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Partners &amp; Advisors</a></li>
+          <li><a href="#" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Press</a></li>
+          <li><a href="#" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Careers</a></li>
+        </ul>
+      </div>
+
+      <!-- Support -->
+      <div>
+        <p style="font-size:0.62rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(250,248,244,0.28);margin-bottom:0.875rem;">Support</p>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:0.5rem;">
+          <li><a href="#" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Help Center</a></li>
+          <li><a href="#" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">State-by-State Guide</a></li>
+          <li><a href="#" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Grief Resources</a></li>
+          <li><a href="#" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Privacy Policy</a></li>
+          <li><a href="#" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Terms of Service</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;padding-top:1.5rem;flex-wrap:wrap;gap:0.75rem;">
+      <p style="font-size:0.72rem;color:rgba(250,248,244,0.22);font-weight:300;">© 2026 Loss Ally. All rights reserved.</p>
+      <p style="font-size:0.72rem;color:rgba(250,248,244,0.22);font-weight:300;">Not a legal services firm.</p>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ══ SCRIPTS ════════════════════════════════════════════ -->
+<script>
+  // Mobile nav
+  const ham = document.getElementById('mob-ham');
+  const mob = document.getElementById('mob-menu');
+  let open = false;
+  ham.addEventListener('click', () => {
+    open = !open;
+    mob.style.display = open ? 'block' : 'none';
+    document.getElementById('h1').style.transform = open ? 'translateY(6.5px) rotate(45deg)' : '';
+    document.getElementById('h2').style.opacity   = open ? '0' : '1';
+    document.getElementById('h3').style.transform = open ? 'translateY(-6.5px) rotate(-45deg)' : '';
+  });
+  function closeMob() {
+    open = false;
+    mob.style.display = 'none';
+    document.getElementById('h1').style.transform = '';
+    document.getElementById('h2').style.opacity   = '1';
+    document.getElementById('h3').style.transform = '';
+  }
+
+  // Fade-up on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+
+  // Sticky nav shadow
+  const nav = document.getElementById('site-nav');
+  window.addEventListener('scroll', () => {
+    nav.style.boxShadow = window.scrollY > 10 ? '0 1px 20px rgba(44,44,42,0.06)' : 'none';
+  }, { passive: true });
+
+  // Two-column about grid at ≥1024px (panel left, text right)
+  const ag = document.getElementById('about-grid');
+  function layoutAbout() {
+    if (window.innerWidth >= 1024) {
+      ag.style.gridTemplateColumns = '1fr 1fr';
+      document.getElementById('about-panel').style.order = '1';
+      document.getElementById('about-text').style.order  = '2';
+    } else {
+      ag.style.gridTemplateColumns = '1fr';
+      document.getElementById('about-panel').style.order = '1';
+      document.getElementById('about-text').style.order  = '2';
+    }
+  }
+  layoutAbout();
+  window.addEventListener('resize', layoutAbout, { passive: true });
+
+  // Two-column hero at ≥1024px
+  const hg = document.getElementById('hero-grid');
+  const hr = document.getElementById('hero-right');
+  function layoutHero() {
+    if (window.innerWidth >= 1024) {
+      hg.style.gridTemplateColumns = '1.15fr 0.85fr';
+      hr.style.paddingTop = '1.5rem';
+    } else {
+      hg.style.gridTemplateColumns = '1fr';
+      hr.style.paddingTop = '0';
+    }
+  }
+  layoutHero();
+  window.addEventListener('resize', layoutHero, { passive: true });
+
+  // Hero buttons: side-by-side on mobile
+  const heroBtns = document.getElementById('hero-btns');
+  function layoutHeroBtns() {
+    if (!heroBtns) return;
+    const btns = heroBtns.querySelectorAll('a');
+    if (window.innerWidth < 768) {
+      heroBtns.style.flexWrap = 'nowrap';
+      btns.forEach(b => { b.style.flex = '1'; b.style.justifyContent = 'center'; });
+    } else {
+      heroBtns.style.flexWrap = 'wrap';
+      btns.forEach(b => { b.style.flex = ''; b.style.justifyContent = ''; });
+    }
+  }
+  layoutHeroBtns();
+  window.addEventListener('resize', layoutHeroBtns, { passive: true });
+
+  // Services grid: 2 cols on mobile, 3 cols on desktop
+  const svcGrid = document.getElementById('services-grid');
+  function layoutServices() {
+    if (!svcGrid) return;
+    svcGrid.style.gridTemplateColumns = window.innerWidth < 768
+      ? 'repeat(2, 1fr)'
+      : 'repeat(auto-fill, minmax(320px, 1fr))';
+  }
+  layoutServices();
+  window.addEventListener('resize', layoutServices, { passive: true });
+
+  // Two-column steps/purpose at ≥1024px
+  const sg = document.getElementById('steps-grid');
+  if (sg) {
+    function layoutSteps() {
+      sg.style.gridTemplateColumns = window.innerWidth >= 1024 ? '1fr 1fr' : '1fr';
+    }
+    layoutSteps();
+    window.addEventListener('resize', layoutSteps, { passive: true });
+  }
+
+  // Two-column HOW IT WORKS at ≥1024px
+  const hiwg = document.getElementById('hiw-grid');
+  if (hiwg) {
+    function layoutHiw() {
+      hiwg.style.gridTemplateColumns = window.innerWidth >= 1024 ? '1fr 1fr' : '1fr';
+    }
+    layoutHiw();
+    window.addEventListener('resize', layoutHiw, { passive: true });
+  }
+
+  // Two-column CONTACT at ≥1024px
+  const cg = document.getElementById('contact-grid');
+  if (cg) {
+    function layoutContact() {
+      cg.style.gridTemplateColumns = window.innerWidth >= 1024 ? '1fr 1fr' : '1fr';
+    }
+    layoutContact();
+    window.addEventListener('resize', layoutContact, { passive: true });
+  }
+
+  // Four-column footer at ≥1024px
+  const ftg = document.getElementById('footer-grid');
+  if (ftg) {
+    function layoutFooter() {
+      ftg.style.gridTemplateColumns = window.innerWidth >= 1024 ? '1.6fr 1fr 1fr 1fr' : window.innerWidth >= 640 ? '1fr 1fr' : '1fr';
+    }
+    layoutFooter();
+    window.addEventListener('resize', layoutFooter, { passive: true });
+  }
+</script>
+
+</body>
+</html>

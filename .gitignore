@@ -1,0 +1,8 @@
+node_modules/
+temporary screenshots/
+CLAUDE.md
+afterlight.html
+screenshot.mjs
+screenshot-sections.mjs
+serve.mjs
+package-lock.json
