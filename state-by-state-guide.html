@@ -135,9 +135,6 @@
       text-align: left;
       border-bottom: 2px solid var(--mist);
       white-space: nowrap;
-      position: sticky;
-      top: 64px;
-      z-index: 10;
     }
     .guide-table thead th:first-child { border-radius: 0; }
     .guide-table tbody tr {
@@ -1080,26 +1077,73 @@ const states = [
 let currentFilter = 'all';
 let currentSearch = '';
 
-function buildCommunityBadge(s) {
-  if (s.community && s.communityNote) {
-    return `<span class="badge badge-yes">Yes</span><br><span style="font-size:0.72rem;color:var(--charcoal);opacity:0.5;font-style:italic;margin-top:0.25rem;display:block;">${s.communityNote}</span>`;
-  } else if (s.community) {
-    return `<span class="badge badge-yes">Yes</span>`;
-  } else if (s.communityNote) {
-    return `<span class="badge badge-optional">Optional</span><br><span style="font-size:0.72rem;color:var(--charcoal);opacity:0.5;font-style:italic;margin-top:0.25rem;display:block;">${s.communityNote}</span>`;
-  }
-  return `<span class="badge badge-no">No</span>`;
-}
+// Build a <tr> using pure DOM manipulation — completely avoids innerHTML
+// table-parsing quirks across all browsers.
+function makeRow(s) {
+  const tr = document.createElement('tr');
 
-function buildTaxBadge(s) {
-  if (s.taxType === 'none') {
-    return `<span class="badge badge-none">None</span>`;
+  // Cell 1: State name
+  const td1 = document.createElement('td');
+  const nameSpan = document.createElement('span');
+  nameSpan.style.cssText = 'font-weight:400;color:var(--charcoal);';
+  nameSpan.textContent = s.name;
+  td1.appendChild(nameSpan);
+  tr.appendChild(td1);
+
+  // Cell 2: Probate Required
+  const td2 = document.createElement('td');
+  const probadge = document.createElement('span');
+  probadge.className = 'badge badge-yes';
+  probadge.textContent = s.probate === 'Yes' ? 'Yes' : s.probate;
+  td2.appendChild(probadge);
+  tr.appendChild(td2);
+
+  // Cell 3: Small Estate Threshold
+  const td3 = document.createElement('td');
+  td3.style.fontWeight = '400';
+  td3.textContent = s.threshold;
+  tr.appendChild(td3);
+
+  // Cell 4: Creditor Period
+  const td4 = document.createElement('td');
+  td4.textContent = s.creditor;
+  tr.appendChild(td4);
+
+  // Cell 5: Community Property
+  const td5 = document.createElement('td');
+  const commBadge = document.createElement('span');
+  commBadge.className = s.community ? 'badge badge-yes' : (s.communityNote ? 'badge badge-optional' : 'badge badge-no');
+  commBadge.textContent = s.community ? 'Yes' : (s.communityNote ? 'Optional' : 'No');
+  td5.appendChild(commBadge);
+  if (s.communityNote) {
+    const note = document.createElement('span');
+    note.style.cssText = 'font-size:0.72rem;color:var(--charcoal);opacity:0.5;font-style:italic;margin-top:0.3rem;display:block;';
+    note.textContent = s.communityNote;
+    td5.appendChild(note);
   }
-  let label = '';
-  if (s.taxType === 'estate') label = 'Estate tax';
-  else if (s.taxType === 'inheritance') label = 'Inheritance tax';
-  else if (s.taxType === 'both') label = 'Both';
-  return `<div><span class="badge badge-tax">${label}</span><p style="font-size:0.78rem;line-height:1.55;color:var(--charcoal);opacity:0.65;margin-top:0.4rem;font-weight:300;">${s.tax}</p></div>`;
+  tr.appendChild(td5);
+
+  // Cell 6: Estate / Inheritance Tax
+  const td6 = document.createElement('td');
+  if (s.taxType === 'none') {
+    const nobadge = document.createElement('span');
+    nobadge.className = 'badge badge-none';
+    nobadge.textContent = 'None';
+    td6.appendChild(nobadge);
+  } else {
+    const taxLabel = s.taxType === 'estate' ? 'Estate tax' : s.taxType === 'inheritance' ? 'Inheritance tax' : 'Both';
+    const taxBadge = document.createElement('span');
+    taxBadge.className = 'badge badge-tax';
+    taxBadge.textContent = taxLabel;
+    td6.appendChild(taxBadge);
+    const taxDesc = document.createElement('span');
+    taxDesc.style.cssText = 'font-size:0.78rem;line-height:1.55;color:var(--charcoal);opacity:0.65;margin-top:0.4rem;font-weight:300;display:block;';
+    taxDesc.textContent = s.tax;
+    td6.appendChild(taxDesc);
+  }
+  tr.appendChild(td6);
+
+  return tr;
 }
 
 function renderTable() {
@@ -1134,20 +1178,10 @@ function renderTable() {
     resultCount.textContent = 'Showing all 50 states';
   }
 
-  filtered.forEach((s, i) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>
-        <span style="font-weight:400;color:var(--charcoal);">${s.name}</span>
-      </td>
-      <td><span class="badge badge-yes">${s.probate === 'Yes' ? 'Yes' : s.probate}</span></td>
-      <td style="font-weight:400;">${s.threshold}</td>
-      <td>${s.creditor}</td>
-      <td>${buildCommunityBadge(s)}</td>
-      <td>${buildTaxBadge(s)}</td>
-    `;
-    tbody.appendChild(tr);
-  });
+  // Use a DocumentFragment for a single efficient DOM update
+  const frag = document.createDocumentFragment();
+  filtered.forEach(s => frag.appendChild(makeRow(s)));
+  tbody.appendChild(frag);
 }
 
 function setFilter(filter, btn) {
