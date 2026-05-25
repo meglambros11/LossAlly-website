@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="brand_assets/logo.png" />
+  <title>Grief &amp; Estate Resources — Loss Ally</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
+  <script src="https://app.termly.io/resource-blocker/e9fd6e24-20b3-49d3-b189-7e89d49afe42?autoBlock=on"></script>
+  <style>
+    :root {
+      --cream:       #F2EDD8;
+      --cream-deep:  #EAE3C8;
+      --warm-white:  #FAF8F4;
+      --sage:        #8D9D6A;
+      --forest:      #5b6e5b;
+      --forest-mid:  #4A7050;
+      --evergreen:   #1a3620;
+      --charcoal:    #2C2C28;
+      --mist:        #DDD8CC;
+      --mist-light:  #EDE9DF;
+      --gold:        #C9A870;
+      --warm-ochre:  #B4952A;
+      --sand:        #E8C987;
+      --terracotta:  #C4724A;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--charcoal);
+      font-family: 'Lora', Georgia, serif;
+      font-weight: 400;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.5;
+    }
+
+    /* ── Typography helpers ── */
+    .label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--sage);
+    }
+
+    .section-number {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--mist);
+      letter-spacing: 0.04em;
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+      font-weight: 400;
+      color: var(--forest);
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+    }
+
+    .body-text {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 0.9rem;
+      line-height: 1.85;
+      color: var(--charcoal);
+      opacity: 0.78;
+    }
+    .body-text + .body-text { margin-top: 1rem; }
+    .body-text strong { font-weight: 500; opacity: 1; color: var(--charcoal); }
+    .body-text a { color: var(--forest); text-decoration: underline; text-underline-offset: 3px; }
+    .body-text a:hover { color: var(--evergreen); }
+
+    /* ── Nav ── */
+    .nav-link {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 300;
+      color: var(--charcoal);
+      text-decoration: none;
+      opacity: 0.65;
+      transition: opacity 0.18s;
+      letter-spacing: 0.005em;
+    }
+    .nav-link:hover { opacity: 1; }
+    .nav-link:focus-visible { outline: 2px solid var(--gold); border-radius: 2px; }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: var(--forest);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 0.875rem;
+      padding: 0.75rem 1.6rem;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
+      box-shadow: 0 2px 14px rgba(71,102,39,0.25);
+    }
+    .btn-primary:hover {
+      background: var(--evergreen);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 22px rgba(71,102,39,0.32);
+    }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+    /* ── TOC sidebar ── */
+    .toc-link {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      color: var(--forest);
+      text-decoration: none;
+      font-weight: 300;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0;
+      transition: color 0.18s, opacity 0.18s;
+      opacity: 0.75;
+      line-height: 1.4;
+    }
+    .toc-link:hover { color: var(--evergreen); opacity: 1; }
+    .toc-link::before {
+      content: '↓';
+      font-size: 0.65rem;
+      opacity: 0.45;
+      flex-shrink: 0;
+    }
+
+    /* ── Content sections ── */
+    .gr-section {
+      padding: 3.25rem 0;
+      border-bottom: 1px solid var(--mist);
+    }
+    .gr-section:last-of-type { border-bottom: none; }
+
+    /* ── Checklist ── */
+    .checklist {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 1.25rem;
+    }
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.875rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--mist-light);
+      font-family: 'Lora', Georgia, serif;
+      font-size: 0.875rem;
+      line-height: 1.65;
+      color: rgba(44,44,40,0.75);
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist li .check-box {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid var(--mist);
+      border-radius: 4px;
+      margin-top: 0.15em;
+      background: var(--warm-white);
+    }
+    .checklist li strong {
+      color: var(--charcoal);
+      font-weight: 500;
+      display: block;
+      margin-bottom: 0.1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.01em;
+    }
+    .checklist li span.note {
+      font-size: 0.78rem;
+      opacity: 0.6;
+      font-style: italic;
+    }
+
+    /* ── Timeline ── */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 1.5rem;
+      position: relative;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 6px;
+      bottom: 6px;
+      width: 1.5px;
+      background: linear-gradient(to bottom, var(--forest) 0%, var(--mist) 100%);
+    }
+    .timeline-item {
+      display: flex;
+      gap: 1.5rem;
+      padding: 0 0 2rem 0;
+      position: relative;
+    }
+    .timeline-item:last-child { padding-bottom: 0; }
+    .timeline-dot {
+      flex-shrink: 0;
+      width: 21px;
+      height: 21px;
+      border-radius: 50%;
+      background: var(--cream);
+      border: 2px solid var(--forest);
+      margin-top: 0.1rem;
+      position: relative;
+      z-index: 1;
+    }
+    .timeline-dot.active { background: var(--forest); }
+    .timeline-content { flex: 1; }
+    .timeline-period {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 0.3rem;
+      display: block;
+    }
+    .timeline-heading {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: var(--forest);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+    .timeline-tasks {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .timeline-tasks li {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      color: rgba(44,44,40,0.68);
+      padding-left: 0.875rem;
+      position: relative;
+    }
+    .timeline-tasks li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.6em;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--sage);
+    }
+
+    /* ── Glossary ── */
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    @media (min-width: 640px) {
+      .glossary-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .gloss-card {
+      background: var(--warm-white);
+      border: 1px solid var(--mist);
+      border-radius: 10px;
+      padding: 1.25rem 1.4rem;
+      transition: box-shadow 0.18s;
+    }
+    .gloss-card:hover { box-shadow: 0 4px 18px rgba(45,80,48,0.08); }
+    .gloss-term {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--forest);
+      margin-bottom: 0.4rem;
+      letter-spacing: -0.01em;
+    }
+    .gloss-def {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 0.82rem;
+      line-height: 1.7;
+      color: rgba(44,44,40,0.72);
+    }
+
+    /* ── External support ── */
+    .org-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 1.25rem;
+    }
+    .org-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--mist-light);
+    }
+    .org-item:last-child { border-bottom: none; }
+    .org-name {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--forest);
+    }
+    .org-url {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      color: var(--sage);
+      text-decoration: none;
+      letter-spacing: 0.01em;
+    }
+    .org-url:hover { color: var(--forest); }
+    .org-desc {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 0.82rem;
+      line-height: 1.65;
+      color: rgba(44,44,40,0.68);
+      margin-top: 0.2rem;
+    }
+
+    /* ── Callout box ── */
+    .callout {
+      background: var(--warm-white);
+      border: 1px solid var(--mist);
+      border-radius: 10px;
+      padding: 1.4rem 1.6rem;
+      margin-top: 1.25rem;
+    }
+    .callout.forest {
+      background: rgba(45,80,48,0.05);
+      border-color: rgba(45,80,48,0.18);
+    }
+    .callout.gold {
+      background: rgba(180,149,42,0.06);
+      border-color: rgba(180,149,42,0.2);
+    }
+    .callout p {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 0.85rem;
+      line-height: 1.75;
+      color: var(--charcoal);
+      opacity: 0.78;
+    }
+    .callout p strong {
+      font-weight: 500;
+      opacity: 1;
+      color: var(--charcoal);
+    }
+
+    /* ── Fade-up ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .fade-up.in { opacity: 1; transform: translateY(0); }
+
+    /* ── Responsive nav ── */
+    @media (min-width: 768px) {
+      #desk-nav { display: flex !important; }
+      #mob-ham  { display: none  !important; }
+    }
+    @media (max-width: 767px) {
+      #desk-nav { display: none  !important; }
+      #mob-ham  { display: flex  !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAV ══════════════════════════════════════════════════ -->
+<header id="site-nav" style="position:sticky;top:0;z-index:50;background:var(--cream);border-bottom:1px solid var(--mist);transition:box-shadow 0.2s;">
+  <div style="max-width:1200px;margin:0 auto;padding:0 1.75rem;height:64px;display:flex;align-items:center;justify-content:space-between;">
+
+    <a href="index.html" style="display:flex;align-items:center;gap:0.625rem;text-decoration:none;flex-shrink:0;">
+      <img src="brand_assets/logo.png" alt="Loss Ally" style="height:34px;width:auto;mix-blend-mode:multiply;" />
+      <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.2rem;font-weight:500;color:var(--charcoal);letter-spacing:0.01em;">Loss Ally</span>
+    </a>
+
+    <nav id="desk-nav" style="display:flex;align-items:center;gap:2.25rem;">
+      <a href="index.html#services"     class="nav-link">Services</a>
+      <a href="index.html#how-it-works" class="nav-link">How It Works</a>
+      <a href="index.html#pricing"      class="nav-link">Plans</a>
+      <a href="index.html#contact" class="btn-primary" style="padding:0.6rem 1.25rem;font-size:0.82rem;">Get Support</a>
+    </nav>
+
+    <button id="mob-ham" aria-label="Open menu" style="display:none;flex-direction:column;gap:5px;padding:8px;background:none;border:none;cursor:pointer;">
+      <span id="h1" style="display:block;width:20px;height:1.5px;background:var(--charcoal);border-radius:2px;transition:transform 0.2s,opacity 0.2s;"></span>
+      <span id="h2" style="display:block;width:20px;height:1.5px;background:var(--charcoal);border-radius:2px;transition:opacity 0.2s;"></span>
+      <span id="h3" style="display:block;width:20px;height:1.5px;background:var(--charcoal);border-radius:2px;transition:transform 0.2s;"></span>
+    </button>
+  </div>
+
+  <div id="mob-menu" style="display:none;border-top:1px solid var(--mist);background:var(--cream);">
+    <div style="max-width:1200px;margin:0 auto;padding:1.25rem 1.75rem;display:flex;flex-direction:column;gap:0.75rem;">
+      <a href="index.html#services"     class="nav-link" style="padding:0.4rem 0;" onclick="closeMob()">Services</a>
+      <a href="index.html#how-it-works" class="nav-link" style="padding:0.4rem 0;" onclick="closeMob()">How It Works</a>
+      <a href="index.html#pricing"      class="nav-link" style="padding:0.4rem 0;" onclick="closeMob()">Plans</a>
+      <a href="index.html#contact" class="btn-primary" style="align-self:flex-start;margin-top:0.5rem;" onclick="closeMob()">Get Support</a>
+    </div>
+  </div>
+</header>
+
+
+<!-- ══ HERO ══════════════════════════════════════════════════ -->
+<section style="padding:5rem 1.75rem 4rem;background:var(--cream);position:relative;overflow:hidden;border-bottom:1px solid var(--mist);">
+  <div style="position:absolute;top:-160px;right:-80px;width:580px;height:580px;background:radial-gradient(ellipse,rgba(45,80,48,0.06) 0%,transparent 65%);pointer-events:none;"></div>
+  <div style="position:absolute;bottom:-100px;left:-80px;width:420px;height:420px;background:radial-gradient(ellipse,rgba(180,149,42,0.05) 0%,transparent 65%);pointer-events:none;"></div>
+
+  <div style="max-width:820px;margin:0 auto;position:relative;z-index:1;">
+    <span class="label" style="display:block;margin-bottom:1.25rem;">— Resources</span>
+    <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.8rem,5.5vw,4.5rem);font-weight:400;line-height:1.04;letter-spacing:-0.025em;color:var(--forest);margin-bottom:1.5rem;">
+      What comes next<br><em style="font-style:italic;color:var(--warm-ochre);">has a shape.</em>
+    </h1>
+    <p style="font-family:'Lora',Georgia,serif;font-size:1rem;line-height:1.8;color:var(--charcoal);opacity:0.65;max-width:560px;font-weight:400;">
+      The weeks after a loss are full of decisions that can't wait. This page maps the practical work ahead — the tasks, the timeline, the terms — so you know what to expect and where to begin.
+    </p>
+    <div style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:2rem;">
+      <a href="#first-30" style="font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:400;color:var(--forest);text-decoration:none;border:1px solid rgba(45,80,48,0.3);border-radius:20px;padding:0.4rem 0.9rem;transition:border-color 0.18s,background 0.18s;" onmouseover="this.style.background='rgba(45,80,48,0.06)'" onmouseout="this.style.background='transparent'">First 30 Days</a>
+      <a href="#executors" style="font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:400;color:var(--forest);text-decoration:none;border:1px solid rgba(45,80,48,0.3);border-radius:20px;padding:0.4rem 0.9rem;transition:border-color 0.18s,background 0.18s;" onmouseover="this.style.background='rgba(45,80,48,0.06)'" onmouseout="this.style.background='transparent'">For Executors</a>
+      <a href="#timeline" style="font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:400;color:var(--forest);text-decoration:none;border:1px solid rgba(45,80,48,0.3);border-radius:20px;padding:0.4rem 0.9rem;transition:border-color 0.18s,background 0.18s;" onmouseover="this.style.background='rgba(45,80,48,0.06)'" onmouseout="this.style.background='transparent'">Timeline</a>
+      <a href="#glossary" style="font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:400;color:var(--forest);text-decoration:none;border:1px solid rgba(45,80,48,0.3);border-radius:20px;padding:0.4rem 0.9rem;transition:border-color 0.18s,background 0.18s;" onmouseover="this.style.background='rgba(45,80,48,0.06)'" onmouseout="this.style.background='transparent'">Glossary</a>
+      <a href="#support" style="font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:400;color:var(--forest);text-decoration:none;border:1px solid rgba(45,80,48,0.3);border-radius:20px;padding:0.4rem 0.9rem;transition:border-color 0.18s,background 0.18s;" onmouseover="this.style.background='rgba(45,80,48,0.06)'" onmouseout="this.style.background='transparent'">Grief Support</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ BODY ══════════════════════════════════════════════════ -->
+<div style="max-width:1100px;margin:0 auto;padding:0 1.75rem;">
+  <div id="gr-layout" style="display:grid;grid-template-columns:1fr;gap:0;align-items:start;">
+
+    <!-- ── SIDEBAR ── -->
+    <aside id="gr-sidebar" style="padding:2.5rem 0 2rem;">
+      <div style="background:var(--warm-white);border:1px solid var(--mist);border-radius:12px;padding:1.6rem;">
+        <p class="label" style="opacity:0.5;margin-bottom:1rem;">On this page</p>
+        <nav style="display:flex;flex-direction:column;gap:0.05rem;" id="toc-links">
+          <a href="#first-30"   class="toc-link">First 30 Days</a>
+          <a href="#executors"  class="toc-link">For Executors</a>
+          <a href="#timeline"   class="toc-link">Month-by-Month Timeline</a>
+          <a href="#glossary"   class="toc-link">Estate Glossary</a>
+          <a href="#support"    class="toc-link">Grief Support Organizations</a>
+        </nav>
+        <div style="margin-top:1.4rem;padding-top:1.2rem;border-top:1px solid var(--mist);">
+          <p style="font-family:'Lora',Georgia,serif;font-size:0.78rem;line-height:1.65;color:var(--charcoal);opacity:0.5;">
+            Need help with the tasks on this list?
+          </p>
+          <a href="index.html#contact" class="btn-primary" style="margin-top:0.875rem;font-size:0.78rem;padding:0.55rem 1rem;">
+            Talk to a Loss Ally Advisor
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ── MAIN CONTENT ── -->
+    <main style="padding:2.5rem 0 5rem;">
+
+
+      <!-- ══ 1. FIRST 30 DAYS ══════════════════════════════ -->
+      <div class="gr-section fade-up" id="first-30">
+        <span class="section-number">01</span>
+        <h2 class="section-title">First 30 Days</h2>
+        <p class="body-text">
+          The weeks immediately following a death carry the heaviest combination of grief and urgency. Most families have never navigated this before. These are the tasks that cannot wait — not because of arbitrary rules, but because the system has hard deadlines, and some windows close quickly.
+        </p>
+        <p class="body-text" style="margin-top:0.75rem;">
+          You do not have to do all of this at once. But you should know what's in front of you.
+        </p>
+
+        <ul class="checklist" style="margin-top:1.75rem;">
+          <li>
+            <div class="check-box"></div>
+            <div>
+              <strong>Obtain certified copies of the death certificate</strong>
+              Request 10–15 copies. Financial institutions, government agencies, and courts each require an original. Running out means delays. Your funeral home can typically order them.
+            </div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>
+              <strong>Notify the Social Security Administration</strong>
+              Call 1-800-772-1213. Any Social Security payment deposited in the month of death must be returned — do not spend it. If the deceased was receiving benefits, benefits stop; if you were receiving benefits as a spouse or dependent, contact SSA to understand what changes.
+            </div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>
+              <strong>Notify the employer</strong>
+              Ask about final pay, accrued vacation payout, and any employer-sponsored life insurance. Get the HR contact name in writing. If the deceased was self-employed, notify key clients or business partners.
+            </div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>
+              <strong>Locate the will and any trust documents</strong>
+              Check home files, a safe-deposit box, and with any attorney the deceased worked with. If there is no will, the estate is "intestate" and state law governs distribution — knowing this early matters.
+            </div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>
+              <strong>Secure all physical property</strong>
+              This includes the home (change locks if necessary), vehicles, and any valuables. Do not distribute or donate anything until the estate is inventoried and debts are accounted for.
+            </div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>
+              <strong>Notify Medicare and health insurance providers</strong>
+              Cancel coverage going forward and ask about any pending claims that still need processing. <span class="note">Keep records of all correspondence.</span>
+            </div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>
+              <strong>Forward mail</strong>
+              Set up a mail forward with USPS to a trusted family member or the executor's address. Bills, legal notices, and account statements will continue to arrive.
+            </div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>
+              <strong>Notify financial institutions — but do not close accounts yet</strong>
+              Contact each bank and investment firm to flag the death. Do not close accounts until you have legal authority to do so (Letters Testamentary or Letters of Administration from the probate court). Closing prematurely can complicate the estate.
+            </div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>
+              <strong>File for veterans' benefits if applicable</strong>
+              Contact the VA at 1-800-827-1000. Surviving spouses and dependents may be eligible for burial benefits, dependency and indemnity compensation, and other programs.
+            </div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>
+              <strong>Pause or cancel recurring subscriptions</strong>
+              Streaming services, memberships, and auto-pays will continue to charge. Make a list and cancel systematically — but hold off on canceling anything that might be needed to access important accounts (email, cloud storage).
+            </div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>
+              <strong>Keep a running log of all estate-related expenses</strong>
+              Funeral costs, legal fees, travel, and administrative expenses may be reimbursable from the estate before distribution. Save every receipt.
+            </div>
+          </li>
+        </ul>
+
+        <div class="callout forest" style="margin-top:2rem;">
+          <p><strong>A note on timing.</strong> Some states require creditors to be notified within a specific window after probate opens, and benefit applications have their own deadlines. When in doubt about a deadline, assume it is sooner than you think and act accordingly.</p>
+        </div>
+      </div>
+
+
+      <!-- ══ 2. FOR EXECUTORS ═══════════════════════════════ -->
+      <div class="gr-section fade-up" id="executors">
+        <span class="section-number">02</span>
+        <h2 class="section-title">For Executors</h2>
+        <p class="body-text">
+          Being named executor is an act of trust. It is also a legal responsibility that carries real weight — and it arrives at exactly the moment you are least equipped to carry it. You are grieving, too. That is rarely acknowledged, and it should be.
+        </p>
+        <p class="body-text">
+          The executor's role is to represent the estate faithfully: pay what is owed, distribute what remains, and document everything. It is not glamorous work, and it typically takes longer than anyone expects.
+        </p>
+
+        <div class="callout gold" style="margin-top:1.5rem;margin-bottom:1.75rem;">
+          <p><strong>You do not have to accept.</strong> Executors can decline the role. If you are named but feel unable or unwilling to serve, you can renounce the appointment through the probate court. An alternative executor can be appointed. Saying no is a legitimate option.</p>
+        </div>
+
+        <ul class="checklist">
+          <li>
+            <div class="check-box"></div>
+            <div>
+              <strong>File the will with the probate court</strong>
+              This formally opens the estate. The court will then issue your Letters Testamentary — the document that gives you legal authority to act on behalf of the estate.
+            </div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>
+              <strong>Obtain Letters Testamentary</strong>
+              You will need multiple certified copies. Banks, brokerages, and government agencies each require an original. Request at least 8–10.
+            </div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>
+              <strong>Open a dedicated estate bank account</strong>
+              All estate income and expenses must flow through this account. Never co-mingle estate funds with personal funds — doing so can expose you to personal liability.
+            </div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>
+              <strong>Create a full inventory of assets and liabilities</strong>
+              Real property, vehicles, bank accounts, investment accounts, retirement accounts, digital assets, jewelry, art, and any business interests. Also document outstanding debts: mortgage, loans, credit cards, medical bills, and any unpaid taxes.
+            </div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>
+              <strong>Notify all known creditors</strong>
+              Most states require formal notice to creditors after probate opens. Creditors then have a limited window to file claims. Your attorney can guide you through the specific requirements in your state.
+            </div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>
+              <strong>Notify named beneficiaries</strong>
+              Beneficiaries are legally entitled to notification that probate has opened. Keep communication clear, consistent, and in writing.
+            </div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>
+              <strong>Continue ongoing financial obligations</strong>
+              The estate is responsible for mortgage payments, property taxes, utilities, and insurance on estate property until assets are transferred or sold. Pay these from the estate account.
+            </div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>
+              <strong>File the decedent's final income tax return</strong>
+              Due April 15 of the year following death, covering income through the date of death. You may also need to file a separate estate income tax return (Form 1041) if the estate generates income during administration.
+            </div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>
+              <strong>Determine whether a federal estate tax return is required</strong>
+              For 2025–2026, the federal estate tax exemption is approximately $13.6 million per individual. State-level estate taxes have lower thresholds — check your state's rules.
+            </div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>
+              <strong>Pay valid debts before distributing assets</strong>
+              Executors who distribute assets before settling debts can be held personally liable for those debts. Settle all claims first.
+            </div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>
+              <strong>Document every decision</strong>
+              Keep records of every financial transaction, every communication with creditors and beneficiaries, and every professional you engage. If challenged, your documentation is your defense.
+            </div>
+          </li>
+          <li>
+            <div class="check-box"></div>
+            <div>
+              <strong>Petition the court to close the estate</strong>
+              Once assets are distributed and taxes are filed, you file a final accounting with the court and formally close the estate. The court releases you from your executor duties.
+            </div>
+          </li>
+        </ul>
+      </div>
+
+
+      <!-- ══ 3. TIMELINE ════════════════════════════════════ -->
+      <div class="gr-section fade-up" id="timeline">
+        <span class="section-number">03</span>
+        <h2 class="section-title">Month-by-Month Timeline</h2>
+        <p class="body-text">
+          Estate administration rarely follows a neat schedule, but having a rough map helps. Most estates close in six to twelve months. Complex estates — those with business interests, real property in multiple states, contested wills, or unclear beneficiaries — often take longer.
+        </p>
+        <p class="body-text" style="margin-top:0.75rem;">
+          This is a general guide. Your attorney can give you a timeline specific to your state and situation.
+        </p>
+
+        <div class="timeline" style="margin-top:2rem;">
+          <div class="timeline-item">
+            <div class="timeline-dot active"></div>
+            <div class="timeline-content">
+              <span class="timeline-period">Days 1–14</span>
+              <div class="timeline-heading">Immediate Response</div>
+              <ul class="timeline-tasks">
+                <li>Obtain death certificates (10–15 copies)</li>
+                <li>Notify SSA, employer, Medicare, and health insurers</li>
+                <li>Secure physical property; locate the will</li>
+                <li>Forward mail; pause recurring charges</li>
+                <li>Begin logging all estate-related expenses</li>
+              </ul>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot active"></div>
+            <div class="timeline-content">
+              <span class="timeline-period">Weeks 2–4</span>
+              <div class="timeline-heading">Legal & Financial Setup</div>
+              <ul class="timeline-tasks">
+                <li>File the will with the probate court; open the estate</li>
+                <li>Obtain Letters Testamentary or Letters of Administration</li>
+                <li>Open a dedicated estate bank account</li>
+                <li>Begin full asset and liability inventory</li>
+                <li>Retain an estate attorney if you haven't already</li>
+              </ul>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-period">Month 2</span>
+              <div class="timeline-heading">Notification & Inventory</div>
+              <ul class="timeline-tasks">
+                <li>Formally notify all known creditors per state requirements</li>
+                <li>Notify named beneficiaries that probate has opened</li>
+                <li>Complete the asset inventory; obtain appraisals for real property and valuables</li>
+                <li>Transfer or retitle any accounts that pass outside of probate (POD, TOD, joint accounts)</li>
+                <li>Continue paying estate obligations (mortgage, insurance, utilities)</li>
+              </ul>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-period">Months 3–4</span>
+              <div class="timeline-heading">Claims & Resolution</div>
+              <ul class="timeline-tasks">
+                <li>Creditor claim window closes (varies by state — typically 3–6 months)</li>
+                <li>Review and pay or contest submitted creditor claims</li>
+                <li>Sell estate property if needed to satisfy debts or facilitate distribution</li>
+                <li>File the decedent's final income tax return (or extension)</li>
+                <li>Determine whether an estate income tax return (Form 1041) is required</li>
+              </ul>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-period">Month 5–6</span>
+              <div class="timeline-heading">Distribution</div>
+              <ul class="timeline-tasks">
+                <li>All debts, taxes, and claims are resolved</li>
+                <li>Distribute remaining assets to beneficiaries per the will (or state law)</li>
+                <li>Obtain signed receipts from all beneficiaries</li>
+                <li>Prepare the final accounting of all estate income and expenditures</li>
+              </ul>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-period">Month 6–12+</span>
+              <div class="timeline-heading">Closure</div>
+              <ul class="timeline-tasks">
+                <li>File the final accounting with the probate court</li>
+                <li>Court approves the accounting and issues an order of discharge</li>
+                <li>Close the estate bank account</li>
+                <li>Executor is formally released from responsibility</li>
+                <li><em style="opacity:0.7;">Complex estates may require 12–24 months or longer.</em></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ══ 4. GLOSSARY ════════════════════════════════════ -->
+      <div class="gr-section fade-up" id="glossary">
+        <span class="section-number">04</span>
+        <h2 class="section-title">Estate Glossary</h2>
+        <p class="body-text">
+          Estate law has a language of its own. Here are ten terms you will encounter — in plain English.
+        </p>
+
+        <div class="glossary-grid">
+          <div class="gloss-card">
+            <div class="gloss-term">Probate</div>
+            <p class="gloss-def">The court-supervised legal process of validating a will, paying debts, and distributing an estate's assets. Not all assets go through probate — accounts with named beneficiaries (like 401(k)s and life insurance) typically pass directly.</p>
+          </div>
+          <div class="gloss-card">
+            <div class="gloss-term">Letters Testamentary</div>
+            <p class="gloss-def">A document issued by the probate court that gives the executor legal authority to act on behalf of the estate — to access accounts, transfer property, and settle debts. Without it, most institutions will not speak to you.</p>
+          </div>
+          <div class="gloss-card">
+            <div class="gloss-term">Intestate</div>
+            <p class="gloss-def">Dying without a valid will. When someone dies intestate, the state's laws of intestate succession determine who inherits — typically a spouse first, then children, then other relatives. The court appoints an administrator rather than an executor.</p>
+          </div>
+          <div class="gloss-card">
+            <div class="gloss-term">Stepped-Up Basis</div>
+            <p class="gloss-def">When you inherit an asset, its cost basis is "stepped up" to its fair market value on the date of death. If you later sell the asset, you only owe capital gains tax on appreciation after you inherited it — not since the original purchase. This is often significant for stocks and real estate.</p>
+          </div>
+          <div class="gloss-card">
+            <div class="gloss-term">Executor / Personal Representative</div>
+            <p class="gloss-def">The person named in the will — or appointed by the court if there is no will — to administer the estate. Responsible for collecting assets, paying debts, filing taxes, and distributing what remains to beneficiaries.</p>
+          </div>
+          <div class="gloss-card">
+            <div class="gloss-term">Letters of Administration</div>
+            <p class="gloss-def">The equivalent of Letters Testamentary, issued when there is no will. The court appoints an administrator (rather than an executor) and issues this document to give them authority to act on the estate's behalf.</p>
+          </div>
+          <div class="gloss-card">
+            <div class="gloss-term">Beneficiary</div>
+            <p class="gloss-def">A person or entity designated to receive assets from an estate, will, trust, life insurance policy, or financial account. Beneficiary designations on accounts override whatever the will says — which is why keeping them updated matters.</p>
+          </div>
+          <div class="gloss-card">
+            <div class="gloss-term">Creditor Claim Period</div>
+            <p class="gloss-def">After probate opens, creditors have a legally defined window to file claims against the estate — typically three to six months, depending on the state. Claims filed after the deadline are generally barred. Executors must formally notify creditors to start this clock.</p>
+          </div>
+          <div class="gloss-card">
+            <div class="gloss-term">Trustee</div>
+            <p class="gloss-def">The person or institution responsible for managing assets held in a trust, according to the trust document's terms. A trustee is not the same as an executor — though the same person sometimes serves both roles.</p>
+          </div>
+          <div class="gloss-card">
+            <div class="gloss-term">Pour-Over Will</div>
+            <p class="gloss-def">A type of will used alongside a living trust. At death, any assets not already in the trust are "poured over" into it, ensuring the trust's distribution terms govern the entire estate. It still requires probate for the assets being transferred.</p>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ══ 5. EXTERNAL SUPPORT ════════════════════════════ -->
+      <div class="gr-section fade-up" id="support">
+        <span class="section-number">05</span>
+        <h2 class="section-title">Grief Support Organizations</h2>
+        <p class="body-text">
+          Administrative help is one kind of support. Emotional support is another. These organizations offer the second kind — honestly described, without endorsement of any particular approach.
+        </p>
+
+        <div class="org-list">
+          <div class="org-item">
+            <span class="org-name">GriefShare</span>
+            <a href="https://www.griefshare.org" target="_blank" rel="noopener" class="org-url">griefshare.org</a>
+            <p class="org-desc">Peer support groups offered through local churches across the US. Faith-based in framing but broadly welcoming. The group locator is practical and easy to use.</p>
+          </div>
+          <div class="org-item">
+            <span class="org-name">What's Your Grief</span>
+            <a href="https://whatsyourgrief.com" target="_blank" rel="noopener" class="org-url">whatsyourgrief.com</a>
+            <p class="org-desc">Research-grounded grief education for people who prefer to process independently, at their own pace. Honest, non-sentimental, and genuinely useful.</p>
+          </div>
+          <div class="org-item">
+            <span class="org-name">The Dougy Center</span>
+            <a href="https://www.dougy.org" target="_blank" rel="noopener" class="org-url">dougy.org</a>
+            <p class="org-desc">Peer support groups for children, teens, young adults, and their families. One of the few organizations with programming specifically designed for young people who are grieving.</p>
+          </div>
+          <div class="org-item">
+            <span class="org-name">National Alliance for Grieving Children</span>
+            <a href="https://childrengrieve.org" target="_blank" rel="noopener" class="org-url">childrengrieve.org</a>
+            <p class="org-desc">Resources for grieving children and the adults — parents, teachers, counselors — who support them. Includes a provider directory for finding local grief support for kids.</p>
+          </div>
+          <div class="org-item">
+            <span class="org-name">The Compassionate Friends</span>
+            <a href="https://www.compassionatefriends.org" target="_blank" rel="noopener" class="org-url">compassionatefriends.org</a>
+            <p class="org-desc">For parents, grandparents, and siblings who have lost a child — at any age. One of the largest peer support networks in the country, with both local chapters and online groups.</p>
+          </div>
+          <div class="org-item">
+            <span class="org-name">Open to Hope</span>
+            <a href="https://www.opentohope.com" target="_blank" rel="noopener" class="org-url">opentohope.com</a>
+            <p class="org-desc">First-person accounts of loss and recovery from people across many circumstances. Less structured than a support group — more like reading alongside others who have been where you are.</p>
+          </div>
+          <div class="org-item">
+            <span class="org-name">SAMHSA National Helpline</span>
+            <a href="https://www.samhsa.gov/find-help/national-helpline" target="_blank" rel="noopener" class="org-url">samhsa.gov — 1-800-662-4357</a>
+            <p class="org-desc">Free, confidential support for mental health and substance use crises, available 24/7. Relevant when grief becomes acute or when existing mental health challenges are amplified by loss.</p>
+          </div>
+          <div class="org-item">
+            <span class="org-name">Veterans Crisis Line</span>
+            <a href="https://www.veteranscrisisline.net" target="_blank" rel="noopener" class="org-url">veteranscrisisline.net — Dial 988, then press 1</a>
+            <p class="org-desc">For veterans and service members navigating grief, loss, or their own mental health. Available by phone, text, or chat, around the clock.</p>
+          </div>
+        </div>
+      </div>
+
+
+    </main>
+  </div>
+</div>
+
+
+<!-- ══ QUIET CTA ══════════════════════════════════════════════ -->
+<div style="border-top:1px solid var(--mist);padding:4rem 1.75rem;">
+  <div style="max-width:640px;margin:0 auto;text-align:center;">
+    <p style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.5rem,3vw,2rem);font-weight:400;color:var(--forest);line-height:1.35;letter-spacing:-0.015em;">
+      Carrying this alone?<br><em style="font-style:italic;color:var(--warm-ochre);">We can help.</em>
+    </p>
+    <p style="font-family:'Lora',Georgia,serif;font-size:0.875rem;line-height:1.75;color:var(--charcoal);opacity:0.55;margin-top:1rem;max-width:420px;margin-left:auto;margin-right:auto;">
+      Loss Ally handles the administrative work of estate settlement so families can focus on what matters.
+    </p>
+    <a href="index.html" class="btn-primary" style="margin-top:1.75rem;">
+      Learn how Loss Ally works
+    </a>
+  </div>
+</div>
+
+
+<!-- ══ FOOTER ════════════════════════════════════════════════ -->
+<footer style="background:#1a2218;padding:3.5rem 1.75rem 2rem;">
+  <div style="max-width:1200px;margin:0 auto;">
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:2.5rem;padding-bottom:2rem;border-bottom:1px solid rgba(255,255,255,0.06);" id="footer-grid">
+      <div>
+        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.875rem;">
+          <img src="brand_assets/logo.png" alt="Loss Ally" style="height:30px;width:auto;" />
+          <span style="font-size:0.95rem;font-weight:400;color:rgba(250,248,244,0.8);font-family:'DM Sans',sans-serif;">Loss Ally</span>
+        </div>
+        <p style="font-family:'DM Sans',sans-serif;font-size:0.78rem;color:rgba(250,248,244,0.3);line-height:1.75;max-width:200px;font-weight:300;">
+          Estate and life administration support. Compassionate. Practical. Always here.
+        </p>
+      </div>
+      <div>
+        <p style="font-family:'DM Sans',sans-serif;font-size:0.62rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(250,248,244,0.28);margin-bottom:0.875rem;">Services</p>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:0.5rem;">
+          <li><a href="index.html#services" style="font-family:'DM Sans',sans-serif;font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Legal &amp; Probate</a></li>
+          <li><a href="index.html#services" style="font-family:'DM Sans',sans-serif;font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Financial Closure</a></li>
+          <li><a href="index.html#services" style="font-family:'DM Sans',sans-serif;font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Government Records</a></li>
+          <li><a href="index.html#services" style="font-family:'DM Sans',sans-serif;font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Digital Estate</a></li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-family:'DM Sans',sans-serif;font-size:0.62rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(250,248,244,0.28);margin-bottom:0.875rem;">Resources</p>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:0.5rem;">
+          <li><a href="grief-resources.html" style="font-family:'DM Sans',sans-serif;font-size:0.8rem;color:rgba(250,248,244,0.6);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.6)'">Grief Resources</a></li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-family:'DM Sans',sans-serif;font-size:0.62rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(250,248,244,0.28);margin-bottom:0.875rem;">Legal</p>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:0.5rem;">
+          <li><a href="privacy-policy.html" style="font-family:'DM Sans',sans-serif;font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Privacy Policy</a></li>
+          <li><a href="terms-of-service.html" style="font-family:'DM Sans',sans-serif;font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;padding-top:1.5rem;flex-wrap:wrap;gap:0.75rem;">
+      <p style="font-family:'DM Sans',sans-serif;font-size:0.72rem;color:rgba(250,248,244,0.22);font-weight:300;">© 2026 Loss Ally LLC. All rights reserved.</p>
+      <p style="font-family:'DM Sans',sans-serif;font-size:0.72rem;color:rgba(250,248,244,0.22);font-weight:300;">Not a legal services firm.</p>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ══ SCRIPTS ════════════════════════════════════════════════ -->
+<script>
+  // Mobile nav
+  const ham = document.getElementById('mob-ham');
+  const mob = document.getElementById('mob-menu');
+  let open = false;
+  ham.addEventListener('click', () => {
+    open = !open;
+    mob.style.display = open ? 'block' : 'none';
+    document.getElementById('h1').style.transform = open ? 'translateY(6.5px) rotate(45deg)' : '';
+    document.getElementById('h2').style.opacity   = open ? '0' : '1';
+    document.getElementById('h3').style.transform = open ? 'translateY(-6.5px) rotate(-45deg)' : '';
+  });
+  function closeMob() {
+    open = false;
+    mob.style.display = 'none';
+    document.getElementById('h1').style.transform = '';
+    document.getElementById('h2').style.opacity   = '1';
+    document.getElementById('h3').style.transform = '';
+  }
+
+  // Fade-up
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.04, rootMargin: '0px 0px -20px 0px' });
+  document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+
+  // Sticky nav shadow
+  const nav = document.getElementById('site-nav');
+  window.addEventListener('scroll', () => {
+    nav.style.boxShadow = window.scrollY > 10 ? '0 1px 20px rgba(44,44,42,0.07)' : 'none';
+  }, { passive: true });
+
+  // Two-column layout at ≥1024px
+  const grLayout  = document.getElementById('gr-layout');
+  const grSidebar = document.getElementById('gr-sidebar');
+  const tocLinks  = document.getElementById('toc-links');
+  function layoutGr() {
+    if (window.innerWidth >= 1024) {
+      grLayout.style.gridTemplateColumns = '260px 1fr';
+      grLayout.style.gap = '3.5rem';
+      grSidebar.style.position = 'sticky';
+      grSidebar.style.top = '80px';
+      tocLinks.style.flexDirection = 'column';
+    } else {
+      grLayout.style.gridTemplateColumns = '1fr';
+      grLayout.style.gap = '0';
+      grSidebar.style.position = 'static';
+      grSidebar.style.top = 'auto';
+      tocLinks.style.flexDirection = 'row';
+      tocLinks.style.flexWrap = 'wrap';
+      tocLinks.style.gap = '0.25rem 0.875rem';
+    }
+  }
+  layoutGr();
+  window.addEventListener('resize', layoutGr, { passive: true });
+
+  // Footer grid
+  const ftg = document.getElementById('footer-grid');
+  if (ftg) {
+    function layoutFooter() {
+      ftg.style.gridTemplateColumns = window.innerWidth >= 1024
+        ? '1.6fr 1fr 1fr 1fr'
+        : window.innerWidth >= 640 ? '1fr 1fr' : '1fr';
+    }
+    layoutFooter();
+    window.addEventListener('resize', layoutFooter, { passive: true });
+  }
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 84, behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
