@@ -31,7 +31,7 @@
     html { scroll-behavior: smooth; }
 
     body {
-      background: var(--cream);
+      background: var(--warm-white);
       color: var(--charcoal);
       font-family: 'Lora', Georgia, serif;
       font-weight: 400;
@@ -405,7 +405,7 @@
 <body>
 
 <!-- ══ NAV ══════════════════════════════════════════════════ -->
-<header id="site-nav" style="position:sticky;top:0;z-index:50;background:var(--cream);border-bottom:1px solid var(--mist);transition:box-shadow 0.2s;">
+<header id="site-nav" style="position:sticky;top:0;z-index:50;background:var(--warm-white);border-bottom:1px solid var(--mist);transition:box-shadow 0.2s;">
   <div style="max-width:1200px;margin:0 auto;padding:0 1.75rem;height:64px;display:flex;align-items:center;justify-content:space-between;">
 
     <a href="index.html" style="display:flex;align-items:center;gap:0.625rem;text-decoration:none;flex-shrink:0;">
@@ -427,7 +427,7 @@
     </button>
   </div>
 
-  <div id="mob-menu" style="display:none;border-top:1px solid var(--mist);background:var(--cream);">
+  <div id="mob-menu" style="display:none;border-top:1px solid var(--mist);background:var(--warm-white);">
     <div style="max-width:1200px;margin:0 auto;padding:1.25rem 1.75rem;display:flex;flex-direction:column;gap:0.75rem;">
       <a href="index.html#services"     class="nav-link" style="padding:0.4rem 0;" onclick="closeMob()">Services</a>
       <a href="index.html#how-it-works" class="nav-link" style="padding:0.4rem 0;" onclick="closeMob()">How It Works</a>
@@ -452,8 +452,6 @@
       The weeks after a loss are full of decisions that can't wait. This page maps the practical work ahead — the tasks, the timeline, the terms — so you know what to expect and where to begin.
     </p>
     <div style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:2rem;">
-      <a href="#first-30" style="font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:400;color:var(--forest);text-decoration:none;border:1px solid rgba(45,80,48,0.3);border-radius:20px;padding:0.4rem 0.9rem;transition:border-color 0.18s,background 0.18s;" onmouseover="this.style.background='rgba(45,80,48,0.06)'" onmouseout="this.style.background='transparent'">First 30 Days</a>
-      <a href="#executors" style="font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:400;color:var(--forest);text-decoration:none;border:1px solid rgba(45,80,48,0.3);border-radius:20px;padding:0.4rem 0.9rem;transition:border-color 0.18s,background 0.18s;" onmouseover="this.style.background='rgba(45,80,48,0.06)'" onmouseout="this.style.background='transparent'">For Executors</a>
       <a href="#timeline" style="font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:400;color:var(--forest);text-decoration:none;border:1px solid rgba(45,80,48,0.3);border-radius:20px;padding:0.4rem 0.9rem;transition:border-color 0.18s,background 0.18s;" onmouseover="this.style.background='rgba(45,80,48,0.06)'" onmouseout="this.style.background='transparent'">Timeline</a>
       <a href="#glossary" style="font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:400;color:var(--forest);text-decoration:none;border:1px solid rgba(45,80,48,0.3);border-radius:20px;padding:0.4rem 0.9rem;transition:border-color 0.18s,background 0.18s;" onmouseover="this.style.background='rgba(45,80,48,0.06)'" onmouseout="this.style.background='transparent'">Glossary</a>
       <a href="#support" style="font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:400;color:var(--forest);text-decoration:none;border:1px solid rgba(45,80,48,0.3);border-radius:20px;padding:0.4rem 0.9rem;transition:border-color 0.18s,background 0.18s;" onmouseover="this.style.background='rgba(45,80,48,0.06)'" onmouseout="this.style.background='transparent'">Grief Support</a>
@@ -471,8 +469,6 @@
       <div style="background:var(--warm-white);border:1px solid var(--mist);border-radius:12px;padding:1.6rem;">
         <p class="label" style="opacity:0.5;margin-bottom:1rem;">On this page</p>
         <nav style="display:flex;flex-direction:column;gap:0.05rem;" id="toc-links">
-          <a href="#first-30"   class="toc-link">First 30 Days</a>
-          <a href="#executors"  class="toc-link">For Executors</a>
           <a href="#timeline"   class="toc-link">Month-by-Month Timeline</a>
           <a href="#glossary"   class="toc-link">Estate Glossary</a>
           <a href="#support"    class="toc-link">Grief Support Organizations</a>
@@ -492,216 +488,12 @@
     <main style="padding:2.5rem 0 5rem;">
 
 
-      <!-- ══ 1. FIRST 30 DAYS ══════════════════════════════ -->
-      <div class="gr-section fade-up" id="first-30">
-        <span class="section-number">01</span>
-        <h2 class="section-title">First 30 Days</h2>
-        <p class="body-text">
-          The weeks immediately following a death carry the heaviest combination of grief and urgency. Most families have never navigated this before. These are the tasks that cannot wait — not because of arbitrary rules, but because the system has hard deadlines, and some windows close quickly.
-        </p>
-        <p class="body-text" style="margin-top:0.75rem;">
-          You do not have to do all of this at once. But you should know what's in front of you.
-        </p>
-
-        <ul class="checklist" style="margin-top:1.75rem;">
-          <li>
-            <div class="check-box"></div>
-            <div>
-              <strong>Obtain certified copies of the death certificate</strong>
-              Request 10–15 copies. Financial institutions, government agencies, and courts each require an original. Running out means delays. Your funeral home can typically order them.
-            </div>
-          </li>
-          <li>
-            <div class="check-box"></div>
-            <div>
-              <strong>Notify the Social Security Administration</strong>
-              Call 1-800-772-1213. Any Social Security payment deposited in the month of death must be returned — do not spend it. If the deceased was receiving benefits, benefits stop; if you were receiving benefits as a spouse or dependent, contact SSA to understand what changes.
-            </div>
-          </li>
-          <li>
-            <div class="check-box"></div>
-            <div>
-              <strong>Notify the employer</strong>
-              Ask about final pay, accrued vacation payout, and any employer-sponsored life insurance. Get the HR contact name in writing. If the deceased was self-employed, notify key clients or business partners.
-            </div>
-          </li>
-          <li>
-            <div class="check-box"></div>
-            <div>
-              <strong>Locate the will and any trust documents</strong>
-              Check home files, a safe-deposit box, and with any attorney the deceased worked with. If there is no will, the estate is "intestate" and state law governs distribution — knowing this early matters.
-            </div>
-          </li>
-          <li>
-            <div class="check-box"></div>
-            <div>
-              <strong>Secure all physical property</strong>
-              This includes the home (change locks if necessary), vehicles, and any valuables. Do not distribute or donate anything until the estate is inventoried and debts are accounted for.
-            </div>
-          </li>
-          <li>
-            <div class="check-box"></div>
-            <div>
-              <strong>Notify Medicare and health insurance providers</strong>
-              Cancel coverage going forward and ask about any pending claims that still need processing. <span class="note">Keep records of all correspondence.</span>
-            </div>
-          </li>
-          <li>
-            <div class="check-box"></div>
-            <div>
-              <strong>Forward mail</strong>
-              Set up a mail forward with USPS to a trusted family member or the executor's address. Bills, legal notices, and account statements will continue to arrive.
-            </div>
-          </li>
-          <li>
-            <div class="check-box"></div>
-            <div>
-              <strong>Notify financial institutions — but do not close accounts yet</strong>
-              Contact each bank and investment firm to flag the death. Do not close accounts until you have legal authority to do so (Letters Testamentary or Letters of Administration from the probate court). Closing prematurely can complicate the estate.
-            </div>
-          </li>
-          <li>
-            <div class="check-box"></div>
-            <div>
-              <strong>File for veterans' benefits if applicable</strong>
-              Contact the VA at 1-800-827-1000. Surviving spouses and dependents may be eligible for burial benefits, dependency and indemnity compensation, and other programs.
-            </div>
-          </li>
-          <li>
-            <div class="check-box"></div>
-            <div>
-              <strong>Pause or cancel recurring subscriptions</strong>
-              Streaming services, memberships, and auto-pays will continue to charge. Make a list and cancel systematically — but hold off on canceling anything that might be needed to access important accounts (email, cloud storage).
-            </div>
-          </li>
-          <li>
-            <div class="check-box"></div>
-            <div>
-              <strong>Keep a running log of all estate-related expenses</strong>
-              Funeral costs, legal fees, travel, and administrative expenses may be reimbursable from the estate before distribution. Save every receipt.
-            </div>
-          </li>
-        </ul>
-
-        <div class="callout forest" style="margin-top:2rem;">
-          <p><strong>A note on timing.</strong> Some states require creditors to be notified within a specific window after probate opens, and benefit applications have their own deadlines. When in doubt about a deadline, assume it is sooner than you think and act accordingly.</p>
-        </div>
-      </div>
-
-
-      <!-- ══ 2. FOR EXECUTORS ═══════════════════════════════ -->
-      <div class="gr-section fade-up" id="executors">
-        <span class="section-number">02</span>
-        <h2 class="section-title">For Executors</h2>
-        <p class="body-text">
-          Being named executor is an act of trust. It is also a legal responsibility that carries real weight — and it arrives at exactly the moment you are least equipped to carry it. You are grieving, too. That is rarely acknowledged, and it should be.
-        </p>
-        <p class="body-text">
-          The executor's role is to represent the estate faithfully: pay what is owed, distribute what remains, and document everything. It is not glamorous work, and it typically takes longer than anyone expects.
-        </p>
-
-        <div class="callout gold" style="margin-top:1.5rem;margin-bottom:1.75rem;">
-          <p><strong>You do not have to accept.</strong> Executors can decline the role. If you are named but feel unable or unwilling to serve, you can renounce the appointment through the probate court. An alternative executor can be appointed. Saying no is a legitimate option.</p>
-        </div>
-
-        <ul class="checklist">
-          <li>
-            <div class="check-box"></div>
-            <div>
-              <strong>File the will with the probate court</strong>
-              This formally opens the estate. The court will then issue your Letters Testamentary — the document that gives you legal authority to act on behalf of the estate.
-            </div>
-          </li>
-          <li>
-            <div class="check-box"></div>
-            <div>
-              <strong>Obtain Letters Testamentary</strong>
-              You will need multiple certified copies. Banks, brokerages, and government agencies each require an original. Request at least 8–10.
-            </div>
-          </li>
-          <li>
-            <div class="check-box"></div>
-            <div>
-              <strong>Open a dedicated estate bank account</strong>
-              All estate income and expenses must flow through this account. Never co-mingle estate funds with personal funds — doing so can expose you to personal liability.
-            </div>
-          </li>
-          <li>
-            <div class="check-box"></div>
-            <div>
-              <strong>Create a full inventory of assets and liabilities</strong>
-              Real property, vehicles, bank accounts, investment accounts, retirement accounts, digital assets, jewelry, art, and any business interests. Also document outstanding debts: mortgage, loans, credit cards, medical bills, and any unpaid taxes.
-            </div>
-          </li>
-          <li>
-            <div class="check-box"></div>
-            <div>
-              <strong>Notify all known creditors</strong>
-              Most states require formal notice to creditors after probate opens. Creditors then have a limited window to file claims. Your attorney can guide you through the specific requirements in your state.
-            </div>
-          </li>
-          <li>
-            <div class="check-box"></div>
-            <div>
-              <strong>Notify named beneficiaries</strong>
-              Beneficiaries are legally entitled to notification that probate has opened. Keep communication clear, consistent, and in writing.
-            </div>
-          </li>
-          <li>
-            <div class="check-box"></div>
-            <div>
-              <strong>Continue ongoing financial obligations</strong>
-              The estate is responsible for mortgage payments, property taxes, utilities, and insurance on estate property until assets are transferred or sold. Pay these from the estate account.
-            </div>
-          </li>
-          <li>
-            <div class="check-box"></div>
-            <div>
-              <strong>File the decedent's final income tax return</strong>
-              Due April 15 of the year following death, covering income through the date of death. You may also need to file a separate estate income tax return (Form 1041) if the estate generates income during administration.
-            </div>
-          </li>
-          <li>
-            <div class="check-box"></div>
-            <div>
-              <strong>Determine whether a federal estate tax return is required</strong>
-              For 2025–2026, the federal estate tax exemption is approximately $13.6 million per individual. State-level estate taxes have lower thresholds — check your state's rules.
-            </div>
-          </li>
-          <li>
-            <div class="check-box"></div>
-            <div>
-              <strong>Pay valid debts before distributing assets</strong>
-              Executors who distribute assets before settling debts can be held personally liable for those debts. Settle all claims first.
-            </div>
-          </li>
-          <li>
-            <div class="check-box"></div>
-            <div>
-              <strong>Document every decision</strong>
-              Keep records of every financial transaction, every communication with creditors and beneficiaries, and every professional you engage. If challenged, your documentation is your defense.
-            </div>
-          </li>
-          <li>
-            <div class="check-box"></div>
-            <div>
-              <strong>Petition the court to close the estate</strong>
-              Once assets are distributed and taxes are filed, you file a final accounting with the court and formally close the estate. The court releases you from your executor duties.
-            </div>
-          </li>
-        </ul>
-      </div>
-
-
-      <!-- ══ 3. TIMELINE ════════════════════════════════════ -->
+      <!-- ══ 1. TIMELINE ════════════════════════════════════ -->
       <div class="gr-section fade-up" id="timeline">
-        <span class="section-number">03</span>
+        <span class="section-number">01</span>
         <h2 class="section-title">Month-by-Month Timeline</h2>
         <p class="body-text">
-          Estate administration rarely follows a neat schedule, but having a rough map helps. Most estates close in six to twelve months. Complex estates — those with business interests, real property in multiple states, contested wills, or unclear beneficiaries — often take longer.
-        </p>
-        <p class="body-text" style="margin-top:0.75rem;">
-          This is a general guide. Your attorney can give you a timeline specific to your state and situation.
+          Most estates close in six to twelve months. Complex estates — those with business interests, property in multiple states, or contested wills — often take longer. This is a general map, not a guarantee.
         </p>
 
         <div class="timeline" style="margin-top:2rem;">
@@ -710,13 +502,7 @@
             <div class="timeline-content">
               <span class="timeline-period">Days 1–14</span>
               <div class="timeline-heading">Immediate Response</div>
-              <ul class="timeline-tasks">
-                <li>Obtain death certificates (10–15 copies)</li>
-                <li>Notify SSA, employer, Medicare, and health insurers</li>
-                <li>Secure physical property; locate the will</li>
-                <li>Forward mail; pause recurring charges</li>
-                <li>Begin logging all estate-related expenses</li>
-              </ul>
+              <p style="font-family:'Lora',Georgia,serif;font-size:0.85rem;line-height:1.7;color:rgba(44,44,40,0.68);margin-top:0.4rem;">The first two weeks are about urgent notifications and securing the estate. Death certificates need to be obtained, government agencies and insurers notified, property secured, and the will located. Mail should be forwarded and recurring charges paused.</p>
             </div>
           </div>
           <div class="timeline-item">
@@ -724,13 +510,7 @@
             <div class="timeline-content">
               <span class="timeline-period">Weeks 2–4</span>
               <div class="timeline-heading">Legal & Financial Setup</div>
-              <ul class="timeline-tasks">
-                <li>File the will with the probate court; open the estate</li>
-                <li>Obtain Letters Testamentary or Letters of Administration</li>
-                <li>Open a dedicated estate bank account</li>
-                <li>Begin full asset and liability inventory</li>
-                <li>Retain an estate attorney if you haven't already</li>
-              </ul>
+              <p style="font-family:'Lora',Georgia,serif;font-size:0.85rem;line-height:1.7;color:rgba(44,44,40,0.68);margin-top:0.4rem;">The estate is formally opened through the probate court, giving the executor legal authority to act. A dedicated estate bank account is opened, a full inventory of assets and debts is begun, and an estate attorney is retained.</p>
             </div>
           </div>
           <div class="timeline-item">
@@ -738,13 +518,7 @@
             <div class="timeline-content">
               <span class="timeline-period">Month 2</span>
               <div class="timeline-heading">Notification & Inventory</div>
-              <ul class="timeline-tasks">
-                <li>Formally notify all known creditors per state requirements</li>
-                <li>Notify named beneficiaries that probate has opened</li>
-                <li>Complete the asset inventory; obtain appraisals for real property and valuables</li>
-                <li>Transfer or retitle any accounts that pass outside of probate (POD, TOD, joint accounts)</li>
-                <li>Continue paying estate obligations (mortgage, insurance, utilities)</li>
-              </ul>
+              <p style="font-family:'Lora',Georgia,serif;font-size:0.85rem;line-height:1.7;color:rgba(44,44,40,0.68);margin-top:0.4rem;">Creditors and beneficiaries are formally notified. The asset inventory is completed, appraisals are obtained for property and valuables, and accounts that pass outside of probate are transferred. Estate obligations — mortgage, insurance, utilities — continue to be paid.</p>
             </div>
           </div>
           <div class="timeline-item">
@@ -752,26 +526,15 @@
             <div class="timeline-content">
               <span class="timeline-period">Months 3–4</span>
               <div class="timeline-heading">Claims & Resolution</div>
-              <ul class="timeline-tasks">
-                <li>Creditor claim window closes (varies by state — typically 3–6 months)</li>
-                <li>Review and pay or contest submitted creditor claims</li>
-                <li>Sell estate property if needed to satisfy debts or facilitate distribution</li>
-                <li>File the decedent's final income tax return (or extension)</li>
-                <li>Determine whether an estate income tax return (Form 1041) is required</li>
-              </ul>
+              <p style="font-family:'Lora',Georgia,serif;font-size:0.85rem;line-height:1.7;color:rgba(44,44,40,0.68);margin-top:0.4rem;">The creditor claim window closes and submitted claims are reviewed, paid, or contested. Estate property may be sold if needed to settle debts. The decedent's final income tax return is filed during this period.</p>
             </div>
           </div>
           <div class="timeline-item">
             <div class="timeline-dot"></div>
             <div class="timeline-content">
-              <span class="timeline-period">Month 5–6</span>
+              <span class="timeline-period">Months 5–6</span>
               <div class="timeline-heading">Distribution</div>
-              <ul class="timeline-tasks">
-                <li>All debts, taxes, and claims are resolved</li>
-                <li>Distribute remaining assets to beneficiaries per the will (or state law)</li>
-                <li>Obtain signed receipts from all beneficiaries</li>
-                <li>Prepare the final accounting of all estate income and expenditures</li>
-              </ul>
+              <p style="font-family:'Lora',Georgia,serif;font-size:0.85rem;line-height:1.7;color:rgba(44,44,40,0.68);margin-top:0.4rem;">With debts and taxes resolved, remaining assets are distributed to beneficiaries according to the will or state law. Signed receipts are collected and a final accounting of all estate income and expenditures is prepared.</p>
             </div>
           </div>
           <div class="timeline-item">
@@ -779,22 +542,16 @@
             <div class="timeline-content">
               <span class="timeline-period">Month 6–12+</span>
               <div class="timeline-heading">Closure</div>
-              <ul class="timeline-tasks">
-                <li>File the final accounting with the probate court</li>
-                <li>Court approves the accounting and issues an order of discharge</li>
-                <li>Close the estate bank account</li>
-                <li>Executor is formally released from responsibility</li>
-                <li><em style="opacity:0.7;">Complex estates may require 12–24 months or longer.</em></li>
-              </ul>
+              <p style="font-family:'Lora',Georgia,serif;font-size:0.85rem;line-height:1.7;color:rgba(44,44,40,0.68);margin-top:0.4rem;">The final accounting is filed with the probate court, which issues an order of discharge releasing the executor from responsibility. The estate bank account is closed and administration is complete. Complex estates may take 12–24 months or longer.</p>
             </div>
           </div>
         </div>
       </div>
 
 
-      <!-- ══ 4. GLOSSARY ════════════════════════════════════ -->
+      <!-- ══ 2. GLOSSARY ════════════════════════════════════ -->
       <div class="gr-section fade-up" id="glossary">
-        <span class="section-number">04</span>
+        <span class="section-number">02</span>
         <h2 class="section-title">Estate Glossary</h2>
         <p class="body-text">
           Estate law has a language of its own. Here are ten terms you will encounter — in plain English.
@@ -845,9 +602,9 @@
       </div>
 
 
-      <!-- ══ 5. EXTERNAL SUPPORT ════════════════════════════ -->
+      <!-- ══ 3. EXTERNAL SUPPORT ════════════════════════════ -->
       <div class="gr-section fade-up" id="support">
-        <span class="section-number">05</span>
+        <span class="section-number">03</span>
         <h2 class="section-title">Grief Support Organizations</h2>
         <p class="body-text">
           Administrative help is one kind of support. Emotional support is another. These organizations offer the second kind — honestly described, without endorsement of any particular approach.
@@ -920,46 +677,36 @@
 
 
 <!-- ══ FOOTER ════════════════════════════════════════════════ -->
-<footer style="background:#1a2218;padding:3.5rem 1.75rem 2rem;">
+<footer style="background:#1a2218;padding:3.5rem 1.75rem 2rem;font-family:'DM Sans',sans-serif;">
   <div style="max-width:1200px;margin:0 auto;">
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:2.5rem;padding-bottom:2rem;border-bottom:1px solid rgba(255,255,255,0.06);" id="footer-grid">
-      <div>
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:2rem;padding-bottom:2rem;border-bottom:1px solid rgba(255,255,255,0.06);">
+
+      <!-- Brand -->
+      <div style="flex-shrink:0;">
         <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.875rem;">
           <img src="brand_assets/logo.png" alt="Loss Ally" style="height:30px;width:auto;" />
-          <span style="font-size:0.95rem;font-weight:400;color:rgba(250,248,244,0.8);font-family:'DM Sans',sans-serif;">Loss Ally</span>
+          <span style="font-size:0.95rem;font-weight:400;color:rgba(250,248,244,0.8);">Loss Ally</span>
         </div>
-        <p style="font-family:'DM Sans',sans-serif;font-size:0.78rem;color:rgba(250,248,244,0.3);line-height:1.75;max-width:200px;font-weight:300;">
+        <p style="font-size:0.78rem;color:rgba(250,248,244,0.3);line-height:1.75;max-width:200px;font-weight:300;">
           Estate and life administration support. Compassionate. Practical. Always here.
         </p>
       </div>
-      <div>
-        <p style="font-family:'DM Sans',sans-serif;font-size:0.62rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(250,248,244,0.28);margin-bottom:0.875rem;">Services</p>
-        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:0.5rem;">
-          <li><a href="index.html#services" style="font-family:'DM Sans',sans-serif;font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Legal &amp; Probate</a></li>
-          <li><a href="index.html#services" style="font-family:'DM Sans',sans-serif;font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Financial Closure</a></li>
-          <li><a href="index.html#services" style="font-family:'DM Sans',sans-serif;font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Government Records</a></li>
-          <li><a href="index.html#services" style="font-family:'DM Sans',sans-serif;font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Digital Estate</a></li>
-        </ul>
-      </div>
-      <div>
-        <p style="font-family:'DM Sans',sans-serif;font-size:0.62rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(250,248,244,0.28);margin-bottom:0.875rem;">Resources</p>
-        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:0.5rem;">
-          <li><a href="grief-resources.html" style="font-family:'DM Sans',sans-serif;font-size:0.8rem;color:rgba(250,248,244,0.6);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.6)'">Grief Resources</a></li>
-        </ul>
-      </div>
-      <div>
-        <p style="font-family:'DM Sans',sans-serif;font-size:0.62rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(250,248,244,0.28);margin-bottom:0.875rem;">Legal</p>
-        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:0.5rem;">
-          <li><a href="privacy-policy.html" style="font-family:'DM Sans',sans-serif;font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Privacy Policy</a></li>
-          <li><a href="terms-of-service.html" style="font-family:'DM Sans',sans-serif;font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Terms of Service</a></li>
-        </ul>
-      </div>
+
+      <!-- Links -->
+      <nav style="display:flex;flex-wrap:wrap;gap:0.625rem 2.25rem;align-items:center;">
+        <a href="help-center.html" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;white-space:nowrap;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Help Center</a>
+        <a href="state-by-state-guide.html" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;white-space:nowrap;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">State-by-State Guide</a>
+        <a href="grief-resources.html" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;white-space:nowrap;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Grief Resources</a>
+        <a href="privacy-policy.html" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;white-space:nowrap;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Privacy Policy</a>
+        <a href="terms-of-service.html" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;white-space:nowrap;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Terms of Service</a>
+      </nav>
+
     </div>
 
     <div style="display:flex;justify-content:space-between;align-items:center;padding-top:1.5rem;flex-wrap:wrap;gap:0.75rem;">
-      <p style="font-family:'DM Sans',sans-serif;font-size:0.72rem;color:rgba(250,248,244,0.22);font-weight:300;">© 2026 Loss Ally LLC. All rights reserved.</p>
-      <p style="font-family:'DM Sans',sans-serif;font-size:0.72rem;color:rgba(250,248,244,0.22);font-weight:300;">Not a legal services firm.</p>
+      <p style="font-size:0.72rem;color:rgba(250,248,244,0.22);font-weight:300;">© 2026 Loss Ally. All rights reserved.</p>
+      <p style="font-size:0.72rem;color:rgba(250,248,244,0.22);font-weight:300;">Not a legal services firm.</p>
     </div>
   </div>
 </footer>
@@ -1021,18 +768,6 @@
   }
   layoutGr();
   window.addEventListener('resize', layoutGr, { passive: true });
-
-  // Footer grid
-  const ftg = document.getElementById('footer-grid');
-  if (ftg) {
-    function layoutFooter() {
-      ftg.style.gridTemplateColumns = window.innerWidth >= 1024
-        ? '1.6fr 1fr 1fr 1fr'
-        : window.innerWidth >= 640 ? '1fr 1fr' : '1fr';
-    }
-    layoutFooter();
-    window.addEventListener('resize', layoutFooter, { passive: true });
-  }
 
   // Smooth scroll for anchor links
   document.querySelectorAll('a[href^="#"]').forEach(a => {
