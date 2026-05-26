@@ -230,7 +230,7 @@
       <a href="#services"     class="nav-link">Services</a>
       <a href="#how-it-works" class="nav-link">How It Works</a>
       <a href="#pricing"      class="nav-link">Plans</a>
-      <a href="#contact" class="btn-primary" style="padding:0.6rem 1.25rem;font-size:0.82rem;">Get Support</a>
+      <a href="intake.html" class="btn-primary" style="padding:0.6rem 1.25rem;font-size:0.82rem;">Get Support</a>
     </nav>
 
     <button id="mob-ham" aria-label="Open menu" style="display:none;flex-direction:column;gap:5px;padding:8px;background:none;border:none;cursor:pointer;">
@@ -245,7 +245,7 @@
       <a href="#services"     class="nav-link" style="padding:0.4rem 0;" onclick="closeMob()">Services</a>
       <a href="#how-it-works" class="nav-link" style="padding:0.4rem 0;" onclick="closeMob()">How It Works</a>
       <a href="#pricing"      class="nav-link" style="padding:0.4rem 0;" onclick="closeMob()">Pricing</a>
-      <a href="#contact" class="btn-primary" style="align-self:flex-start;margin-top:0.5rem;" onclick="closeMob()">Schedule a Call</a>
+      <a href="intake.html" class="btn-primary" style="align-self:flex-start;margin-top:0.5rem;" onclick="closeMob()">Book a Free Consultation</a>
     </div>
   </div>
 </header>
@@ -830,69 +830,32 @@
 </section>
 
 
-<!-- ══ CONTACT ══════════════════════════════════════════════ -->
-<section id="contact" style="padding:6.5rem 1.75rem;background:#1F3A2B;position:relative;overflow:hidden;">
+<!-- ══ CONTACT CTA ══════════════════════════════════════════════ -->
+<section id="contact" style="padding:7rem 1.75rem;background:#1F3A2B;position:relative;overflow:hidden;">
   <div style="position:absolute;top:-120px;left:-80px;width:500px;height:500px;background:radial-gradient(circle,rgba(191,160,106,0.1) 0%,transparent 68%);pointer-events:none;"></div>
   <div style="position:absolute;bottom:-100px;right:-60px;width:520px;height:520px;background:radial-gradient(circle,rgba(191,160,106,0.07) 0%,transparent 68%);pointer-events:none;"></div>
 
-  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:5rem;align-items:start;position:relative;z-index:1;" id="contact-grid">
-
-    <!-- Left: heading + copy -->
-    <div class="fade-up">
-      <span style="font-size:0.7rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:1.25rem;">— Take the First Step</span>
-      <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.4rem,4.5vw,3.75rem);font-weight:400;line-height:1.08;letter-spacing:-0.02em;color:#FAF8F4;margin-bottom:1.5rem;">
-        You don't have to figure this out <em style="font-style:italic;color:var(--warm-ochre);">alone.</em>
-      </h2>
-      <p style="font-size:0.95rem;color:rgba(250,248,244,0.6);line-height:1.8;max-width:400px;margin-bottom:2rem;font-weight:300;">
-        Reach out whenever you're ready — whether that's the day of passing or six months later. There's no wrong time to ask for help. We'll meet you exactly where you are.
-      </p>
-      <p style="font-size:0.75rem;color:rgba(250,248,244,0.3);line-height:1.65;max-width:360px;font-weight:300;">
-        Loss Ally is not a law firm. We provide administrative support and coordination services. For legal advice, we'll connect you with a qualified attorney in your area.
-      </p>
-    </div>
-
-    <!-- Right: contact form -->
-    <div class="fade-up" style="transition-delay:0.12s;">
-      <div style="background:var(--cream);border-radius:16px;padding:2.5rem 2.25rem;box-shadow:0 8px 40px rgba(0,0,0,0.18);">
-        <h3 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.75rem;font-weight:400;color:var(--charcoal);letter-spacing:-0.01em;margin-bottom:1.75rem;line-height:1.2;">Request a Free Consultation</h3>
-        <form onsubmit="return false;" style="display:flex;flex-direction:column;gap:1rem;">
-
-          <div>
-            <label style="display:block;font-size:0.68rem;font-weight:500;letter-spacing:0.07em;color:var(--charcoal);opacity:0.5;margin-bottom:0.4rem;text-transform:uppercase;">Your Name</label>
-            <input type="text" placeholder="First and last name" style="width:100%;background:#fff;border:1px solid var(--mist);border-radius:8px;padding:0.7rem 0.875rem;font-size:0.875rem;color:var(--charcoal);font-family:'DM Sans',sans-serif;font-weight:300;outline:none;transition:border-color 0.18s;" onfocus="this.style.borderColor='#8D9D6A'" onblur="this.style.borderColor=''" />
-          </div>
-
-          <div>
-            <label style="display:block;font-size:0.68rem;font-weight:500;letter-spacing:0.07em;color:var(--charcoal);opacity:0.5;margin-bottom:0.4rem;text-transform:uppercase;">Email Address</label>
-            <input type="email" placeholder="your@email.com" style="width:100%;background:#fff;border:1px solid var(--mist);border-radius:8px;padding:0.7rem 0.875rem;font-size:0.875rem;color:var(--charcoal);font-family:'DM Sans',sans-serif;font-weight:300;outline:none;transition:border-color 0.18s;" onfocus="this.style.borderColor='#8D9D6A'" onblur="this.style.borderColor=''" />
-          </div>
-
-          <div>
-            <label style="display:block;font-size:0.68rem;font-weight:500;letter-spacing:0.07em;color:var(--charcoal);opacity:0.5;margin-bottom:0.4rem;text-transform:uppercase;">Phone (Optional)</label>
-            <input type="tel" placeholder="(555) 000-0000" style="width:100%;background:#fff;border:1px solid var(--mist);border-radius:8px;padding:0.7rem 0.875rem;font-size:0.875rem;color:var(--charcoal);font-family:'DM Sans',sans-serif;font-weight:300;outline:none;transition:border-color 0.18s;" onfocus="this.style.borderColor='#8D9D6A'" onblur="this.style.borderColor=''" />
-          </div>
-
-          <div>
-            <label style="display:block;font-size:0.68rem;font-weight:500;letter-spacing:0.07em;color:var(--charcoal);opacity:0.5;margin-bottom:0.4rem;text-transform:uppercase;">How Can We Help?</label>
-            <select style="width:100%;background:#fff;border:1px solid #E2DDD4;border-radius:8px;padding:0.7rem 0.875rem;font-size:0.875rem;color:#2C2C28;font-family:'DM Sans',sans-serif;font-weight:300;outline:none;transition:border-color 0.18s;cursor:pointer;" onfocus="this.style.borderColor='#8D9D6A'" onblur="this.style.borderColor='#E2DDD4'">
-              <option value="">Select a situation…</option>
-              <option value="recent">A loved one recently passed</option>
-              <option value="planning">Planning ahead for myself</option>
-              <option value="past">A passing was several months ago</option>
-              <option value="unsure">I'm not sure yet</option>
-            </select>
-          </div>
-
-          <button type="submit" class="btn-primary" style="width:100%;justify-content:center;padding:0.85rem 1.6rem;margin-top:0.5rem;">
-            Request Consultation — No Obligation
-          </button>
-
-          <p style="font-size:0.72rem;color:var(--charcoal);opacity:0.4;text-align:center;line-height:1.5;font-weight:300;">We respond within 4 hours, Monday–Friday, 8am–6pm</p>
-
-        </form>
-      </div>
-    </div>
-
+  <div style="max-width:680px;margin:0 auto;text-align:center;position:relative;z-index:1;" class="fade-up">
+    <span style="font-size:0.7rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:1.25rem;">— Take the First Step</span>
+    <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.4rem,4.5vw,3.75rem);font-weight:400;line-height:1.08;letter-spacing:-0.02em;color:#FAF8F4;margin-bottom:1.75rem;">
+      You don't have to figure<br>this out <em style="font-style:italic;color:var(--warm-ochre);">alone.</em>
+    </h2>
+    <p style="font-size:1rem;color:rgba(250,248,244,0.65);line-height:1.8;max-width:520px;margin:0 auto 1rem;font-weight:300;">
+      The first step is simply telling us about your situation — who you lost, where things stand, and what feels most urgent right now.
+    </p>
+    <p style="font-size:1rem;color:rgba(250,248,244,0.65);line-height:1.8;max-width:520px;margin:0 auto 1rem;font-weight:300;">
+      Whether this just happened or you've been managing alone for months, your advisor will meet you exactly where you are.
+    </p>
+    <p style="font-size:0.875rem;color:rgba(250,248,244,0.38);line-height:1.75;max-width:460px;margin:0 auto 2.75rem;font-weight:300;">
+      The consultation is free. There's no obligation. You'll hang up with a clearer sense of what to do next.
+    </p>
+    <a href="intake.html" class="btn-gold" style="font-size:0.95rem;padding:0.9rem 2.25rem;">
+      Book a Free Consultation
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <p style="font-size:0.7rem;color:rgba(250,248,244,0.25);margin-top:1.75rem;font-weight:300;line-height:1.65;">
+      Loss Ally is not a law firm. We provide administrative support and coordination services.<br>For legal advice, we'll connect you with a qualified attorney in your area.
+    </p>
   </div>
 </section>
 
@@ -1042,16 +1005,6 @@
     }
     layoutHiw();
     window.addEventListener('resize', layoutHiw, { passive: true });
-  }
-
-  // Two-column CONTACT at ≥1024px
-  const cg = document.getElementById('contact-grid');
-  if (cg) {
-    function layoutContact() {
-      cg.style.gridTemplateColumns = window.innerWidth >= 1024 ? '1fr 1fr' : '1fr';
-    }
-    layoutContact();
-    window.addEventListener('resize', layoutContact, { passive: true });
   }
 
   // Footer: brand + links — flex layout handles responsiveness natively
