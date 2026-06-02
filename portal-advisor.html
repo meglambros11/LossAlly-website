@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="brand_assets/logo.png" />
+  <title>Advisor Portal — Loss Ally</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --cream: #f6f1e6;
+      --warm-white: #FAF8F4;
+      --sage: #8D9D6A;
+      --forest: #5b6e5b;
+      --evergreen: #2D4D0C;
+      --charcoal: #2C2C28;
+      --mist: #E2DDD4;
+      --gold: #C9A870;
+      --terracotta: #C4724A;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--warm-white);
+      color: var(--charcoal);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.5;
+    }
+    .nav-link {
+      font-size: 0.875rem;
+      font-weight: 300;
+      color: var(--charcoal);
+      text-decoration: none;
+      opacity: 0.6;
+      transition: opacity 0.18s;
+      letter-spacing: 0.005em;
+    }
+    .nav-link:hover { opacity: 1; }
+    .nav-link.active { opacity: 1; font-weight: 400; }
+    .nav-link:focus-visible { outline: 2px solid var(--gold); border-radius: 2px; }
+    .btn-logout {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: transparent;
+      color: var(--charcoal);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      font-size: 0.82rem;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      border: 1px solid var(--mist);
+      cursor: pointer;
+      transition: border-color 0.18s ease, background 0.18s ease;
+      opacity: 0.7;
+    }
+    .btn-logout:hover { border-color: var(--sage); background: rgba(141,157,106,0.06); opacity: 1; }
+    .btn-logout:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+    .client-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 1.5rem;
+      border: 1px solid rgba(226,221,212,0.6);
+      box-shadow: 0 2px 16px rgba(44,44,42,0.05), 0 1px 4px rgba(44,44,42,0.04);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .client-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(44,44,42,0.1), 0 2px 8px rgba(44,44,42,0.06);
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.2rem 0.65rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 400;
+    }
+    .status-active {
+      background: rgba(141,157,106,0.12);
+      color: var(--forest);
+    }
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fade-up 0.5s ease forwards; }
+    @media (min-width: 640px)  { #clients-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1024px) { #clients-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 1024px) { #desk-nav { display: flex !important; } #mob-ham { display: none  !important; } }
+    @media (max-width: 1023px) { #desk-nav { display: none  !important; } #mob-ham { display: flex  !important; } }
+  </style>
+</head>
+<body style="visibility:hidden;">
+
+<!-- ══ NAV ══════════════════════════════════════════════ -->
+<header id="site-nav" style="position:sticky;top:0;z-index:50;background:var(--warm-white);border-bottom:1px solid var(--mist);transition:box-shadow 0.2s;">
+  <div style="max-width:1200px;margin:0 auto;padding:0 1.75rem;height:64px;display:flex;align-items:center;justify-content:space-between;">
+
+    <a href="/" style="display:flex;align-items:center;gap:0.625rem;text-decoration:none;flex-shrink:0;">
+      <img src="brand_assets/logo.png" alt="Loss Ally" style="height:34px;width:auto;mix-blend-mode:multiply;" />
+      <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.2rem;font-weight:500;color:var(--charcoal);letter-spacing:0.01em;">Loss Ally</span>
+    </a>
+
+    <nav id="desk-nav" style="display:flex;align-items:center;gap:2rem;">
+      <a href="portal-dashboard.html" class="nav-link">Dashboard</a>
+      <a href="portal-advisor.html" class="nav-link active">Clients</a>
+      <button id="btn-logout" class="btn-logout">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        Sign Out
+      </button>
+    </nav>
+
+    <button id="mob-ham" aria-label="Open menu" style="display:flex;flex-direction:column;gap:5px;padding:8px;background:none;border:none;cursor:pointer;">
+      <span style="display:block;width:20px;height:1.5px;background:var(--charcoal);border-radius:2px;"></span>
+      <span style="display:block;width:20px;height:1.5px;background:var(--charcoal);border-radius:2px;"></span>
+      <span style="display:block;width:20px;height:1.5px;background:var(--charcoal);border-radius:2px;"></span>
+    </button>
+  </div>
+
+  <div id="mob-menu" style="display:none;border-top:1px solid var(--mist);background:var(--warm-white);">
+    <div style="max-width:1200px;margin:0 auto;padding:1.25rem 1.75rem;display:flex;flex-direction:column;gap:0.75rem;">
+      <a href="portal-dashboard.html" class="nav-link" style="padding:0.4rem 0;">Dashboard</a>
+      <a href="portal-advisor.html" class="nav-link active" style="padding:0.4rem 0;">Clients</a>
+      <button id="mob-logout" class="btn-logout" style="align-self:flex-start;margin-top:0.5rem;">Sign Out</button>
+    </div>
+  </div>
+</header>
+
+
+<!-- ══ PAGE HEADER ══════════════════════════════════════ -->
+<div style="background:var(--cream);border-bottom:1px solid var(--mist);padding:2.5rem 1.75rem 2.75rem;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <span style="font-size:0.68rem;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--sage);">Advisor Portal</span>
+    <div style="display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-top:0.4rem;">
+      <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2rem,4vw,3rem);font-weight:400;letter-spacing:-0.02em;color:var(--charcoal);line-height:1.1;">Your Clients</h1>
+      <span id="client-count" style="font-size:0.8rem;color:var(--charcoal);opacity:0.45;padding:0.25rem 0.75rem;background:rgba(226,221,212,0.5);border-radius:20px;"></span>
+    </div>
+    <p style="font-size:0.9rem;line-height:1.7;color:var(--charcoal);opacity:0.55;margin-top:0.625rem;font-family:'Lora',Georgia,serif;font-style:italic;">
+      All active client accounts. To add a client, create their user account in the Supabase dashboard.
+    </p>
+  </div>
+</div>
+
+
+<!-- ══ CLIENT LIST ══════════════════════════════════════ -->
+<main style="max-width:1200px;margin:0 auto;padding:2.5rem 1.75rem 4rem;">
+
+  <!-- Loading state -->
+  <div id="clients-loading" style="text-align:center;padding:4rem 0;color:var(--charcoal);opacity:0.4;">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="animation:spin 1s linear infinite;display:inline-block;margin-bottom:0.75rem;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+    <p style="font-size:0.85rem;">Loading clients…</p>
+  </div>
+
+  <!-- Client grid (populated by JS) -->
+  <div id="clients-grid" style="display:none;grid-template-columns:1fr;gap:1.25rem;"></div>
+
+  <!-- Empty state -->
+  <div id="clients-empty" style="display:none;text-align:center;padding:4rem 1.75rem;">
+    <div style="width:64px;height:64px;background:var(--cream);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    </div>
+    <h3 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;font-weight:400;color:var(--charcoal);margin-bottom:0.5rem;">No clients yet</h3>
+    <p style="font-size:0.85rem;line-height:1.65;color:var(--charcoal);opacity:0.5;max-width:380px;margin:0 auto;">
+      Create client accounts in the Supabase dashboard under Authentication → Users. Their profiles will appear here automatically.
+    </p>
+  </div>
+
+  <!-- Error state -->
+  <div id="clients-error" style="display:none;text-align:center;padding:3rem 1.75rem;">
+    <p style="font-size:0.85rem;color:var(--terracotta);">Could not load clients. Check your Supabase configuration.</p>
+  </div>
+
+</main>
+
+
+<style>
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes fade-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+
+<script type="module">
+import { requireAdvisor, signOut, supabase } from './auth.js'
+
+// ─── Auth guard ───────────────────────────────────────────────────────────────
+const auth = await requireAdvisor()
+if (!auth) throw new Error('redirect')
+
+document.body.style.visibility = 'visible'
+
+// ─── Fetch clients ────────────────────────────────────────────────────────────
+const loading  = document.getElementById('clients-loading')
+const grid     = document.getElementById('clients-grid')
+const empty    = document.getElementById('clients-empty')
+const errEl    = document.getElementById('clients-error')
+const countEl  = document.getElementById('client-count')
+
+const { data: clients, error } = await supabase
+  .from('profiles')
+  .select('*')
+  .eq('role', 'client')
+  .order('full_name')
+
+loading.style.display = 'none'
+
+if (error) {
+  errEl.style.display = ''
+  console.error('Error fetching clients:', error)
+} else if (!clients || clients.length === 0) {
+  empty.style.display = ''
+  countEl.textContent = '0 clients'
+} else {
+  countEl.textContent = `${clients.length} client${clients.length === 1 ? '' : 's'}`
+  grid.style.display = 'grid'
+
+  grid.innerHTML = clients.map((c, i) => `
+    <div class="client-card" style="animation:fade-up 0.45s ease ${i * 0.05}s forwards;opacity:0;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem;">
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <div style="width:38px;height:38px;border-radius:50%;background:${avatarColor(c.full_name)};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1rem;font-weight:500;color:#fff;">${initials(c.full_name)}</span>
+          </div>
+          <div>
+            <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.15rem;font-weight:500;color:var(--charcoal);line-height:1.2;">${esc(c.full_name || 'Unnamed Client')}</div>
+            <div style="font-size:0.75rem;color:var(--charcoal);opacity:0.48;margin-top:0.1rem;">${esc(c.email || '')}</div>
+          </div>
+        </div>
+        <span class="status-pill status-active">
+          <span style="width:5px;height:5px;border-radius:50%;background:var(--sage);"></span>
+          Active
+        </span>
+      </div>
+
+      <div style="height:1px;background:var(--mist);margin-bottom:0.875rem;"></div>
+
+      <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">
+        <div>
+          <div style="font-size:0.65rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.2rem;">Joined</div>
+          <div style="font-size:0.8rem;color:var(--charcoal);opacity:0.65;">${formatDate(c.created_at)}</div>
+        </div>
+        ${c.advisor_id ? `
+        <div>
+          <div style="font-size:0.65rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.2rem;">Assigned To</div>
+          <div style="font-size:0.8rem;color:var(--charcoal);opacity:0.65;">You</div>
+        </div>` : ''}
+      </div>
+
+      ${c.notes ? `
+      <div style="margin-top:0.875rem;padding-top:0.875rem;border-top:1px solid var(--mist);">
+        <div style="font-size:0.65rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.35rem;">Notes</div>
+        <p style="font-size:0.8rem;line-height:1.65;color:var(--charcoal);opacity:0.65;font-family:'Lora',Georgia,serif;">${esc(c.notes)}</p>
+      </div>` : ''}
+    </div>
+  `).join('')
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+function esc(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+}
+
+function initials(name) {
+  const parts = (name || '').trim().split(/\s+/)
+  if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+  return (parts[0] || '?')[0].toUpperCase()
+}
+
+function avatarColor(name) {
+  const colors = ['#7a8f5f','#6b8080','#8f7a5f','#5f7a8f','#806b5f']
+  let hash = 0
+  for (const ch of (name || '')) hash = (hash * 31 + ch.charCodeAt(0)) | 0
+  return colors[Math.abs(hash) % colors.length]
+}
+
+function formatDate(iso) {
+  if (!iso) return '—'
+  const d = new Date(iso)
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+}
+
+// ─── Logout ───────────────────────────────────────────────────────────────────
+document.getElementById('btn-logout').addEventListener('click', signOut)
+const mobLogout = document.getElementById('mob-logout')
+if (mobLogout) mobLogout.addEventListener('click', signOut)
+
+// ─── Mobile nav ───────────────────────────────────────────────────────────────
+const ham     = document.getElementById('mob-ham')
+const mobMenu = document.getElementById('mob-menu')
+ham.addEventListener('click', () => {
+  const open = mobMenu.style.display !== 'none'
+  mobMenu.style.display = open ? 'none' : ''
+  ham.setAttribute('aria-expanded', String(!open))
+})
+
+// ─── Scroll shadow ────────────────────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  document.getElementById('site-nav').style.boxShadow =
+    window.scrollY > 4 ? '0 2px 20px rgba(44,44,42,0.08)' : ''
+})
+</script>
+
+</body>
+</html>
