@@ -123,23 +123,15 @@
 
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
 
-// In production, _worker.js injects window.SUPABASE_URL / window.SUPABASE_ANON_KEY
-// before <head> so those are used first. In local dev (serve.mjs) they are absent,
-// so we fall back to config.js via dynamic import. Dynamic import means a missing
-// or broken config.js cannot prevent auth.js from loading at all.
-let _cfgUrl = '', _cfgKey = ''
-try {
-  const cfg = await import('./config.js')
-  _cfgUrl = cfg.SUPABASE_URL || ''
-  _cfgKey = cfg.SUPABASE_ANON_KEY || ''
-} catch (e) {
-  console.warn('[auth.js] config.js not available:', e.message)
-}
+// Credentials are injected as window globals before this script runs:
+//   • Production: _worker.js reads them from Cloudflare env vars
+//   • Local dev:  serve.mjs reads them from config.js
+// auth.js never imports config.js directly — that file is gitignored and
+// must not be fetched by browser code.
+const _url = window.SUPABASE_URL  || ''
+const _key = window.SUPABASE_ANON_KEY || ''
 
-const _url = window.SUPABASE_URL || _cfgUrl
-const _key = window.SUPABASE_ANON_KEY || _cfgKey
-
-console.log('[auth.js] URL:', _url ? _url.slice(0, 40) + '...' : '⚠️  MISSING — set SUPABASE_URL in config.js')
+console.log('[auth.js] URL:', _url ? _url.slice(0, 40) + '...' : '⚠️  MISSING — window.SUPABASE_URL not set')
 console.log('[auth.js] key present:', !!_key)
 
 export const supabase = createClient(_url, _key)
