@@ -123,16 +123,22 @@
 
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
 
-// Credentials are injected as window globals before this script runs:
-//   • Production: _worker.js reads them from Cloudflare env vars
-//   • Local dev:  serve.mjs reads them from config.js
-// auth.js never imports config.js directly — that file is gitignored and
-// must not be fetched by browser code.
-const _url = window.SUPABASE_URL  || ''
-const _key = window.SUPABASE_ANON_KEY || ''
+// Credential resolution order:
+//   1. window.SUPABASE_URL / window.SUPABASE_ANON_KEY  — injected by _worker.js
+//      (production, Cloudflare env vars) or serve.mjs (local dev, reads config.js)
+//   2. Hardcoded fallbacks below — used when the injection hasn't run yet, so
+//      createClient never receives empty strings and the module always loads.
+//
+// The Supabase anon key is a public, client-side credential. Security is enforced
+// by Row Level Security policies in the database, not by hiding this key.
+const FALLBACK_URL = 'https://escpzdkbtbviyznshrkz.supabase.co'
+const FALLBACK_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVzY3B6ZGtidGJ2aXl6bnNocmt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzNzU0MTYsImV4cCI6MjA5NTk1MTQxNn0.JidEhFjJF2Ed8tmHqpsIZLA36N1wfAIbVO055QkqpJo'
 
-console.log('[auth.js] URL:', _url ? _url.slice(0, 40) + '...' : '⚠️  MISSING — window.SUPABASE_URL not set')
-console.log('[auth.js] key present:', !!_key)
+const _url = window.SUPABASE_URL  || FALLBACK_URL
+const _key = window.SUPABASE_ANON_KEY || FALLBACK_KEY
+
+console.log('[auth.js] URL source:', window.SUPABASE_URL ? 'window global' : 'fallback')
+console.log('[auth.js] URL:', _url.slice(0, 40) + '...')
 
 export const supabase = createClient(_url, _key)
 
