@@ -122,15 +122,25 @@
  */
 
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
-import { SUPABASE_URL as CONFIG_URL, SUPABASE_ANON_KEY as CONFIG_KEY } from './config.js'
 
-// In production, _worker.js injects credentials as window globals before <head>.
-// In local dev (serve.mjs), those globals are never set, so fall back to config.js.
-const _url = window.SUPABASE_URL || CONFIG_URL
-const _key = window.SUPABASE_ANON_KEY || CONFIG_KEY
+// In production, _worker.js injects window.SUPABASE_URL / window.SUPABASE_ANON_KEY
+// before <head> so those are used first. In local dev (serve.mjs) they are absent,
+// so we fall back to config.js via dynamic import. Dynamic import means a missing
+// or broken config.js cannot prevent auth.js from loading at all.
+let _cfgUrl = '', _cfgKey = ''
+try {
+  const cfg = await import('./config.js')
+  _cfgUrl = cfg.SUPABASE_URL || ''
+  _cfgKey = cfg.SUPABASE_ANON_KEY || ''
+} catch (e) {
+  console.warn('[auth.js] config.js not available:', e.message)
+}
 
-console.log('[auth.js] Supabase URL:', _url ? _url.slice(0, 40) + '…' : '⚠️  MISSING — check config.js or _worker.js env vars')
-console.log('[auth.js] Anon key present:', !!_key)
+const _url = window.SUPABASE_URL || _cfgUrl
+const _key = window.SUPABASE_ANON_KEY || _cfgKey
+
+console.log('[auth.js] URL:', _url ? _url.slice(0, 40) + '...' : '⚠️  MISSING — set SUPABASE_URL in config.js')
+console.log('[auth.js] key present:', !!_key)
 
 export const supabase = createClient(_url, _key)
 
@@ -142,21 +152,25 @@ export async function getSession() {
 }
 
 export async function getProfile() {
-  const session = await getSession()
-  if (!session) return null
+  const { data } = await supabase.auth.getSession()
+  if (!data.session) return null
   const { data: profile, error } = await supabase
     .from('profiles')
     .select('*')
-    .eq('id', session.user.id)
+    .eq('id', data.session.user.id)
     .single()
-  if (error) console.error('[auth] getProfile() error:', error.code, error.message, error)
-  return profile
+  if (error) console.error('[auth] getProfile() error:', error.code, error.message)
+  return profile || null
 }
 
 // ─── Auth Actions ────────────────────────────────────────────────────────────
 
 export async function signIn(email, password) {
-  return supabase.auth.signInWithPassword({ email, password })
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+  if (!error && data.session) {
+    window.location.href = 'portal-dashboard.html'
+  }
+  return { data, error }
 }
 
 export async function signOut() {
@@ -177,32 +191,31 @@ export async function updatePassword(newPassword) {
 // ─── Route Guards ────────────────────────────────────────────────────────────
 
 // Redirects to portal.html if not logged in. Returns { session, profile } if ok.
+// profile may be null if the profiles row is missing or the query fails —
+// callers must guard with auth.profile?.field rather than assuming it exists.
 export async function requireAuth() {
-  const session = await getSession()
-  if (!session) {
+  const { data } = await supabase.auth.getSession()
+
+  if (!data.session) {
     window.location.replace('portal.html')
     return null
   }
 
-  // Use session.user.id directly — same UUID that auth.uid() resolves to on the
-  // Supabase server, so it satisfies `using (auth.uid() = id)` RLS policy.
-  // Avoids an extra getUser() network call whose timing can cause session-not-ready races.
   const { data: profile, error: profileErr } = await supabase
     .from('profiles')
     .select('*')
-    .eq('id', session.user.id)
+    .eq('id', data.session.user.id)
     .single()
 
   if (profileErr) {
-    console.error('[auth] requireAuth() — profiles query failed')
-    console.error('[auth] code:', profileErr.code, '| message:', profileErr.message)
-    console.error('[auth] queried id:', session.user.id)
+    console.error('[auth] requireAuth() — profiles query error:', profileErr.code, profileErr.message)
+    console.error('[auth] user id queried:', data.session.user.id)
     console.error('[auth] full error:', profileErr)
   } else {
-    console.log('[auth] profile loaded — id:', profile?.id, '| role:', profile?.role, '| plan:', profile?.plan)
+    console.log('[auth] profile —', 'id:', profile?.id, '| role:', profile?.role, '| plan:', profile?.plan)
   }
 
-  return { session, profile }
+  return { session: data.session, profile: profile || null }
 }
 
 // Redirects to portal-dashboard.html if not an advisor.
