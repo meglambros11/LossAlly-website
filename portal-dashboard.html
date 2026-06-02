@@ -95,46 +95,155 @@
     }
     .btn-logout:hover { border-color: var(--sage); background: rgba(141,157,106,0.06); opacity: 1; }
     .btn-logout:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
-    .checklist-item {
+
+    /* ── Priority section ───────────────── */
+    details.priority-section {
+      margin-bottom: 1.25rem;
+    }
+    details.priority-section:last-child { margin-bottom: 0; }
+
+    details.priority-section > summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--mist);
+      user-select: none;
+    }
+    details.priority-section > summary::-webkit-details-marker { display: none; }
+    details.priority-section > summary:focus-visible {
+      outline: 2px solid var(--gold);
+      border-radius: 4px;
+      outline-offset: 2px;
+    }
+    .priority-tag {
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.22rem 0.7rem;
+      border-radius: 20px;
+      flex-shrink: 0;
+    }
+    .priority-count {
+      font-size: 0.72rem;
+      color: var(--charcoal);
+      opacity: 0.42;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+    .chevron {
+      flex-shrink: 0;
+      opacity: 0.3;
+      transition: transform 0.22s ease;
+    }
+    details[open] > summary .chevron { transform: rotate(180deg); }
+
+    .priority-tasks { padding: 0.25rem 0 0.5rem; }
+
+    /* ── Task rows ──────────────────────── */
+    .task-row {
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      padding: 0.625rem 0;
-      border-bottom: 1px solid var(--mist);
+      padding: 0.55rem 0;
+      border-bottom: 1px solid rgba(226,221,212,0.4);
+      transition: opacity 0.25s ease;
     }
-    .checklist-item:last-child { border-bottom: none; }
-    .check-box {
-      width: 18px;
-      height: 18px;
+    .task-row:last-child { border-bottom: none; }
+    .task-row.is-done { opacity: 0.35; }
+
+    .task-title {
+      font-size: 0.84rem;
+      color: var(--charcoal);
+      line-height: 1.45;
+      flex: 1;
+    }
+    .task-row.is-done .task-title { text-decoration: line-through; }
+
+    .cat-badge {
+      font-size: 0.62rem;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      padding: 0.15rem 0.55rem;
+      border-radius: 20px;
+      background: rgba(226,221,212,0.55);
+      color: var(--charcoal);
+      opacity: 0.55;
+      white-space: nowrap;
+      flex-shrink: 0;
+      max-width: 130px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ── Checkbox button ────────────────── */
+    .check-btn {
+      width: 20px;
+      height: 20px;
       border-radius: 5px;
       flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
+      border: 1.5px solid var(--mist);
+      background: transparent;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+      padding: 0;
     }
-    .check-box.done { background: var(--forest); }
-    .check-box.pending { border: 1.5px solid var(--mist); }
-    .check-box.in-progress { border: 1.5px solid var(--sage); background: rgba(141,157,106,0.08); }
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.18rem 0.65rem;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      font-weight: 400;
-      letter-spacing: 0.02em;
+    .check-btn:hover:not([disabled]) {
+      border-color: var(--sage);
+      background: rgba(141,157,106,0.07);
     }
-    .pill-coming {
-      background: rgba(201,168,112,0.12);
-      color: #8a6d2a;
+    .check-btn:active:not([disabled]) { transform: scale(0.88); }
+    .check-btn:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 2px;
+      border-radius: 5px;
     }
+    .check-btn.is-done {
+      background: var(--forest);
+      border-color: var(--forest);
+    }
+    .check-btn[disabled] {
+      cursor: default;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    /* ── Progress category bars ─────────── */
+    .cat-bar-row { margin-bottom: 0.75rem; }
+    .cat-bar-row:last-child { margin-bottom: 0; }
+
+    /* ── Skeleton loader ────────────────── */
+    @keyframes shimmer {
+      0%   { background-position: -500px 0; }
+      100% { background-position:  500px 0; }
+    }
+    .skeleton {
+      border-radius: 5px;
+      background: linear-gradient(90deg,
+        var(--mist) 25%,
+        rgba(250,248,244,0.6) 50%,
+        var(--mist) 75%
+      );
+      background-size: 500px 100%;
+      animation: shimmer 1.5s infinite linear;
+    }
+
+    /* ── Fade animations ────────────────── */
     @keyframes fade-up {
       from { opacity: 0; transform: translateY(16px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    .fade-up { animation: fade-up 0.5s ease forwards; }
+    .fade-up   { animation: fade-up 0.5s ease forwards; }
     .fade-up-2 { animation: fade-up 0.5s ease 0.08s forwards; opacity: 0; }
     .fade-up-3 { animation: fade-up 0.5s ease 0.16s forwards; opacity: 0; }
+
+    /* ── Responsive grid ────────────────── */
     @media (min-width: 1024px) {
       #dash-grid { grid-template-columns: 1.8fr 1fr; }
       #desk-nav  { display: flex !important; }
@@ -195,70 +304,67 @@
 
 <!-- ══ MAIN CONTENT ══════════════════════════════════════ -->
 <main style="max-width:1200px;margin:0 auto;padding:2.5rem 1.75rem 4rem;">
-  <div id="dash-grid" style="display:grid;grid-template-columns:1fr;gap:1.5rem;">
+  <div id="dash-grid" style="display:grid;grid-template-columns:1fr;gap:1.5rem;align-items:start;">
 
     <!-- ── LEFT: Estate Checklist ── -->
     <div class="portal-card fade-up">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:0.875rem;">
         <div>
           <div class="card-label">Estate Administration</div>
-          <h2 class="card-title" style="margin-bottom:0;border-bottom:none;padding-bottom:0;">Your Checklist</h2>
+          <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.25rem;font-weight:500;color:var(--charcoal);">Your Checklist</h2>
         </div>
-        <span class="pill pill-coming">Coming soon</span>
+        <!-- shown only for supported/full_service plans -->
+        <div id="readonly-badge" style="display:none;margin-top:0.2rem;">
+          <span style="display:inline-flex;align-items:center;gap:0.3rem;padding:0.2rem 0.7rem;border-radius:20px;background:rgba(45,77,12,0.07);color:var(--evergreen);font-size:0.68rem;font-weight:400;letter-spacing:0.02em;">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Advisor-managed
+          </span>
+        </div>
       </div>
-      <div style="height:1px;background:var(--mist);margin-bottom:1.25rem;"></div>
+      <div style="height:1px;background:var(--mist);margin-bottom:1.5rem;"></div>
 
-      <!-- Placeholder checklist items -->
-      <div class="checklist-item">
-        <div class="check-box done">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      <!-- Loading skeleton -->
+      <div id="checklist-loading">
+        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <div class="skeleton" style="width:20px;height:20px;border-radius:5px;flex-shrink:0;"></div>
+            <div class="skeleton" style="height:13px;flex:1;border-radius:4px;"></div>
+            <div class="skeleton" style="height:13px;width:80px;border-radius:20px;flex-shrink:0;"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <div class="skeleton" style="width:20px;height:20px;border-radius:5px;flex-shrink:0;"></div>
+            <div class="skeleton" style="height:13px;width:70%;border-radius:4px;"></div>
+            <div class="skeleton" style="height:13px;width:65px;border-radius:20px;flex-shrink:0;"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <div class="skeleton" style="width:20px;height:20px;border-radius:5px;flex-shrink:0;"></div>
+            <div class="skeleton" style="height:13px;width:85%;border-radius:4px;"></div>
+            <div class="skeleton" style="height:13px;width:72px;border-radius:20px;flex-shrink:0;"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <div class="skeleton" style="width:20px;height:20px;border-radius:5px;flex-shrink:0;"></div>
+            <div class="skeleton" style="height:13px;width:60%;border-radius:4px;"></div>
+            <div class="skeleton" style="height:13px;width:90px;border-radius:20px;flex-shrink:0;"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <div class="skeleton" style="width:20px;height:20px;border-radius:5px;flex-shrink:0;"></div>
+            <div class="skeleton" style="height:13px;width:78%;border-radius:4px;"></div>
+            <div class="skeleton" style="height:13px;width:75px;border-radius:20px;flex-shrink:0;"></div>
+          </div>
         </div>
-        <span style="font-size:0.85rem;color:var(--charcoal);opacity:0.38;text-decoration:line-through;">Obtain certified death certificates</span>
-      </div>
-      <div class="checklist-item">
-        <div class="check-box done">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        </div>
-        <span style="font-size:0.85rem;color:var(--charcoal);opacity:0.38;text-decoration:line-through;">Locate and secure the will</span>
-      </div>
-      <div class="checklist-item">
-        <div class="check-box done">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        </div>
-        <span style="font-size:0.85rem;color:var(--charcoal);opacity:0.38;text-decoration:line-through;">Notify immediate family members</span>
-      </div>
-      <div class="checklist-item">
-        <div class="check-box in-progress">
-          <div style="width:7px;height:7px;background:var(--sage);border-radius:50%;"></div>
-        </div>
-        <span style="font-size:0.85rem;color:var(--charcoal);">Notify Social Security Administration</span>
-        <span style="margin-left:auto;flex-shrink:0;" class="pill" style="background:rgba(141,157,106,0.1);color:var(--forest);">
-          <span style="background:rgba(141,157,106,0.15);color:var(--forest);padding:0.15rem 0.55rem;border-radius:20px;font-size:0.68rem;">In progress</span>
-        </span>
-      </div>
-      <div class="checklist-item">
-        <div class="check-box pending"></div>
-        <span style="font-size:0.85rem;color:var(--charcoal);">Cancel subscriptions and recurring bills</span>
-      </div>
-      <div class="checklist-item">
-        <div class="check-box pending"></div>
-        <span style="font-size:0.85rem;color:var(--charcoal);">File final income tax return</span>
-      </div>
-      <div class="checklist-item">
-        <div class="check-box pending"></div>
-        <span style="font-size:0.85rem;color:var(--charcoal);">Notify financial institutions and creditors</span>
-      </div>
-      <div class="checklist-item">
-        <div class="check-box pending"></div>
-        <span style="font-size:0.85rem;color:var(--charcoal);">Transfer or close bank accounts</span>
-      </div>
-      <div class="checklist-item">
-        <div class="check-box pending"></div>
-        <span style="font-size:0.85rem;color:var(--charcoal);">Distribute personal property per the will</span>
       </div>
 
-      <p style="font-size:0.75rem;color:var(--charcoal);opacity:0.38;margin-top:1.25rem;font-family:'Lora',Georgia,serif;font-style:italic;">
-        Your full interactive checklist is coming soon. Your advisor is tracking all items on your behalf.
+      <!-- Live content (populated by JS) -->
+      <div id="checklist-content" style="display:none;"></div>
+
+      <!-- Error state -->
+      <div id="checklist-error" style="display:none;padding:1.5rem 0;text-align:center;">
+        <p style="font-size:0.84rem;color:var(--terracotta);line-height:1.6;">Unable to load your checklist. Please refresh the page.</p>
+      </div>
+
+      <!-- Read-only note (shown for supported/full_service) -->
+      <p id="readonly-note" style="display:none;font-size:0.72rem;color:var(--charcoal);opacity:0.42;margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--mist);font-family:'Lora',Georgia,serif;font-style:italic;">
+        Your advisor tracks and completes tasks on your behalf. Reach out with any questions.
       </p>
     </div>
 
@@ -271,33 +377,43 @@
         <h2 class="card-title">Progress</h2>
 
         <div style="display:flex;align-items:baseline;gap:0.5rem;margin-bottom:0.625rem;">
-          <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:2.5rem;font-weight:400;color:var(--charcoal);line-height:1;">3</span>
-          <span style="font-size:0.82rem;color:var(--charcoal);opacity:0.5;">of 9 tasks complete</span>
+          <span id="prog-count" style="font-family:'Cormorant Garamond',Georgia,serif;font-size:2.5rem;font-weight:400;color:var(--charcoal);line-height:1;">—</span>
+          <span style="font-size:0.82rem;color:var(--charcoal);opacity:0.5;">of 59 tasks complete</span>
         </div>
 
         <!-- Progress bar -->
-        <div style="background:var(--mist);border-radius:100px;height:6px;overflow:hidden;margin-bottom:1.25rem;">
-          <div style="height:100%;width:33%;background:linear-gradient(90deg,var(--sage),var(--forest));border-radius:100px;"></div>
+        <div style="background:var(--mist);border-radius:100px;height:6px;overflow:hidden;margin-bottom:1.5rem;">
+          <div id="prog-bar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--sage),var(--forest));border-radius:100px;transition:width 0.55s ease;"></div>
         </div>
 
-        <div style="display:flex;flex-direction:column;gap:0.625rem;">
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <span style="font-size:0.8rem;color:var(--charcoal);opacity:0.6;">Completed</span>
-            <span style="font-size:0.8rem;font-weight:400;color:var(--forest);">3 tasks</span>
+        <!-- Category breakdown -->
+        <div style="margin-bottom:0.5rem;">
+          <span style="font-size:0.68rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--charcoal);opacity:0.4;">By Category</span>
+        </div>
+        <div id="prog-categories">
+          <!-- skeleton rows -->
+          <div class="cat-bar-row" style="display:flex;flex-direction:column;gap:0.3rem;">
+            <div style="display:flex;justify-content:space-between;">
+              <div class="skeleton" style="height:11px;width:60%;border-radius:3px;"></div>
+              <div class="skeleton" style="height:11px;width:28px;border-radius:3px;"></div>
+            </div>
+            <div class="skeleton" style="height:3px;border-radius:100px;width:100%;"></div>
           </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <span style="font-size:0.8rem;color:var(--charcoal);opacity:0.6;">In progress</span>
-            <span style="font-size:0.8rem;font-weight:400;color:var(--sage);">1 task</span>
+          <div class="cat-bar-row" style="display:flex;flex-direction:column;gap:0.3rem;">
+            <div style="display:flex;justify-content:space-between;">
+              <div class="skeleton" style="height:11px;width:50%;border-radius:3px;"></div>
+              <div class="skeleton" style="height:11px;width:28px;border-radius:3px;"></div>
+            </div>
+            <div class="skeleton" style="height:3px;border-radius:100px;width:100%;"></div>
           </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <span style="font-size:0.8rem;color:var(--charcoal);opacity:0.6;">Remaining</span>
-            <span style="font-size:0.8rem;font-weight:400;color:var(--charcoal);opacity:0.7;">5 tasks</span>
+          <div class="cat-bar-row" style="display:flex;flex-direction:column;gap:0.3rem;">
+            <div style="display:flex;justify-content:space-between;">
+              <div class="skeleton" style="height:11px;width:65%;border-radius:3px;"></div>
+              <div class="skeleton" style="height:11px;width:28px;border-radius:3px;"></div>
+            </div>
+            <div class="skeleton" style="height:3px;border-radius:100px;width:100%;"></div>
           </div>
         </div>
-
-        <p style="font-size:0.72rem;color:var(--charcoal);opacity:0.38;margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--mist);font-family:'Lora',Georgia,serif;font-style:italic;">
-          Live progress tracking coming soon.
-        </p>
       </div>
 
       <!-- Advisor Notes card -->
@@ -305,7 +421,6 @@
         <div class="card-label">From Your Advisor</div>
         <h2 class="card-title">Advisor Notes</h2>
 
-        <!-- Placeholder note -->
         <div style="background:var(--cream);border-radius:10px;padding:1.25rem;margin-bottom:1rem;">
           <p style="font-size:0.85rem;line-height:1.75;color:var(--charcoal);opacity:0.75;font-family:'Lora',Georgia,serif;">
             We've submitted the Social Security notification on your behalf. The next step is coordinating with the bank regarding the joint accounts — I'll reach out by end of week with next steps.
@@ -320,10 +435,6 @@
             <div style="font-size:0.72rem;color:var(--charcoal);opacity:0.45;">Loss Ally</div>
           </div>
         </div>
-
-        <p style="font-size:0.72rem;color:var(--charcoal);opacity:0.38;margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--mist);font-family:'Lora',Georgia,serif;font-style:italic;">
-          Live advisor notes coming soon.
-        </p>
       </div>
 
     </div><!-- /sidebar -->
@@ -373,6 +484,275 @@ window.addEventListener('scroll', () => {
   document.getElementById('site-nav').style.boxShadow =
     window.scrollY > 4 ? '0 2px 20px rgba(44,44,42,0.08)' : ''
 })
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// CHECKLIST
+// ══════════════════════════════════════════════════════════════════════════════
+
+const PRIORITY_ORDER = ['Urgent', 'Month 1', 'Months 2-6', 'Long-Term']
+
+const PRIORITY_STYLES = {
+  'Urgent':     { bg: 'rgba(196,114,74,0.1)',   color: '#9b4a1f' },
+  'Month 1':    { bg: 'rgba(201,168,112,0.14)',  color: '#7a5718' },
+  'Months 2-6': { bg: 'rgba(141,157,106,0.13)',  color: 'var(--forest)' },
+  'Long-Term':  { bg: 'rgba(45,77,12,0.08)',     color: 'var(--evergreen)' },
+}
+
+const CATEGORIES = [
+  'Government & Benefits',
+  'Legal & Probate',
+  'Financial Accounts',
+  'Property & Home',
+  'Digital Estate',
+  'Personal & Memberships',
+  'Record Retention',
+]
+
+const CHECK_SVG = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`
+
+let allTasks    = []    // template tasks from tasks table
+let ctMap       = {}    // task_id → client_task row
+let isReadOnly  = false
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+async function initChecklist() {
+  try {
+    // 1. Load template tasks
+    const { data: tasks, error: tasksErr } = await supabase
+      .from('tasks')
+      .select('*')
+      .order('sort_order')
+    if (tasksErr) throw tasksErr
+    allTasks = tasks || []
+
+    // 2. Load this client's task rows
+    const clientId = auth.profile.id
+    let { data: ctRows, error: ctErr } = await supabase
+      .from('client_tasks')
+      .select('*')
+      .eq('client_id', clientId)
+    if (ctErr) throw ctErr
+
+    // 3. First-login seed: if no rows exist, create them from the template
+    if (!ctRows || ctRows.length === 0) {
+      const seed = allTasks.map(t => ({
+        client_id: clientId,
+        task_id:   t.id,
+        done:      false,
+        notes:     '',
+      }))
+      const { error: seedErr } = await supabase
+        .from('client_tasks')
+        .upsert(seed, { onConflict: 'client_id,task_id' })
+      if (seedErr) throw seedErr
+
+      const { data: refetched, error: refetchErr } = await supabase
+        .from('client_tasks')
+        .select('*')
+        .eq('client_id', clientId)
+      if (refetchErr) throw refetchErr
+      ctRows = refetched || []
+    }
+
+    // 4. Build lookup map: task_id → client_task row
+    ctMap = {}
+    for (const ct of ctRows) ctMap[ct.task_id] = ct
+
+    // 5. Plan-based read-only check
+    const plan = auth.profile?.plan || 'guided'
+    isReadOnly  = plan === 'supported' || plan === 'full_service'
+    if (isReadOnly) {
+      document.getElementById('readonly-badge').style.display = ''
+      document.getElementById('readonly-note').style.display  = ''
+    }
+
+    // 6. Render
+    renderChecklist()
+    renderProgress()
+
+  } catch (err) {
+    console.error('Checklist error:', err)
+    document.getElementById('checklist-loading').style.display = 'none'
+    document.getElementById('checklist-error').style.display   = ''
+  }
+}
+
+// ─── Render checklist ─────────────────────────────────────────────────────────
+function renderChecklist() {
+  const grouped = {}
+  for (const p of PRIORITY_ORDER) grouped[p] = []
+  for (const t of allTasks) {
+    if (grouped[t.priority]) grouped[t.priority].push(t)
+  }
+
+  const container = document.getElementById('checklist-content')
+  container.innerHTML = ''
+
+  for (const priority of PRIORITY_ORDER) {
+    const group = grouped[priority]
+    if (!group.length) continue
+
+    const doneCount = group.filter(t => ctMap[t.id]?.done).length
+    const style     = PRIORITY_STYLES[priority]
+
+    // <details> element — all sections start open
+    const details = document.createElement('details')
+    details.className  = 'priority-section'
+    details.open       = true
+    details.dataset.priority = priority
+
+    // Summary (clickable header)
+    const summary = document.createElement('summary')
+    summary.innerHTML = `
+      <span class="priority-tag" style="background:${style.bg};color:${style.color};">${priority}</span>
+      <span class="priority-count" data-priority="${priority}">${doneCount} of ${group.length} complete</span>
+      <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    `
+    details.appendChild(summary)
+
+    // Task list
+    const taskList = document.createElement('div')
+    taskList.className = 'priority-tasks'
+    for (const task of group) {
+      const ct   = ctMap[task.id]
+      const done = ct?.done || false
+      const ctId = ct?.id   || ''
+      taskList.appendChild(buildTaskRow(task, done, ctId))
+    }
+    details.appendChild(taskList)
+    container.appendChild(details)
+  }
+
+  // Show content, hide skeleton
+  document.getElementById('checklist-loading').style.display = 'none'
+  container.style.display = ''
+
+  // Attach checkbox listeners (guided plan only)
+  if (!isReadOnly) {
+    container.querySelectorAll('.check-btn').forEach(btn => {
+      btn.addEventListener('click', handleCheck)
+    })
+  }
+}
+
+// ─── Build a single task row ──────────────────────────────────────────────────
+function buildTaskRow(task, done, ctId) {
+  const row = document.createElement('div')
+  row.className    = `task-row${done ? ' is-done' : ''}`
+  row.dataset.taskId = task.id
+  row.dataset.ctId   = ctId
+
+  const btn = document.createElement('button')
+  btn.className = `check-btn${done ? ' is-done' : ''}`
+  btn.dataset.ctId  = ctId
+  btn.dataset.done  = done
+  btn.setAttribute('aria-pressed', done)
+  btn.setAttribute('aria-label', `${done ? 'Mark incomplete' : 'Mark complete'}: ${task.title}`)
+  if (done) btn.innerHTML = CHECK_SVG
+  if (isReadOnly) {
+    btn.disabled = true
+    btn.title    = 'Your advisor manages task completion for your plan'
+  }
+
+  const titleSpan = document.createElement('span')
+  titleSpan.className   = 'task-title'
+  titleSpan.textContent = task.title
+
+  const catSpan = document.createElement('span')
+  catSpan.className   = 'cat-badge'
+  catSpan.textContent = task.category
+  catSpan.title       = task.category
+
+  row.appendChild(btn)
+  row.appendChild(titleSpan)
+  row.appendChild(catSpan)
+  return row
+}
+
+// ─── Handle checkbox click ────────────────────────────────────────────────────
+async function handleCheck(e) {
+  const btn         = e.currentTarget
+  const ctId        = btn.dataset.ctId
+  const currentDone = btn.dataset.done === 'true'
+  const newDone     = !currentDone
+  const row         = btn.closest('.task-row')
+  const taskId      = row.dataset.taskId
+  const priority    = row.closest('details.priority-section')?.dataset.priority
+
+  // Optimistic UI
+  applyDoneState(btn, row, taskId, newDone)
+  updatePriorityCount(priority)
+  renderProgress()
+
+  // Persist to Supabase
+  const { error } = await supabase
+    .from('client_tasks')
+    .update({ done: newDone })
+    .eq('id', ctId)
+
+  if (error) {
+    // Revert on failure
+    applyDoneState(btn, row, taskId, currentDone)
+    updatePriorityCount(priority)
+    renderProgress()
+    console.error('Failed to update task:', error)
+  }
+}
+
+function applyDoneState(btn, row, taskId, done) {
+  btn.dataset.done = done
+  btn.setAttribute('aria-pressed', done)
+  btn.classList.toggle('is-done', done)
+  btn.innerHTML = done ? CHECK_SVG : ''
+  row.classList.toggle('is-done', done)
+  if (ctMap[taskId]) ctMap[taskId].done = done
+}
+
+// ─── Update priority group count label ───────────────────────────────────────
+function updatePriorityCount(priority) {
+  if (!priority) return
+  const group    = allTasks.filter(t => t.priority === priority)
+  const done     = group.filter(t => ctMap[t.id]?.done).length
+  const el       = document.querySelector(`.priority-count[data-priority="${priority}"]`)
+  if (el) el.textContent = `${done} of ${group.length} complete`
+}
+
+// ─── Progress sidebar ─────────────────────────────────────────────────────────
+function renderProgress() {
+  const total  = allTasks.length
+  const done   = allTasks.filter(t => ctMap[t.id]?.done).length
+  const pct    = total > 0 ? Math.round((done / total) * 100) : 0
+
+  document.getElementById('prog-count').textContent = done
+  document.getElementById('prog-bar').style.width   = `${pct}%`
+
+  const container = document.getElementById('prog-categories')
+  let html = ''
+
+  for (const cat of CATEGORIES) {
+    const catTasks = allTasks.filter(t => t.category === cat)
+    const catDone  = catTasks.filter(t => ctMap[t.id]?.done).length
+    const catPct   = catTasks.length > 0 ? Math.round((catDone / catTasks.length) * 100) : 0
+
+    html += `
+      <div class="cat-bar-row">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem;">
+          <span style="font-size:0.75rem;color:var(--charcoal);opacity:0.6;">${cat}</span>
+          <span style="font-size:0.72rem;color:var(--charcoal);opacity:0.45;font-weight:400;">${catDone}<span style="opacity:0.6;">/${catTasks.length}</span></span>
+        </div>
+        <div style="background:var(--mist);border-radius:100px;height:3px;overflow:hidden;">
+          <div style="height:100%;width:${catPct}%;background:linear-gradient(90deg,var(--sage),var(--forest));border-radius:100px;transition:width 0.45s ease;"></div>
+        </div>
+      </div>
+    `
+  }
+
+  container.innerHTML = html
+}
+
+// ─── Start ────────────────────────────────────────────────────────────────────
+initChecklist()
 </script>
 
 </body>
