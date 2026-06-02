@@ -289,19 +289,15 @@ function setLoading(btnId, textId, spinId, on) {
 
 // ─── On load ────────────────────────────────────────────────────────────────
 ;(async () => {
-  // Listen for PASSWORD_RECOVERY auth event (user clicked email reset link)
-  const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-    if (event === 'PASSWORD_RECOVERY') {
-      showSection('section-newpw')
-      hideError()
-      subscription.unsubscribe()
-    }
-  })
-
-  // Redirect if already logged in (and not in recovery flow)
+  // Check hash synchronously — onAuthStateChange fires during module init,
+  // before any listener can be registered, so we must read the hash directly.
   const hashParams = new URLSearchParams(window.location.hash.slice(1))
-  if (hashParams.get('type') === 'recovery') return // let onAuthStateChange handle it
+  if (hashParams.get('type') === 'recovery') {
+    showSection('section-newpw')
+    return
+  }
 
+  // Redirect if already logged in
   const session = await getSession()
   if (session) {
     window.location.replace('portal-dashboard.html')

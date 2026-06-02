@@ -156,7 +156,7 @@ export async function signOut() {
 
 export async function sendPasswordReset(email) {
   return supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${window.location.origin}/portal.html`,
+    redirectTo: 'https://lossally.com/portal.html',
   })
 }
 
