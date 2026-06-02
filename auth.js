@@ -142,14 +142,15 @@ export async function getSession() {
 }
 
 export async function getProfile() {
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return null
-  const { data } = await supabase
+  const session = await getSession()
+  if (!session) return null
+  const { data: profile, error } = await supabase
     .from('profiles')
     .select('*')
-    .eq('id', user.id)
+    .eq('id', session.user.id)
     .single()
-  return data
+  if (error) console.error('[auth] getProfile() error:', error.code, error.message, error)
+  return profile
 }
 
 // ─── Auth Actions ────────────────────────────────────────────────────────────
@@ -182,7 +183,25 @@ export async function requireAuth() {
     window.location.replace('portal.html')
     return null
   }
-  const profile = await getProfile()
+
+  // Use session.user.id directly — same UUID that auth.uid() resolves to on the
+  // Supabase server, so it satisfies `using (auth.uid() = id)` RLS policy.
+  // Avoids an extra getUser() network call whose timing can cause session-not-ready races.
+  const { data: profile, error: profileErr } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', session.user.id)
+    .single()
+
+  if (profileErr) {
+    console.error('[auth] requireAuth() — profiles query failed')
+    console.error('[auth] code:', profileErr.code, '| message:', profileErr.message)
+    console.error('[auth] queried id:', session.user.id)
+    console.error('[auth] full error:', profileErr)
+  } else {
+    console.log('[auth] profile loaded — id:', profile?.id, '| role:', profile?.role, '| plan:', profile?.plan)
+  }
+
   return { session, profile }
 }
 
