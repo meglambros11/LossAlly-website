@@ -122,8 +122,17 @@
  */
 
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+import { SUPABASE_URL as CONFIG_URL, SUPABASE_ANON_KEY as CONFIG_KEY } from './config.js'
 
-export const supabase = createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY)
+// In production, _worker.js injects credentials as window globals before <head>.
+// In local dev (serve.mjs), those globals are never set, so fall back to config.js.
+const _url = window.SUPABASE_URL || CONFIG_URL
+const _key = window.SUPABASE_ANON_KEY || CONFIG_KEY
+
+console.log('[auth.js] Supabase URL:', _url ? _url.slice(0, 40) + '…' : '⚠️  MISSING — check config.js or _worker.js env vars')
+console.log('[auth.js] Anon key present:', !!_key)
+
+export const supabase = createClient(_url, _key)
 
 // ─── Session & Profile ───────────────────────────────────────────────────────
 

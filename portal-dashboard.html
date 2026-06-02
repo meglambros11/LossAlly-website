@@ -443,10 +443,22 @@
 
 
 <script type="module">
+// ─── Top-level import error guard ─────────────────────────────────────────────
+// If auth.js fails to import (bad URL, syntax error, etc.) this block never runs
+// and the page stays hidden. Check the browser console for "Failed to fetch" or
+// "SyntaxError" messages targeting auth.js or config.js if the page is blank.
+console.log('[portal] module script started')
+
 import { requireAuth, signOut, supabase } from './auth.js'
 
+console.log('[portal] auth.js imported successfully, supabase client:', !!supabase)
+
 // ─── Auth guard ───────────────────────────────────────────────────────────────
+console.log('[portal] calling requireAuth()…')
 const auth = await requireAuth()
+console.log('[portal] requireAuth() returned:', auth
+  ? `session=${auth.session?.user?.id}, profile=${JSON.stringify(auth.profile)}`
+  : 'null — redirecting to portal.html')
 if (!auth) throw new Error('redirect')
 
 document.body.style.visibility = 'visible'
@@ -517,25 +529,57 @@ let isReadOnly  = false
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 async function initChecklist() {
+  console.log('[checklist] initChecklist() started')
+
   try {
-    // 1. Load template tasks
+    // ── Step 0: verify the Supabase session is still live ──────────────────────
+    console.log('[checklist] Step 0: verifying active session…')
+    const { data: { session }, error: sessionErr } = await supabase.auth.getSession()
+    if (sessionErr) {
+      console.error('[checklist] getSession() error:', sessionErr)
+      throw sessionErr
+    }
+    console.log('[checklist] session:', session
+      ? `active  user_id=${session.user.id}  expires=${new Date(session.expires_at * 1000).toISOString()}`
+      : '⚠️  null — user is not authenticated')
+    if (!session) throw new Error('getSession() returned null — not authenticated')
+
+    // ── Step 0b: confirm profile loaded ────────────────────────────────────────
+    const clientId = auth.profile?.id
+    console.log('[checklist] auth.profile:', JSON.stringify(auth.profile))
+    if (!clientId) {
+      throw new Error(
+        'auth.profile is missing or has no id. ' +
+        'This usually means the profiles table query failed in requireAuth(). ' +
+        'Check that RLS allows the user to read their own profiles row.'
+      )
+    }
+
+    // ── Step 1: load template tasks ────────────────────────────────────────────
+    console.log('[checklist] Step 1: querying tasks table…')
     const { data: tasks, error: tasksErr } = await supabase
       .from('tasks')
       .select('*')
       .order('sort_order')
+    console.log('[checklist] tasks — count:', tasks?.length ?? 'null',
+      '  error:', tasksErr ? `${tasksErr.code} ${tasksErr.message}` : 'none')
     if (tasksErr) throw tasksErr
-    allTasks = tasks || []
+    if (!tasks?.length) throw new Error('tasks table returned 0 rows — run supabase-phase2-tasks.sql')
+    allTasks = tasks
 
-    // 2. Load this client's task rows
-    const clientId = auth.profile.id
+    // ── Step 2: load this client's task rows ───────────────────────────────────
+    console.log('[checklist] Step 2: querying client_tasks for client_id:', clientId)
     let { data: ctRows, error: ctErr } = await supabase
       .from('client_tasks')
       .select('*')
       .eq('client_id', clientId)
+    console.log('[checklist] client_tasks — count:', ctRows?.length ?? 'null',
+      '  error:', ctErr ? `${ctErr.code} ${ctErr.message}` : 'none')
     if (ctErr) throw ctErr
 
-    // 3. First-login seed: if no rows exist, create them from the template
+    // ── Step 3: first-login seed ───────────────────────────────────────────────
     if (!ctRows || ctRows.length === 0) {
+      console.log('[checklist] Step 3: no rows found — seeding', allTasks.length, 'rows…')
       const seed = allTasks.map(t => ({
         client_id: clientId,
         task_id:   t.id,
@@ -545,34 +589,48 @@ async function initChecklist() {
       const { error: seedErr } = await supabase
         .from('client_tasks')
         .upsert(seed, { onConflict: 'client_id,task_id' })
+      console.log('[checklist] upsert seed — error:', seedErr ? `${seedErr.code} ${seedErr.message}` : 'none')
       if (seedErr) throw seedErr
 
       const { data: refetched, error: refetchErr } = await supabase
         .from('client_tasks')
         .select('*')
         .eq('client_id', clientId)
+      console.log('[checklist] refetch after seed — count:', refetched?.length ?? 'null',
+        '  error:', refetchErr ? `${refetchErr.code} ${refetchErr.message}` : 'none')
       if (refetchErr) throw refetchErr
       ctRows = refetched || []
+    } else {
+      console.log('[checklist] Step 3: skipped — client_tasks already exist')
     }
 
-    // 4. Build lookup map: task_id → client_task row
+    // ── Step 4: build lookup map ───────────────────────────────────────────────
     ctMap = {}
     for (const ct of ctRows) ctMap[ct.task_id] = ct
+    console.log('[checklist] Step 4: ctMap built —', Object.keys(ctMap).length, 'entries')
 
-    // 5. Plan-based read-only check
+    // ── Step 5: plan-based read-only check ─────────────────────────────────────
     const plan = auth.profile?.plan || 'guided'
     isReadOnly  = plan === 'supported' || plan === 'full_service'
+    console.log('[checklist] Step 5: plan =', plan, '  isReadOnly =', isReadOnly)
     if (isReadOnly) {
       document.getElementById('readonly-badge').style.display = ''
       document.getElementById('readonly-note').style.display  = ''
     }
 
-    // 6. Render
+    // ── Step 6: render ─────────────────────────────────────────────────────────
+    console.log('[checklist] Step 6: rendering checklist and progress…')
     renderChecklist()
     renderProgress()
+    console.log('[checklist] ✓ done')
 
   } catch (err) {
-    console.error('Checklist error:', err)
+    console.error('[checklist] ✗ FAILED')
+    console.error('[checklist] message:', err?.message)
+    console.error('[checklist] code:', err?.code)
+    console.error('[checklist] hint:', err?.hint)
+    console.error('[checklist] details:', err?.details)
+    console.error('[checklist] full error object:', err)
     document.getElementById('checklist-loading').style.display = 'none'
     document.getElementById('checklist-error').style.display   = ''
   }
