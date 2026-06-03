@@ -195,6 +195,92 @@
     .adv-task-label.done { opacity:0.45; text-decoration:line-through; }
     .tasks-loading-msg { padding:1.5rem 1.25rem; font-size:0.82rem; color:var(--charcoal); opacity:0.4; }
 
+    /* ── Task expand button ── */
+    .adv-task-expand {
+      background:none; border:none; cursor:pointer; padding:0.2rem; color:var(--charcoal);
+      opacity:0.28; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+      transition:opacity 0.15s, transform 0.2s; border-radius:3px;
+    }
+    .adv-task-expand:hover { opacity:0.65; }
+    .adv-task-expand[aria-expanded="true"] { transform:rotate(180deg); opacity:0.65; }
+    .adv-task-expand:focus-visible { outline:2px solid var(--gold); }
+
+    /* ── Task detail panel ── */
+    .adv-task-detail { border-top:1px solid rgba(226,221,212,0.5); background:rgba(141,157,106,0.035); }
+    .task-detail-inner { padding:1rem 1.25rem 1rem 3.5rem; }
+    .task-steps { padding-left:1.25rem; margin-bottom:0.875rem; }
+    .task-step {
+      font-size:0.8rem; color:var(--charcoal); line-height:1.65; margin-bottom:0.5rem; padding-left:0.25rem;
+    }
+    .task-step:last-child { margin-bottom:0; }
+    .task-tip-box {
+      font-size:0.78rem; line-height:1.6; color:var(--charcoal); padding:0.6rem 0.875rem;
+      background:rgba(141,157,106,0.1); border-left:2px solid var(--sage); border-radius:0 6px 6px 0;
+      margin-bottom:0.625rem;
+    }
+    .task-warn-box {
+      font-size:0.78rem; line-height:1.6; color:var(--charcoal); padding:0.6rem 0.875rem;
+      background:rgba(196,114,74,0.08); border-left:2px solid var(--terracotta); border-radius:0 6px 6px 0;
+      margin-bottom:0.625rem;
+    }
+    .tip-label, .warn-label {
+      font-size:0.6rem; font-weight:500; letter-spacing:0.1em; text-transform:uppercase;
+      display:inline-block; margin-right:0.35rem; vertical-align:middle;
+    }
+    .tip-label { color:var(--sage); }
+    .warn-label { color:var(--terracotta); }
+    .task-resources { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.75rem; align-items:center; }
+    .resources-label {
+      font-size:0.6rem; font-weight:500; letter-spacing:0.1em; text-transform:uppercase;
+      color:var(--charcoal); opacity:0.35; margin-right:0.2rem; flex-shrink:0;
+    }
+    .resource-btn {
+      display:inline-flex; align-items:center; gap:0.3rem;
+      font-family:'DM Sans',sans-serif; font-size:0.72rem; font-weight:300;
+      padding:0.25rem 0.7rem; border-radius:20px; border:1px solid var(--mist);
+      background:var(--warm-white); color:var(--charcoal); cursor:pointer;
+      transition:border-color 0.15s, background 0.15s;
+    }
+    .resource-btn:hover { border-color:var(--sage); background:rgba(141,157,106,0.07); }
+    .resource-btn.is-guide { border-color:rgba(42,74,122,0.25); color:#2A4A7A; background:#EEF2FA; }
+    .resource-btn.is-guide:hover { border-color:#2A4A7A; }
+    .resource-btn:focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+
+    /* ── Template modal ── */
+    #template-modal {
+      display:none; position:fixed; inset:0; z-index:500;
+      background:rgba(26,34,24,0.68); align-items:center; justify-content:center; padding:1.5rem;
+    }
+    #template-modal.open { display:flex; }
+    .tpl-modal-inner {
+      background:#fff; border-radius:14px; max-width:720px; width:100%; max-height:86vh;
+      overflow:hidden; display:flex; flex-direction:column;
+      box-shadow:0 20px 60px rgba(0,0,0,0.28);
+    }
+    .tpl-modal-head {
+      padding:1.125rem 1.375rem; border-bottom:1px solid var(--mist);
+      display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-shrink:0;
+    }
+    .tpl-modal-body {
+      flex:1; overflow-y:auto; padding:1.375rem 1.5rem;
+      font-family:'IBM Plex Mono',monospace,'Courier New',monospace;
+      font-size:0.78rem; line-height:1.75; color:var(--charcoal);
+      white-space:pre-wrap; background:var(--cream);
+    }
+    .tpl-copy-btn {
+      display:inline-flex; align-items:center; gap:0.35rem;
+      background:var(--forest); color:#fff; font-family:'DM Sans',sans-serif;
+      font-size:0.75rem; font-weight:400; padding:0.4rem 0.9rem; border-radius:6px;
+      border:none; cursor:pointer; transition:background 0.15s; flex-shrink:0;
+    }
+    .tpl-copy-btn:hover { background:var(--evergreen); }
+    .tpl-close-btn {
+      background:none; border:1px solid var(--mist); color:var(--charcoal); opacity:0.5;
+      font-size:1rem; line-height:1; padding:0.35rem 0.6rem; border-radius:6px; cursor:pointer;
+      transition:opacity 0.15s; flex-shrink:0;
+    }
+    .tpl-close-btn:hover { opacity:1; }
+
     /* ── Advisor done toggle (supported / full_service) ── */
     .adv-done-toggle {
       width:20px; height:20px; border-radius:50%; border:1.5px solid var(--mist);
@@ -317,6 +403,26 @@
   </div>
 
 </main>
+
+<!-- ══ TEMPLATE MODAL ════════════════════════════════════════════════════════ -->
+<div id="template-modal">
+  <div class="tpl-modal-inner">
+    <div class="tpl-modal-head">
+      <div>
+        <div id="modal-tpl-type" style="font-size:0.6rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--sage);margin-bottom:0.2rem;"></div>
+        <div id="modal-tpl-name" style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.05rem;font-weight:500;color:var(--charcoal);line-height:1.2;max-width:500px;"></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <button id="modal-copy-btn" class="tpl-copy-btn">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+        <button id="modal-close-btn" class="tpl-close-btn" aria-label="Close">×</button>
+      </div>
+    </div>
+    <pre id="modal-tpl-content" class="tpl-modal-body">Loading…</pre>
+  </div>
+</div>
 
 
 <style>
@@ -620,7 +726,18 @@ async function loadClients() {
 
   // Also load all template tasks once for use in every client panel
   const { data: allTasks } = await supabase
-    .from('tasks').select('id,title,category,sort_order').order('sort_order')
+    .from('tasks').select('id,title,category,sort_order,steps,tip,warn,template').order('sort_order')
+
+  // Maps task sort_order → form guide names (static — sourced from supabase-templates-seed.sql)
+  const TASK_GUIDES = {
+    3:  ['VitalChek — How to Order Certified Death Certificates'],
+    7:  ['IRS Form 1310 — Claiming a Refund for a Deceased Taxpayer'],
+    8:  ['IRS EIN Application — Estate Tax ID Number'],
+    9:  ['IRS Form 1041 — Estate Income Tax Return Guide'],
+    12: ['How to Open Probate — Step-by-Step Process Guide'],
+    15: ['Estate Asset Inventory — How to Compile All Four Categories'],
+    23: ['Inherited IRA and 401k — Beneficiary Claim Guide'],
+  }
 
   const list = document.getElementById('clients-list')
   list.style.display = 'flex'
@@ -700,7 +817,7 @@ async function loadClients() {
       const wasOpen = row.classList.contains('open')
       row.classList.toggle('open', !wasOpen)
       if (!wasOpen) {
-        loadClientTaskPanel(c.id, row, allTasks || [], currentPlan)
+        loadClientTaskPanel(c.id, row, allTasks || [], currentPlan, TASK_GUIDES)
         loadClientMessages(c.id, row)
         loadEstateDetails(c.id, row)
         // Dismiss unread badge and mark messages as read
@@ -785,7 +902,7 @@ async function loadClients() {
 
 const _loadedPanels = new Set()
 
-async function loadClientTaskPanel(clientId, row, allTasks, plan) {
+async function loadClientTaskPanel(clientId, row, allTasks, plan, taskGuides = {}) {
   if (_loadedPanels.has(clientId)) return
   _loadedPanels.add(clientId)
 
@@ -875,8 +992,9 @@ async function loadClientTaskPanel(clientId, row, allTasks, plan) {
                 title="${done ? 'Mark as not done' : 'Mark as done'}"
               >${done ? CHECK_SVG_SMALL : ''}</button>`
             : ''
+          const hasDetail = t.steps?.length || t.tip || t.warn || t.template || (taskGuides[t.sort_order]?.length)
           return `
-          <div class="adv-task-row">
+          <div class="adv-task-row" data-task-id="${esc(t.id)}">
             <button
               class="adv-task-toggle${included ? ' included' : ''}"
               data-ct-id="${ct?.id || ''}"
@@ -888,7 +1006,9 @@ async function loadClientTaskPanel(clientId, row, allTasks, plan) {
             <span class="adv-task-label${included ? '' : ' excluded'}${isAdvisorManaged && done ? ' done' : ''}">${esc(t.title)}</span>
             ${donePill}
             ${doneToggle}
-          </div>`
+            ${hasDetail ? `<button class="adv-task-expand" data-expand-id="${esc(t.id)}" title="How-to instructions" aria-expanded="false"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>` : ''}
+          </div>
+          ${hasDetail ? `<div class="adv-task-detail" data-detail-id="${esc(t.id)}" style="display:none;">${buildTaskDetail(t, taskGuides)}</div>` : ''}`
         }).join('')
     }).join('')
 
@@ -980,6 +1100,28 @@ async function loadClientTaskPanel(clientId, row, allTasks, plan) {
         updateSummary()
         alert('Could not update task: ' + err.message)
       }
+    })
+  })
+}
+
+  // ── Expand / collapse task detail panels ─────────────────────────────────
+  panel.querySelectorAll('.adv-task-expand').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation()
+      const id     = btn.dataset.expandId
+      const detail = panel.querySelector(`[data-detail-id="${id}"]`)
+      if (!detail) return
+      const isOpen = detail.style.display !== 'none'
+      detail.style.display = isOpen ? 'none' : ''
+      btn.setAttribute('aria-expanded', String(!isOpen))
+    })
+  })
+
+  // ── Resource buttons → open template modal ────────────────────────────────
+  panel.querySelectorAll('.resource-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation()
+      showTemplate(btn.dataset.openTemplate)
     })
   })
 }
@@ -1080,6 +1222,52 @@ function advMsgDate(iso) {
   if (!iso) return ''
   return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
 }
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// TEMPLATE MODAL
+// ══════════════════════════════════════════════════════════════════════════════
+
+async function showTemplate(name) {
+  const modal   = document.getElementById('template-modal')
+  const nameEl  = document.getElementById('modal-tpl-name')
+  const typeEl  = document.getElementById('modal-tpl-type')
+  const bodyEl  = document.getElementById('modal-tpl-content')
+  const copyBtn = document.getElementById('modal-copy-btn')
+
+  nameEl.textContent = name
+  typeEl.textContent = ''
+  bodyEl.textContent = 'Loading…'
+  copyBtn.textContent = 'Copy'
+  modal.classList.add('open')
+
+  const { data, error } = await supabase
+    .from('templates').select('type,content').eq('name', name).single()
+
+  if (error || !data) {
+    bodyEl.textContent = 'Could not load this template. Make sure supabase-templates-schema.sql and supabase-templates-seed.sql have been run.'
+    return
+  }
+
+  typeEl.textContent = data.type === 'guide' ? 'Form Guide' : 'Letter Template'
+  bodyEl.textContent = data.content
+
+  copyBtn.onclick = () => {
+    navigator.clipboard.writeText(data.content).then(() => {
+      copyBtn.textContent = 'Copied!'
+      setTimeout(() => { copyBtn.textContent = 'Copy' }, 2200)
+    })
+  }
+}
+
+// Modal close
+;(function () {
+  const modal    = document.getElementById('template-modal')
+  const closeBtn = document.getElementById('modal-close-btn')
+  closeBtn.addEventListener('click', () => modal.classList.remove('open'))
+  modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open') })
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.classList.remove('open') })
+})()
 
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -1249,6 +1437,46 @@ function buildEstateDetailsDisplay(d) {
       ${textBlock('Additional Notes', d.additional_notes)}
     </div>
   `
+}
+
+
+// ── Task detail panel builder ─────────────────────────────────────────────────
+function buildTaskDetail(t, taskGuides) {
+  let html = '<div class="task-detail-inner">'
+
+  if (t.steps?.length) {
+    html += '<ol class="task-steps">'
+    // Steps come from trusted seed data and contain intentional <strong> tags
+    html += t.steps.map(step => `<li class="task-step">${step}</li>`).join('')
+    html += '</ol>'
+  }
+
+  if (t.tip) {
+    html += `<div class="task-tip-box"><span class="tip-label">Tip</span>${esc(t.tip)}</div>`
+  }
+  if (t.warn) {
+    html += `<div class="task-warn-box"><span class="warn-label">Important</span>${esc(t.warn)}</div>`
+  }
+
+  const resources = []
+  if (t.template)                          resources.push({ name: t.template,  type: 'letter' })
+  ;(taskGuides[t.sort_order] || []).forEach(g => resources.push({ name: g, type: 'guide' }))
+
+  if (resources.length) {
+    const LETTER_ICON = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`
+    const GUIDE_ICON  = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`
+    html += `<div class="task-resources"><span class="resources-label">Resources</span>`
+    html += resources.map(r =>
+      `<button class="resource-btn${r.type === 'guide' ? ' is-guide' : ''}" data-open-template="${esc(r.name)}">
+        ${r.type === 'guide' ? GUIDE_ICON : LETTER_ICON}
+        ${esc(r.name)}
+      </button>`
+    ).join('')
+    html += '</div>'
+  }
+
+  html += '</div>'
+  return html
 }
 
 
