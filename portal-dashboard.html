@@ -514,22 +514,25 @@
         </p>
       </div>
 
-      <!-- Advisor Notes + Client Details card -->
+      <!-- Messages + Client Details card -->
       <div class="portal-card fade-up-2">
-        <div class="card-label">From Your Advisor</div>
-        <h2 class="card-title">Advisor Notes</h2>
-        <div style="background:var(--cream);border-radius:10px;padding:1.25rem;margin-bottom:1rem;">
-          <p style="font-size:0.85rem;line-height:1.75;color:var(--charcoal);opacity:0.75;font-family:'Lora',Georgia,serif;">
-            We've submitted the Social Security notification on your behalf. The next step is coordinating with the bank regarding the joint accounts — I'll reach out by end of week with next steps.
-          </p>
+        <div class="card-label">Messages</div>
+        <h2 class="card-title">Your Advisor</h2>
+
+        <!-- Message thread -->
+        <div id="msg-thread" style="display:flex;flex-direction:column;gap:0.5rem;max-height:320px;overflow-y:auto;margin-bottom:1rem;padding-right:0.25rem;">
+          <p id="msg-loading" style="font-size:0.8rem;color:var(--charcoal);opacity:0.4;">Loading…</p>
         </div>
-        <div style="display:flex;align-items:center;gap:0.625rem;margin-bottom:1.75rem;">
-          <div style="width:28px;height:28px;border-radius:50%;background:var(--sage);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg>
-          </div>
-          <div>
-            <div style="font-size:0.8rem;font-weight:400;color:var(--charcoal);">Your Advisor</div>
-            <div style="font-size:0.72rem;color:var(--charcoal);opacity:0.45;">Loss Ally</div>
+
+        <!-- Client compose -->
+        <div style="margin-bottom:1.75rem;">
+          <textarea id="client-msg-input" rows="3" placeholder="Leave a note for your advisor…" onfocus="this.style.borderColor='var(--sage)';this.style.boxShadow='0 0 0 3px rgba(141,157,106,0.12)'" onblur="this.style.borderColor='var(--mist)';this.style.boxShadow='none'" style="width:100%;padding:0.6rem 0.8rem;border-radius:8px;border:1.5px solid var(--mist);background:var(--warm-white);font-family:'DM Sans',sans-serif;font-size:0.83rem;font-weight:300;color:var(--charcoal);outline:none;resize:vertical;line-height:1.6;box-sizing:border-box;"></textarea>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:0.5rem;">
+            <p id="client-msg-status" style="font-size:0.75rem;color:var(--terracotta);display:none;margin:0;"></p>
+            <button id="client-msg-send" style="display:inline-flex;align-items:center;gap:0.4rem;background:var(--forest);color:#fff;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:400;padding:0.5rem 1.1rem;border-radius:7px;border:none;cursor:pointer;transition:background 0.15s,transform 0.1s;margin-left:auto;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              Send
+            </button>
           </div>
         </div>
 
@@ -1071,6 +1074,99 @@ function updateHeroProgress() {
 // ─── Start ────────────────────────────────────────────────────────────────────
 initChecklist()
 initClientDetails()
+initMessages()
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// MESSAGES
+// ══════════════════════════════════════════════════════════════════════════════
+
+async function initMessages() {
+  const clientId = auth.profile?.id
+  if (!clientId) return
+
+  const thread   = document.getElementById('msg-thread')
+  const loadingEl = document.getElementById('msg-loading')
+
+  const { data: msgs, error } = await supabase
+    .from('advisor_messages')
+    .select('*')
+    .eq('client_id', clientId)
+    .order('created_at', { ascending: true })
+
+  if (loadingEl) loadingEl.remove()
+
+  if (error) {
+    console.error('[messages] load failed:', error)
+    return
+  }
+
+  if (!msgs?.length) {
+    const p = document.createElement('p')
+    p.id = 'msg-empty'
+    p.style.cssText = "font-size:0.8rem;color:var(--charcoal);opacity:0.4;font-family:'Lora',Georgia,serif;font-style:italic;"
+    p.textContent = 'No messages yet.'
+    thread.appendChild(p)
+  } else {
+    msgs.forEach(msg => thread.appendChild(buildMsgBubble(msg)))
+    thread.scrollTop = thread.scrollHeight
+  }
+
+  const sendBtn  = document.getElementById('client-msg-send')
+  const input    = document.getElementById('client-msg-input')
+  const statusEl = document.getElementById('client-msg-status')
+
+  sendBtn.addEventListener('click', async () => {
+    const body = input.value.trim()
+    if (!body) return
+    sendBtn.disabled = true
+
+    const { data: newMsg, error: sendErr } = await supabase
+      .from('advisor_messages')
+      .insert({ client_id: clientId, sender_role: 'client', body })
+      .select()
+      .single()
+
+    sendBtn.disabled = false
+
+    if (sendErr) {
+      statusEl.textContent = 'Could not send. Please try again.'
+      statusEl.style.display = ''
+      setTimeout(() => { statusEl.style.display = 'none' }, 4000)
+      return
+    }
+
+    input.value = ''
+    const emptyEl = document.getElementById('msg-empty')
+    if (emptyEl) emptyEl.remove()
+    thread.appendChild(buildMsgBubble(newMsg))
+    thread.scrollTop = thread.scrollHeight
+  })
+}
+
+function buildMsgBubble(msg) {
+  const isAdvisor = msg.sender_role === 'advisor'
+  const wrap = document.createElement('div')
+  wrap.style.cssText = `display:flex;flex-direction:column;align-items:${isAdvisor ? 'flex-start' : 'flex-end'};gap:0.15rem;padding:0.2rem 0;`
+
+  const escaped = String(msg.body ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+  const bubble = document.createElement('div')
+  bubble.style.cssText = `max-width:88%;padding:0.65rem 0.875rem;border-radius:${isAdvisor ? '4px 12px 12px 12px' : '12px 4px 12px 12px'};background:${isAdvisor ? 'var(--cream)' : 'rgba(91,110,91,0.1)'};`
+  bubble.innerHTML = `<p style="font-size:0.83rem;line-height:1.7;color:var(--charcoal);font-family:'Lora',Georgia,serif;">${escaped}</p>`
+
+  const meta = document.createElement('span')
+  meta.style.cssText = 'font-size:0.63rem;color:var(--charcoal);opacity:0.38;'
+  meta.textContent = `${isAdvisor ? 'Your Advisor' : 'You'} · ${msgDate(msg.created_at)}`
+
+  wrap.appendChild(bubble)
+  wrap.appendChild(meta)
+  return wrap
+}
+
+function msgDate(iso) {
+  if (!iso) return ''
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
+}
 
 
 // ══════════════════════════════════════════════════════════════════════════════

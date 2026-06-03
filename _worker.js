@@ -296,6 +296,20 @@ async function handleInvite(request, env) {
     })
   }
 
+  // Seed welcome message for the new client
+  if (userId) {
+    const firstName = fullName(intake.first_name, intake.last_name).split(' ')[0] || 'there'
+    await fetch(`${env.SUPABASE_URL}/rest/v1/advisor_messages`, {
+      method: 'POST',
+      headers: { ...serviceHeaders(env), 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify({
+        client_id: userId,
+        sender_role: 'advisor',
+        body: `Welcome to your Loss Ally portal, ${firstName}. This is your space to track your case and stay in touch. Feel free to leave a note here any time — I'm here to help.`,
+      }),
+    })
+  }
+
   // Mark the intake submission as 'client' and link the profile
   await fetch(
     `${env.SUPABASE_URL}/rest/v1/intake_submissions?id=eq.${encodeURIComponent(intake_id)}`,

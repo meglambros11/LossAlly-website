@@ -636,12 +636,32 @@ async function loadClients() {
         <div class="task-panel" data-client-id="${esc(c.id)}">
           <p class="tasks-loading-msg">Loading checklist…</p>
         </div>
+        <div class="adv-messages-panel">
+          <div style="padding:0.875rem 1.25rem 0.5rem;border-top:2px solid var(--mist);">
+            <span style="font-size:0.63rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--sage);">Messages</span>
+          </div>
+          <div class="adv-msg-thread" style="padding:0 1.25rem 0.5rem;max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:0.5rem;">
+            <p class="tasks-loading-msg">Loading messages…</p>
+          </div>
+          <div style="padding:0.75rem 1.25rem 1rem;" onclick="event.stopPropagation()">
+            <textarea class="adv-msg-input" rows="2" placeholder="Send a note to ${esc((c.full_name||'').split(' ')[0] || 'client')}…" style="width:100%;padding:0.5rem 0.7rem;border-radius:7px;border:1.5px solid var(--mist);background:var(--warm-white);font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:300;color:var(--charcoal);outline:none;resize:none;line-height:1.5;box-sizing:border-box;transition:border-color 0.15s;" onfocus="this.style.borderColor='var(--sage)'" onblur="this.style.borderColor='var(--mist)'"></textarea>
+            <div style="display:flex;justify-content:flex-end;margin-top:0.4rem;">
+              <button class="invite-btn adv-msg-send" style="font-size:0.75rem;padding:0.4rem 0.875rem;">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                Send
+              </button>
+            </div>
+          </div>
+        </div>
       </div>`
 
     row.querySelector('.client-row-head').addEventListener('click', () => {
       const wasOpen = row.classList.contains('open')
       row.classList.toggle('open', !wasOpen)
-      if (!wasOpen) loadClientTaskPanel(c.id, row, allTasks || [])
+      if (!wasOpen) {
+        loadClientTaskPanel(c.id, row, allTasks || [])
+        loadClientMessages(c.id, row)
+      }
     })
 
     // Plan change handler
@@ -783,6 +803,96 @@ async function loadClientTaskPanel(clientId, row, allTasks) {
 }
 
 const CHECK_SVG_SMALL = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// MESSAGES (advisor side)
+// ══════════════════════════════════════════════════════════════════════════════
+
+const _loadedMessages = new Set()
+
+async function loadClientMessages(clientId, row) {
+  if (_loadedMessages.has(clientId)) return
+  _loadedMessages.add(clientId)
+
+  const thread = row.querySelector('.adv-msg-thread')
+
+  const { data: msgs, error } = await supabase
+    .from('advisor_messages')
+    .select('*')
+    .eq('client_id', clientId)
+    .order('created_at', { ascending: true })
+
+  thread.innerHTML = ''
+
+  if (error) {
+    thread.innerHTML = `<p class="tasks-loading-msg" style="color:var(--terracotta);">Could not load messages.</p>`
+    return
+  }
+
+  if (!msgs?.length) {
+    const p = document.createElement('p')
+    p.className = 'tasks-loading-msg'
+    p.setAttribute('data-empty', '1')
+    p.textContent = 'No messages yet.'
+    thread.appendChild(p)
+  } else {
+    msgs.forEach(msg => thread.appendChild(buildAdvMsgBubble(msg)))
+    thread.scrollTop = thread.scrollHeight
+  }
+
+  const sendBtn = row.querySelector('.adv-msg-send')
+  const input   = row.querySelector('.adv-msg-input')
+
+  sendBtn.addEventListener('click', async () => {
+    const body = input.value.trim()
+    if (!body) return
+    sendBtn.disabled = true
+    const origHTML = sendBtn.innerHTML
+    sendBtn.textContent = 'Sending…'
+
+    const { data: newMsg, error: sendErr } = await supabase
+      .from('advisor_messages')
+      .insert({ client_id: clientId, sender_role: 'advisor', body })
+      .select()
+      .single()
+
+    sendBtn.disabled = false
+    sendBtn.innerHTML = origHTML
+
+    if (sendErr) { alert('Could not send: ' + sendErr.message); return }
+
+    input.value = ''
+    const emptyEl = thread.querySelector('[data-empty]')
+    if (emptyEl) emptyEl.remove()
+    thread.appendChild(buildAdvMsgBubble(newMsg))
+    thread.scrollTop = thread.scrollHeight
+  })
+}
+
+function buildAdvMsgBubble(msg) {
+  const isSelf = msg.sender_role === 'advisor'
+  const wrap = document.createElement('div')
+  wrap.style.cssText = `display:flex;flex-direction:column;align-items:${isSelf ? 'flex-end' : 'flex-start'};gap:0.15rem;padding:0.2rem 0;`
+
+  const escaped = String(msg.body ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+  const bubble = document.createElement('div')
+  bubble.style.cssText = `max-width:88%;padding:0.6rem 0.875rem;border-radius:${isSelf ? '12px 4px 12px 12px' : '4px 12px 12px 12px'};background:${isSelf ? 'rgba(91,110,91,0.1)' : 'var(--cream)'};`
+  bubble.innerHTML = `<p style="font-size:0.8rem;line-height:1.65;color:var(--charcoal);font-family:'Lora',Georgia,serif;">${escaped}</p>`
+
+  const meta = document.createElement('span')
+  meta.style.cssText = 'font-size:0.63rem;color:var(--charcoal);opacity:0.38;'
+  meta.textContent = `${isSelf ? 'You' : 'Client'} · ${advMsgDate(msg.created_at)}`
+
+  wrap.appendChild(bubble)
+  wrap.appendChild(meta)
+  return wrap
+}
+
+function advMsgDate(iso) {
+  if (!iso) return ''
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
+}
 
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
