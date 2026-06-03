@@ -251,19 +251,31 @@ async function handleInvite(request, env) {
     executor_relationship: intake.relationship || '',
   }
 
-  // Create the profile pre-populated with intake data
-  await fetch(`${env.SUPABASE_URL}/rest/v1/profiles`, {
+  // Create the profile pre-populated with intake data.
+  // Try full insert first; if it fails (e.g. column not yet migrated), fall back to
+  // a minimal insert so the client always lands in Active Clients.
+  const profilePayload = { id: userId, full_name: fullName(intake.first_name, intake.last_name), email: intake.email, role: 'client', plan, client_details }
+  let profileRes = await fetch(`${env.SUPABASE_URL}/rest/v1/profiles`, {
     method: 'POST',
     headers: { ...serviceHeaders(env), 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates' },
-    body: JSON.stringify({
-      id:             userId,
-      full_name:      fullName(intake.first_name, intake.last_name),
-      email:          intake.email,
-      role:           'client',
-      plan,
-      client_details,
-    }),
+    body: JSON.stringify(profilePayload),
   })
+  if (!profileRes.ok) {
+    const profileErr = await profileRes.text()
+    console.error('[invite] profile upsert failed:', profileErr, '— retrying with minimal payload')
+    // Retry without extended columns in case a migration hasn't been run yet
+    const minimalPayload = { id: userId, full_name: fullName(intake.first_name, intake.last_name), email: intake.email, role: 'client' }
+    profileRes = await fetch(`${env.SUPABASE_URL}/rest/v1/profiles`, {
+      method: 'POST',
+      headers: { ...serviceHeaders(env), 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates' },
+      body: JSON.stringify(minimalPayload),
+    })
+    if (!profileRes.ok) {
+      const fatalErr = await profileRes.text()
+      console.error('[invite] profile upsert failed on minimal payload too:', fatalErr)
+      return jsonResponse({ error: 'Failed to create client profile', detail: fatalErr }, 500)
+    }
+  }
 
   // Seed all tasks for the new client so the advisor can manage them immediately
   const tasksRes = await fetch(`${env.SUPABASE_URL}/rest/v1/tasks?select=id&is_template=eq.true`, {
