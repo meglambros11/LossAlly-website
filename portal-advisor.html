@@ -350,6 +350,7 @@ async function loadIntake() {
   const { data: rows, error } = await supabase
     .from('intake_submissions')
     .select('*')
+    .neq('status', 'client')
     .order('submitted_at', { ascending: false })
 
   document.getElementById('intake-loading').style.display = 'none'
