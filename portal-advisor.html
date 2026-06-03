@@ -589,7 +589,9 @@ async function loadClients() {
     row.className = 'client-row'
     row.style.cssText = `animation:fade-up 0.45s ease ${i * 0.05}s forwards;opacity:0;`
 
-    const planLabel = { guided: 'Guided', supported: 'Supported', full_service: 'Full Service' }[c.plan] || c.plan || 'Guided'
+    const PLAN_LABELS = { guided: 'Guided', supported: 'Supported', full_service: 'Full Service' }
+    let currentPlan = c.plan || 'guided'
+    const planLabel = () => PLAN_LABELS[currentPlan] || currentPlan
 
     row.innerHTML = `
       <div class="client-row-head">
@@ -599,7 +601,7 @@ async function loadClients() {
           </div>
           <div>
             <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.05rem;font-weight:500;color:var(--charcoal);line-height:1.2;">${esc(c.full_name || 'Unnamed Client')}</div>
-            <div style="font-size:0.72rem;color:var(--charcoal);opacity:0.45;margin-top:0.1rem;">${esc(c.email || '')} · ${planLabel} · Joined ${formatDate(c.created_at)}</div>
+            <div class="client-subtitle" style="font-size:0.72rem;color:var(--charcoal);opacity:0.45;margin-top:0.1rem;">${esc(c.email || '')} · ${planLabel()} · Joined ${formatDate(c.created_at)}</div>
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:0.75rem;flex-shrink:0;">
@@ -608,6 +610,15 @@ async function loadClients() {
         </div>
       </div>
       <div class="client-row-body">
+        <div style="display:flex;align-items:center;gap:0.75rem;padding:0.875rem 1.25rem;border-bottom:1px solid var(--mist);background:var(--warm-white);" onclick="event.stopPropagation()">
+          <span style="font-size:0.65rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);flex-shrink:0;">Plan</span>
+          <select class="client-plan-select status-select" data-client-id="${esc(c.id)}" style="font-size:0.8rem;">
+            <option value="guided"${currentPlan==='guided'?' selected':''}>Guided</option>
+            <option value="supported"${currentPlan==='supported'?' selected':''}>Supported</option>
+            <option value="full_service"${currentPlan==='full_service'?' selected':''}>Full Service</option>
+          </select>
+          <span class="plan-save-msg" style="font-size:0.75rem;color:var(--forest);opacity:0;transition:opacity 0.3s;">Saved</span>
+        </div>
         <div class="task-panel" data-client-id="${esc(c.id)}">
           <p class="tasks-loading-msg">Loading checklist…</p>
         </div>
@@ -617,6 +628,26 @@ async function loadClients() {
       const wasOpen = row.classList.contains('open')
       row.classList.toggle('open', !wasOpen)
       if (!wasOpen) loadClientTaskPanel(c.id, row, allTasks || [])
+    })
+
+    // Plan change handler
+    const planSelect  = row.querySelector('.client-plan-select')
+    const planSaveMsg = row.querySelector('.plan-save-msg')
+    const subtitle    = row.querySelector('.client-subtitle')
+    planSelect.addEventListener('change', async e => {
+      e.stopPropagation()
+      const newPlan = planSelect.value
+      const { error } = await supabase
+        .from('profiles').update({ plan: newPlan }).eq('id', c.id)
+      if (error) {
+        planSelect.value = currentPlan
+        alert('Could not update plan: ' + error.message)
+      } else {
+        currentPlan = newPlan
+        subtitle.textContent = `${c.email || ''} · ${planLabel()} · Joined ${formatDate(c.created_at)}`
+        planSaveMsg.style.opacity = '1'
+        setTimeout(() => { planSaveMsg.style.opacity = '0' }, 2000)
+      }
     })
 
     list.appendChild(row)
