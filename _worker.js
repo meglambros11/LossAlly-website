@@ -104,19 +104,59 @@ async function handleIntake(request, env) {
 
   if (!supabaseInsert.ok) {
     console.error('[intake] Supabase insert failed:', await supabaseInsert.text())
-    // Still attempt Formspree so the advisor gets the email even if DB write fails
   }
 
-  // Forward to Formspree for email notification to support@lossally.com
-  const flat = {}
-  for (const [k, v] of Object.entries(data)) {
-    flat[k] = Array.isArray(v) ? v.join(', ') : v
-  }
-  await fetch('https://formspree.io/f/mqejygzd', {
+  // Send notification email via Resend
+  const deceasedName = [str(data.deceased_first_name), str(data.deceased_last_name)].filter(Boolean).join(' ') || 'Unknown'
+  const executorName = [str(data.first_name), str(data.last_name)].filter(Boolean).join(' ') || 'Unknown'
+  const location     = [str(data.city_of_death), str(data.state)].filter(Boolean).join(', ') || '—'
+  const assetList    = assets.length ? assets.join(', ') : '—'
+
+  await fetch('https://api.resend.com/emails', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify(flat),
-  }).catch(() => {}) // non-fatal if Formspree is down
+    headers: {
+      'Authorization': `Bearer ${env.RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: 'Loss Ally <support@lossally.com>',
+      to:   ['support@lossally.com'],
+      subject: `New intake form — ${executorName} (${deceasedName})`,
+      html: `
+<div style="font-family:Georgia,serif;max-width:600px;margin:0 auto;color:#2C2C28;">
+  <div style="background:#f6f1e6;padding:24px 28px 16px;border-bottom:2px solid #E2DDD4;">
+    <p style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#8D9D6A;margin:0 0 6px;">Loss Ally — New Intake</p>
+    <h1 style="font-size:22px;font-weight:400;margin:0;">${executorName}</h1>
+    <p style="font-size:13px;color:#666;margin:4px 0 0;">Submitted ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</p>
+  </div>
+
+  <div style="padding:24px 28px;">
+
+    <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px;">
+      <tr><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;color:#8D9D6A;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;width:40%;">Contact</td><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;"><a href="mailto:${str(data.email)||''}" style="color:#5b6e5b;">${str(data.email)||'—'}</a> · ${str(data.phone)||'—'}</td></tr>
+      <tr><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;color:#8D9D6A;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Relationship</td><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;">${str(data.relationship)||'—'}</td></tr>
+      <tr><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;color:#8D9D6A;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Deceased</td><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;">${deceasedName}</td></tr>
+      <tr><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;color:#8D9D6A;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Date of Passing</td><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;">${str(data.date_of_passing)||'—'}</td></tr>
+      <tr><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;color:#8D9D6A;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Location</td><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;">${location}</td></tr>
+      <tr><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;color:#8D9D6A;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Stage</td><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;">${str(data.stage)||'—'}</td></tr>
+      <tr><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;color:#8D9D6A;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Executor Status</td><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;">${str(data.executor_status)||'—'}</td></tr>
+      <tr><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;color:#8D9D6A;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Will / Trust</td><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;">${str(data.will_or_trust)||'—'}</td></tr>
+      <tr><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;color:#8D9D6A;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Assets</td><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;">${assetList}</td></tr>
+      <tr><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;color:#8D9D6A;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Availability</td><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;">${str(data.availability)||'—'} · ${str(data.timezone)||'—'}</td></tr>
+      <tr><td style="padding:7px 0;color:#8D9D6A;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Referral</td><td style="padding:7px 0;">${str(data.referral_source)||'—'}</td></tr>
+    </table>
+
+    ${str(data.consultation_goal) ? `<div style="margin-bottom:16px;"><p style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#8D9D6A;margin:0 0 6px;">What they're hoping for</p><p style="font-size:13px;line-height:1.7;background:#faf8f4;border-left:3px solid #C9A870;padding:10px 14px;margin:0;">${str(data.consultation_goal)}</p></div>` : ''}
+    ${str(data.how_doing) ? `<div style="margin-bottom:16px;"><p style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#8D9D6A;margin:0 0 6px;">How they're doing</p><p style="font-size:13px;line-height:1.7;background:#faf8f4;border-left:3px solid #C9A870;padding:10px 14px;margin:0;">${str(data.how_doing)}</p></div>` : ''}
+    ${str(data.anything_else) ? `<div style="margin-bottom:16px;"><p style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#8D9D6A;margin:0 0 6px;">Anything else</p><p style="font-size:13px;line-height:1.7;background:#faf8f4;border-left:3px solid #C9A870;padding:10px 14px;margin:0;">${str(data.anything_else)}</p></div>` : ''}
+
+    <div style="margin-top:24px;padding-top:20px;border-top:1px solid #E2DDD4;text-align:center;">
+      <a href="https://lossally.com/portal-advisor.html" style="display:inline-block;background:#5b6e5b;color:#fff;text-decoration:none;font-size:13px;padding:10px 22px;border-radius:6px;">View in Advisor Portal</a>
+    </div>
+  </div>
+</div>`,
+    }),
+  }).catch(err => console.error('[intake] Resend failed:', err))
 
   // Redirect to intake page with ?submitted=1 so the form can show a thank-you
   return Response.redirect(new URL('/intake.html?submitted=1', request.url).href, 302)
