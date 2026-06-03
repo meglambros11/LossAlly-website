@@ -1085,7 +1085,7 @@ async function initMessages() {
   const clientId = auth.profile?.id
   if (!clientId) return
 
-  const thread   = document.getElementById('msg-thread')
+  const thread    = document.getElementById('msg-thread')
   const loadingEl = document.getElementById('msg-loading')
 
   const { data: msgs, error } = await supabase
@@ -1100,6 +1100,15 @@ async function initMessages() {
     console.error('[messages] load failed:', error)
     return
   }
+
+  // Mark advisor messages as read (fire-and-forget) so the next advisor
+  // message will trigger a fresh email notification
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    if (session) fetch('/api/client-mark-read', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${session.access_token}` },
+    }).catch(() => {})
+  })
 
   if (!msgs?.length) {
     const p = document.createElement('p')

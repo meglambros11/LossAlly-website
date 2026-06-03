@@ -24,6 +24,9 @@ export default {
     if (request.method === 'POST' && url.pathname === '/api/mark-read') {
       return handleMarkRead(request, env)
     }
+    if (request.method === 'POST' && url.pathname === '/api/client-mark-read') {
+      return handleClientMarkRead(request, env)
+    }
 
     // ── Static asset serving + env-var injection ────────────────────────────────
     const response = await env.ASSETS.fetch(request)
@@ -484,6 +487,15 @@ async function handleMessages(request, env, url) {
     try { body = await request.json() } catch { return jsonResponse({ error: 'Invalid JSON' }, 400) }
     const { client_id, message_body } = body
     if (!client_id || !message_body) return jsonResponse({ error: 'client_id and message_body required' }, 400)
+
+    // Check for existing unread advisor messages before inserting — if any exist,
+    // the client already received an email and hasn't logged in yet, so skip this one.
+    const unreadCheckRes = await fetch(
+      `${env.SUPABASE_URL}/rest/v1/advisor_messages?client_id=eq.${encodeURIComponent(client_id)}&sender_role=eq.advisor&is_read_by_client=eq.false&select=id&limit=1`,
+      { headers: serviceHeaders(env) }
+    )
+    const clientAlreadyUnread = unreadCheckRes.ok && (await unreadCheckRes.json()).length > 0
+
     const res = await fetch(`${env.SUPABASE_URL}/rest/v1/advisor_messages`, {
       method: 'POST',
       headers: { ...serviceHeaders(env), 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
@@ -496,12 +508,12 @@ async function handleMessages(request, env, url) {
     const rows = await res.json()
     const newMsg = rows[0] || {}
 
-    // Email the client so they know to check their portal
-    const profileRes = await fetch(
+    // Email the client only if they have no prior unread messages from the advisor
+    const profileRes = !clientAlreadyUnread && await fetch(
       `${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(client_id)}&select=full_name,email`,
       { headers: serviceHeaders(env) }
     )
-    if (profileRes.ok) {
+    if (profileRes && profileRes.ok) {
       const cp = (await profileRes.json())[0]
       if (cp?.email) {
         const firstName = (cp.full_name || '').split(' ')[0] || 'there'
@@ -609,6 +621,32 @@ async function handleClientMessage(request, env) {
   }
 
   return jsonResponse(newMsg)
+}
+
+
+// ── /api/client-mark-read ─────────────────────────────────────────────────────
+// Client-only. Called when the client loads their messages thread.
+// Marks all advisor messages as read so the next advisor message triggers a
+// fresh email notification.
+async function handleClientMarkRead(request, env) {
+  const authHeader = request.headers.get('Authorization') || ''
+  if (!authHeader.startsWith('Bearer ')) return jsonResponse({ error: 'Unauthorized' }, 401)
+  const jwt = authHeader.slice(7)
+  const userRes = await fetch(`${env.SUPABASE_URL}/auth/v1/user`, {
+    headers: { 'Authorization': `Bearer ${jwt}`, 'apikey': env.SUPABASE_ANON_KEY },
+  })
+  if (!userRes.ok) return jsonResponse({ error: 'Invalid session' }, 401)
+  const clientId = (await userRes.json()).id
+
+  await fetch(
+    `${env.SUPABASE_URL}/rest/v1/advisor_messages?client_id=eq.${encodeURIComponent(clientId)}&sender_role=eq.advisor&is_read_by_client=eq.false`,
+    {
+      method: 'PATCH',
+      headers: { ...serviceHeaders(env), 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ is_read_by_client: true }),
+    }
+  )
+  return jsonResponse({ success: true })
 }
 
 
