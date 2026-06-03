@@ -537,13 +537,13 @@
         <h2 class="card-title">Your Advisor</h2>
 
         <!-- Message thread -->
-        <div id="msg-thread" style="display:flex;flex-direction:column;gap:0.5rem;max-height:320px;overflow-y:auto;margin-bottom:1rem;padding-right:0.25rem;">
+        <div id="msg-thread" style="display:flex;flex-direction:column;gap:0.5rem;max-height:180px;overflow-y:auto;margin-bottom:0.875rem;padding-right:0.25rem;">
           <p id="msg-loading" style="font-size:0.8rem;color:var(--charcoal);opacity:0.4;">Loading…</p>
         </div>
 
         <!-- Client compose -->
-        <div style="margin-bottom:1.75rem;">
-          <textarea id="client-msg-input" rows="3" placeholder="Leave a note for your advisor…" onfocus="this.style.borderColor='var(--sage)';this.style.boxShadow='0 0 0 3px rgba(141,157,106,0.12)'" onblur="this.style.borderColor='var(--mist)';this.style.boxShadow='none'" style="width:100%;padding:0.6rem 0.8rem;border-radius:8px;border:1.5px solid var(--mist);background:var(--warm-white);font-family:'DM Sans',sans-serif;font-size:0.83rem;font-weight:300;color:var(--charcoal);outline:none;resize:vertical;line-height:1.6;box-sizing:border-box;"></textarea>
+        <div style="margin-bottom:1.25rem;">
+          <textarea id="client-msg-input" rows="2" placeholder="Leave a note for your advisor…" onfocus="this.style.borderColor='var(--sage)';this.style.boxShadow='0 0 0 3px rgba(141,157,106,0.12)'" onblur="this.style.borderColor='var(--mist)';this.style.boxShadow='none'" style="width:100%;padding:0.6rem 0.8rem;border-radius:8px;border:1.5px solid var(--mist);background:var(--warm-white);font-family:'DM Sans',sans-serif;font-size:0.83rem;font-weight:300;color:var(--charcoal);outline:none;resize:vertical;line-height:1.6;box-sizing:border-box;"></textarea>
           <div style="display:flex;align-items:center;justify-content:space-between;margin-top:0.5rem;">
             <p id="client-msg-status" style="font-size:0.75rem;color:var(--terracotta);display:none;margin:0;"></p>
             <button id="client-msg-send" style="display:inline-flex;align-items:center;gap:0.4rem;background:var(--forest);color:#fff;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:400;padding:0.5rem 1.1rem;border-radius:7px;border:none;cursor:pointer;transition:background 0.15s,transform 0.1s;margin-left:auto;">
