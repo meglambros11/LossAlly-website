@@ -189,10 +189,37 @@
     .adv-task-toggle:focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
     .adv-task-label {
       font-size:0.82rem; color:var(--charcoal); line-height:1.4;
-      transition:opacity 0.15s;
+      transition:opacity 0.15s; flex:1;
     }
     .adv-task-label.excluded { opacity:0.35; text-decoration:line-through; }
+    .adv-task-label.done { opacity:0.45; text-decoration:line-through; }
     .tasks-loading-msg { padding:1.5rem 1.25rem; font-size:0.82rem; color:var(--charcoal); opacity:0.4; }
+
+    /* ── Advisor done toggle (supported / full_service) ── */
+    .adv-done-toggle {
+      width:20px; height:20px; border-radius:50%; border:1.5px solid var(--mist);
+      background:#fff; cursor:pointer; flex-shrink:0; display:flex; align-items:center;
+      justify-content:center; transition:border-color 0.15s, background 0.15s;
+      margin-left:auto;
+    }
+    .adv-done-toggle.done { border-color:var(--forest); background:var(--forest); }
+    .adv-done-toggle:hover { border-color:var(--sage); }
+    .adv-done-toggle:focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+
+    /* ── Estate details display ── */
+    .estate-det-section { padding:0.875rem 1.25rem; border-top:1px solid var(--mist); }
+    .estate-det-section:first-child { border-top:none; }
+    .estate-det-section-header {
+      font-size:0.6rem; font-weight:500; letter-spacing:0.12em; text-transform:uppercase;
+      color:var(--sage); margin-bottom:0.75rem;
+    }
+    .estate-det-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.5rem 1.5rem; margin-bottom:0.75rem; }
+    @media (max-width:600px) { .estate-det-grid { grid-template-columns:1fr; } }
+    .estate-det-label {
+      font-size:0.6rem; font-weight:500; letter-spacing:0.09em; text-transform:uppercase;
+      color:var(--charcoal); opacity:0.38; margin-bottom:0.15rem;
+    }
+    .estate-det-value { font-size:0.8rem; color:var(--charcoal); line-height:1.45; }
   </style>
 </head>
 <body style="visibility:hidden;">
@@ -660,6 +687,13 @@ async function loadClients() {
             </div>
           </div>
         </div>
+        <div class="adv-estate-panel">
+          <div style="padding:0.875rem 1.25rem 0.5rem;border-top:2px solid var(--mist);display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:0.63rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--sage);">Estate Details</span>
+            <span class="estate-details-status" style="font-size:0.65rem;color:var(--charcoal);opacity:0.38;"></span>
+          </div>
+          <div class="adv-estate-content" style="padding:0 0 0.5rem;"></div>
+        </div>
       </div>`
 
     row.querySelector('.client-row-head').addEventListener('click', () => {
@@ -668,6 +702,7 @@ async function loadClients() {
       if (!wasOpen) {
         loadClientTaskPanel(c.id, row, allTasks || [], currentPlan)
         loadClientMessages(c.id, row)
+        loadEstateDetails(c.id, row)
         // Dismiss unread badge and mark messages as read
         row.querySelector('.unread-badge')?.remove()
         supabase.auth.getSession().then(({ data: { session } }) => {
@@ -767,7 +802,26 @@ async function loadClientTaskPanel(clientId, row, allTasks, plan) {
   }
 
   if (!ctRows?.length) {
-    panel.innerHTML = `<p class="tasks-loading-msg">No tasks yet — tasks are created when the invite is sent.</p>`
+    panel.innerHTML = `
+      <div style="padding:1.25rem;text-align:center;">
+        <p style="font-size:0.82rem;color:var(--charcoal);opacity:0.45;margin-bottom:0.875rem;">No tasks found for this client. This happens if the account was created outside the invite flow.</p>
+        <button class="seed-tasks-btn invite-btn" style="font-size:0.75rem;padding:0.4rem 1rem;">
+          Seed All Tasks Now
+        </button>
+      </div>`
+    panel.querySelector('.seed-tasks-btn').addEventListener('click', async () => {
+      const btn = panel.querySelector('.seed-tasks-btn')
+      btn.disabled = true; btn.textContent = 'Seeding…'
+      const rows = allTasks.map(t => ({ client_id: clientId, task_id: t.id, done: false, excluded: false, notes: '' }))
+      const { error } = await supabase.from('client_tasks').insert(rows)
+      if (error) {
+        btn.disabled = false; btn.textContent = 'Seed All Tasks Now'
+        alert('Could not seed tasks: ' + error.message)
+      } else {
+        _loadedPanels.delete(clientId)
+        loadClientTaskPanel(clientId, row, allTasks, plan)
+      }
+    })
     return
   }
 
@@ -776,18 +830,12 @@ async function loadClientTaskPanel(clientId, row, allTasks, plan) {
 
   const summaryEl = row.querySelector('.task-summary-label')
   const updateSummary = () => {
-    const active = allTasks.filter(t => !ctMap[t.id]?.excluded)
-    const done   = active.filter(t => ctMap[t.id]?.done).length
-    const total  = allTasks.length
-    if (plan === 'guided') {
-      summaryEl.textContent = active.length < total
-        ? `${done} of ${active.length} done · ${active.length} of ${total} active`
-        : `${done} of ${active.length} done`
-    } else {
-      summaryEl.textContent = active.length < total
-        ? `${active.length} of ${total} tasks active`
-        : `${total} tasks`
-    }
+    const active    = allTasks.filter(t => !ctMap[t.id]?.excluded)
+    const doneCount = active.filter(t => ctMap[t.id]?.done).length
+    const total     = allTasks.length
+    summaryEl.textContent = active.length < total
+      ? `${doneCount} of ${active.length} done · ${active.length} of ${total} active`
+      : `${doneCount} of ${active.length} done`
   }
   updateSummary()
 
@@ -798,11 +846,13 @@ async function loadClientTaskPanel(clientId, row, allTasks, plan) {
     if (!seen.has(t.category)) { categories.push(t.category); seen.add(t.category) }
   }
 
+  const isAdvisorManaged = plan !== 'guided'
   panel.innerHTML = `
     <div style="padding:0.625rem 1.25rem 0.75rem;background:rgba(141,157,106,0.05);border-bottom:1px solid var(--mist);">
       <p style="font-size:0.75rem;line-height:1.6;color:var(--charcoal);opacity:0.55;">
-        Check or uncheck tasks below to include or exclude them from this client's checklist.
-        Unchecked tasks are hidden from the client's view.
+        ${isAdvisorManaged
+          ? 'Left toggle: include or exclude the task from the client\'s view. Right circle: mark the task done on the client\'s behalf.'
+          : 'Check or uncheck tasks below to include or exclude them from this client\'s checklist. Unchecked tasks are hidden from the client\'s view.'}
       </p>
     </div>` +
     categories.map(cat => {
@@ -812,8 +862,18 @@ async function loadClientTaskPanel(clientId, row, allTasks, plan) {
           const ct       = ctMap[t.id]
           const included = !ct?.excluded
           const done     = ct?.done || false
-          const donePill = done && plan === 'guided'
+          const donePill = !isAdvisorManaged && done
             ? `<span style="display:inline-flex;align-items:center;gap:0.2rem;font-size:0.62rem;font-weight:400;color:var(--forest);opacity:0.75;flex-shrink:0;white-space:nowrap;">${CHECK_SVG_SMALL.replace('stroke="#fff"','stroke="var(--forest)"')} Done</span>`
+            : ''
+          const doneToggle = isAdvisorManaged
+            ? `<button
+                class="adv-done-toggle${done ? ' done' : ''}"
+                data-ct-id="${ct?.id || ''}"
+                data-task-id="${t.id}"
+                data-client-id="${clientId}"
+                aria-pressed="${done}"
+                title="${done ? 'Mark as not done' : 'Mark as done'}"
+              >${done ? CHECK_SVG_SMALL : ''}</button>`
             : ''
           return `
           <div class="adv-task-row">
@@ -825,8 +885,9 @@ async function loadClientTaskPanel(clientId, row, allTasks, plan) {
               aria-pressed="${included}"
               aria-label="${included ? 'Exclude' : 'Include'}: ${esc(t.title)}"
             >${included ? CHECK_SVG_SMALL : ''}</button>
-            <span class="adv-task-label${included ? '' : ' excluded'}">${esc(t.title)}</span>
+            <span class="adv-task-label${included ? '' : ' excluded'}${isAdvisorManaged && done ? ' done' : ''}">${esc(t.title)}</span>
             ${donePill}
+            ${doneToggle}
           </div>`
         }).join('')
     }).join('')
@@ -868,6 +929,54 @@ async function loadClientTaskPanel(clientId, row, allTasks, plan) {
         btn.innerHTML = nowExcl ? CHECK_SVG_SMALL : ''
         label.classList.toggle('excluded', !nowExcl)
         if (ctMap[taskId]) ctMap[taskId].excluded = !nowExcl
+        updateSummary()
+        alert('Could not update task: ' + err.message)
+      }
+    })
+  })
+
+  // ── Done toggles (supported / full_service only) ──────────────────────────
+  panel.querySelectorAll('.adv-done-toggle').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const ctId    = btn.dataset.ctId
+      const taskId  = btn.dataset.taskId
+      const cId     = btn.dataset.clientId
+      const nowDone = !btn.classList.contains('done')
+      const label   = btn.closest('.adv-task-row').querySelector('.adv-task-label')
+
+      // Optimistic UI
+      btn.classList.toggle('done', nowDone)
+      btn.innerHTML = nowDone ? CHECK_SVG_SMALL : ''
+      btn.setAttribute('aria-pressed', String(nowDone))
+      btn.title = nowDone ? 'Mark as not done' : 'Mark as done'
+      label.classList.toggle('done', nowDone)
+      if (ctMap[taskId]) ctMap[taskId].done = nowDone
+      updateSummary()
+
+      let err
+      if (ctId) {
+        const { error } = await supabase.from('client_tasks').update({ done: nowDone }).eq('id', ctId)
+        err = error
+      } else {
+        const { data, error } = await supabase
+          .from('client_tasks')
+          .insert({ client_id: cId, task_id: taskId, done: nowDone, excluded: false, notes: '' })
+          .select('id').single()
+        if (data?.id) {
+          btn.dataset.ctId = data.id
+          const inclBtn = btn.closest('.adv-task-row').querySelector('.adv-task-toggle')
+          if (inclBtn) inclBtn.dataset.ctId = data.id
+          if (ctMap[taskId]) ctMap[taskId].id = data.id
+        }
+        err = error
+      }
+
+      if (err) {
+        // Revert on failure
+        btn.classList.toggle('done', !nowDone)
+        btn.innerHTML = nowDone ? '' : CHECK_SVG_SMALL
+        label.classList.toggle('done', !nowDone)
+        if (ctMap[taskId]) ctMap[taskId].done = !nowDone
         updateSummary()
         alert('Could not update task: ' + err.message)
       }
@@ -970,6 +1079,176 @@ function buildAdvMsgBubble(msg) {
 function advMsgDate(iso) {
   if (!iso) return ''
   return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ESTATE DETAILS (advisor view)
+// ══════════════════════════════════════════════════════════════════════════════
+
+const _loadedEstate = new Set()
+
+async function loadEstateDetails(clientId, row) {
+  if (_loadedEstate.has(clientId)) return
+  _loadedEstate.add(clientId)
+
+  const content = row.querySelector('.adv-estate-content')
+  const status  = row.querySelector('.estate-details-status')
+
+  const { data, error } = await supabase
+    .from('estate_details')
+    .select('*')
+    .eq('client_id', clientId)
+    .maybeSingle()
+
+  if (error) {
+    content.innerHTML = `<p style="padding:0 1.25rem 1rem;font-size:0.8rem;color:var(--terracotta);">Could not load estate details.</p>`
+    return
+  }
+
+  if (!data) {
+    status.textContent = 'Not submitted'
+    content.innerHTML = `<p style="padding:0.5rem 1.25rem 1rem;font-size:0.8rem;color:var(--charcoal);opacity:0.4;font-style:italic;font-family:'Lora',Georgia,serif;">The client has not yet submitted the Estate Details Form.</p>`
+    return
+  }
+
+  status.textContent = `Submitted ${formatDate(data.updated_at)}`
+  content.innerHTML  = buildEstateDetailsDisplay(data)
+
+  // SSN reveal toggle
+  const ssnReveal  = content.querySelector('.ssn-reveal-btn')
+  const ssnDisplay = content.querySelector('.ssn-display')
+  if (ssnReveal && ssnDisplay) {
+    ssnReveal.addEventListener('click', () => {
+      const isHidden = ssnDisplay.dataset.shown !== 'true'
+      ssnDisplay.textContent  = isHidden ? (data.deceased_ssn || '—') : maskSSN(data.deceased_ssn)
+      ssnDisplay.dataset.shown = isHidden ? 'true' : 'false'
+      ssnReveal.textContent    = isHidden ? 'Hide' : 'Reveal'
+    })
+  }
+}
+
+function maskSSN(ssn) {
+  if (!ssn) return '—'
+  const c = ssn.replace(/\D/g, '')
+  return `•••-••-${c.slice(-4)}`
+}
+
+function buildEstateDetailsDisplay(d) {
+  const det = (label, value) => value
+    ? `<div><div class="estate-det-label">${esc(label)}</div><div class="estate-det-value">${esc(String(value))}</div></div>`
+    : ''
+
+  const list = (label, items, fmt) => items?.length
+    ? `<div style="margin-bottom:0.625rem;">
+        <div class="estate-det-label" style="margin-bottom:0.3rem;">${esc(label)}</div>
+        ${items.map(fmt).join('')}
+       </div>`
+    : ''
+
+  const textBlock = (label, value) => value
+    ? `<div style="margin-bottom:0.625rem;">
+        <div class="estate-det-label">${esc(label)}</div>
+        <div style="font-size:0.8rem;color:var(--charcoal);line-height:1.65;white-space:pre-line;">${esc(value)}</div>
+       </div>`
+    : ''
+
+  return `
+    <div class="estate-det-section">
+      <div class="estate-det-section-header">Identification</div>
+      <div class="estate-det-grid">
+        ${det('Date of Birth', d.deceased_dob ? new Date(d.deceased_dob + 'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : null)}
+        <div>
+          <div class="estate-det-label">Social Security Number</div>
+          <div class="estate-det-value" style="display:flex;align-items:center;gap:0.5rem;">
+            <span class="ssn-display">${maskSSN(d.deceased_ssn)}</span>
+            ${d.deceased_ssn ? `<button class="ssn-reveal-btn" style="font-size:0.65rem;color:var(--sage);background:none;border:none;cursor:pointer;padding:0;text-decoration:underline;font-family:'DM Sans',sans-serif;">Reveal</button>` : ''}
+          </div>
+        </div>
+        ${det("Driver's License", d.deceased_dl_state && d.deceased_dl_number ? `${d.deceased_dl_state} — ${d.deceased_dl_number}` : null)}
+        ${det('Medicare / Medicaid ID', d.deceased_medicare_id)}
+      </div>
+    </div>
+
+    <div class="estate-det-section">
+      <div class="estate-det-section-header">Legal &amp; Beneficiaries</div>
+      <div class="estate-det-grid">
+        ${det('Will Location', d.will_location)}
+        ${det('Estate Attorney', d.has_attorney === false ? 'No attorney' : d.attorney_name && d.attorney_contact ? `${d.attorney_name} — ${d.attorney_contact}` : d.attorney_name || null)}
+      </div>
+      ${list('Beneficiaries / Heirs', d.beneficiaries, b =>
+        `<div style="font-size:0.8rem;color:var(--charcoal);line-height:1.45;padding:0.15rem 0;">
+          <span style="font-weight:400;">${esc(b.name||'—')}</span>
+          ${b.relationship ? `<span style="opacity:0.5;"> · ${esc(b.relationship)}</span>` : ''}
+          ${b.contact     ? `<span style="opacity:0.5;"> · ${esc(b.contact)}</span>` : ''}
+         </div>`)}
+    </div>
+
+    <div class="estate-det-section">
+      <div class="estate-det-section-header">Financial Accounts</div>
+      ${list('Bank Accounts', d.bank_accounts, a =>
+        `<div style="font-size:0.8rem;color:var(--charcoal);line-height:1.45;padding:0.15rem 0;">
+          <span style="font-weight:400;">${esc(a.institution||'—')}</span>
+          <span style="opacity:0.5;"> · ${esc(a.account_type||'account')} #${esc(a.account_number||'—')}</span>
+         </div>`)}
+      ${list('Life Insurance', d.life_insurance, p =>
+        `<div style="font-size:0.8rem;color:var(--charcoal);line-height:1.45;padding:0.15rem 0;">
+          <span style="font-weight:400;">${esc(p.company||'—')}</span>
+          <span style="opacity:0.5;"> · Policy #${esc(p.policy_number||'—')}</span>
+          ${p.beneficiary ? `<span style="opacity:0.5;"> · Beneficiary: ${esc(p.beneficiary)}</span>` : ''}
+         </div>`)}
+      ${list('Retirement Accounts', d.retirement_accounts, a =>
+        `<div style="font-size:0.8rem;color:var(--charcoal);line-height:1.45;padding:0.15rem 0;">
+          <span style="font-weight:400;">${esc(a.institution||'—')}</span>
+          <span style="opacity:0.5;"> · ${esc(a.plan_type||'account')} #${esc(a.account_number||'—')}</span>
+         </div>`)}
+      ${list('Investment Accounts', (d.investment_accounts||[]).filter(a=>a.institution||a.account_number), a =>
+        `<div style="font-size:0.8rem;color:var(--charcoal);line-height:1.45;padding:0.15rem 0;">
+          <span style="font-weight:400;">${esc(a.institution||'—')}</span>
+          ${a.account_number ? `<span style="opacity:0.5;"> · #${esc(a.account_number)}</span>` : ''}
+         </div>`)}
+    </div>
+
+    <div class="estate-det-section">
+      <div class="estate-det-section-header">Property &amp; Vehicles</div>
+      ${list('Properties', d.properties, p =>
+        `<div style="font-size:0.8rem;color:var(--charcoal);padding:0.15rem 0;">${esc(p.address||'—')}</div>`)}
+      <div class="estate-det-grid">
+        ${det('Mortgage', d.mortgage_servicer ? `${d.mortgage_servicer} — Loan #${d.mortgage_loan_number||'—'}` : null)}
+        ${det('Landlord / Property Manager', d.landlord_contact)}
+      </div>
+      ${list('Vehicles', d.vehicles, v =>
+        `<div style="font-size:0.8rem;color:var(--charcoal);line-height:1.45;padding:0.15rem 0;">
+          <span style="font-weight:400;">${esc(v.year||'')} ${esc(v.make||'')} ${esc(v.model||'')}</span>
+          ${v.vin ? `<span style="opacity:0.5;"> · VIN: ${esc(v.vin)}</span>` : ''}
+         </div>`)}
+      ${det('Vehicle Lease', d.vehicle_lease_info)}
+      <div class="estate-det-grid" style="margin-top:0.5rem;">
+        ${d.utility_electric?.provider ? det('Electric', `${d.utility_electric.provider} — Acct #${d.utility_electric.account_number||'—'}`) : ''}
+        ${d.utility_gas?.provider      ? det('Gas',      `${d.utility_gas.provider} — Acct #${d.utility_gas.account_number||'—'}`) : ''}
+        ${d.utility_water?.provider    ? det('Water',    `${d.utility_water.provider} — Acct #${d.utility_water.account_number||'—'}`) : ''}
+        ${d.utility_internet?.provider ? det('Internet', `${d.utility_internet.provider} — Acct #${d.utility_internet.account_number||'—'}`) : ''}
+        ${det('Cell Phone', d.cell_carrier ? `${d.cell_carrier} — Acct #${d.cell_account_number||'—'}` : null)}
+      </div>
+    </div>
+
+    <div class="estate-det-section" style="margin-bottom:0.5rem;">
+      <div class="estate-det-section-header">Digital Accounts, Insurance &amp; Tax</div>
+      <div class="estate-det-grid">
+        ${det('Health Insurance', d.health_ins_carrier ? `${d.health_ins_carrier} — Member #${d.health_ins_member_id||'—'}` : null)}
+        ${det('CPA / Tax Preparer', d.cpa_name && d.cpa_contact ? `${d.cpa_name} — ${d.cpa_contact}` : d.cpa_name || (d.cpa_name === null && !d.cpa_contact ? 'Self-prepared' : null))}
+        ${det('Prior Tax Returns', d.prior_tax_location)}
+        ${det('Apple ID', d.apple_id_email)}
+      </div>
+      ${textBlock('Email Addresses', d.email_addresses)}
+      ${textBlock('Social Media Accounts', d.social_media_accounts)}
+      ${textBlock('Recurring Subscriptions', d.subscriptions)}
+      ${textBlock('Cryptocurrency', d.crypto_info)}
+      ${textBlock('Loyalty Programs', d.loyalty_programs)}
+      ${textBlock('Professional Memberships', d.professional_memberships)}
+      ${textBlock('Additional Notes', d.additional_notes)}
+    </div>
+  `
 }
 
 
