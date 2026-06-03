@@ -134,6 +134,15 @@
     .invite-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
     .resend-btn { background: transparent; color: var(--forest); border: 1px solid var(--forest); font-size: 0.72rem; padding: 0.3rem 0.7rem; }
     .resend-btn:hover { background: rgba(91,110,91,0.08); }
+    .delete-btn {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      background: transparent; color: var(--charcoal); opacity: 0.35;
+      font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 300;
+      padding: 0.3rem 0.6rem; border-radius: 6px; border: 1px solid transparent;
+      cursor: pointer; transition: opacity 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .delete-btn:hover { opacity: 1; color: var(--terracotta); border-color: rgba(196,114,74,0.3); }
+    .delete-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
     .invited-badge {
       display: inline-flex; align-items: center; gap: 0.3rem;
       font-size: 0.72rem; color: var(--forest);
@@ -386,6 +395,25 @@ async function loadIntake() {
     sel.addEventListener('click', e => e.stopPropagation())
   })
 
+  // Wire up delete buttons
+  list.querySelectorAll('.delete-btn[data-id]').forEach(btn => {
+    btn.addEventListener('click', async e => {
+      e.stopPropagation()
+      if (!confirm(`Permanently delete the intake submission for ${btn.dataset.name}? This cannot be undone.`)) return
+      btn.disabled = true
+      const { error } = await supabase
+        .from('intake_submissions')
+        .delete()
+        .eq('id', btn.dataset.id)
+      if (error) {
+        btn.disabled = false
+        alert('Delete failed: ' + error.message)
+      } else {
+        btn.closest('.intake-card').remove()
+      }
+    })
+  })
+
   // Wire up invite + resend buttons
   list.querySelectorAll('.invite-btn[data-id]').forEach(btn => {
     btn.addEventListener('click', async e => {
@@ -521,7 +549,11 @@ function buildIntakeCard(r, i) {
       ${r.how_doing ? `<div class="intake-free-label">How they're doing</div><div class="intake-free-text">${esc(r.how_doing)}</div>` : ''}
       ${r.anything_else ? `<div class="intake-free-label">Anything else</div><div class="intake-free-text">${esc(r.anything_else)}</div>` : ''}
 
-      <div style="display:flex;align-items:center;justify-content:flex-end;padding-top:0.875rem;border-top:1px solid var(--mist);margin-top:0.875rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding-top:0.875rem;border-top:1px solid var(--mist);margin-top:0.875rem;">
+        <button class="delete-btn" data-id="${esc(r.id)}" data-name="${esc(executorName)}" onclick="event.stopPropagation()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          Delete submission
+        </button>
         <div class="invite-action">${inviteAction}</div>
       </div>
     </div>
