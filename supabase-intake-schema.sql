@@ -70,5 +70,5 @@ CREATE POLICY "advisors_update_intake"
 -- Advisors (authenticated) can read and update submissions
 GRANT SELECT, UPDATE ON public.intake_submissions TO authenticated;
 
--- Cloudflare Worker uses the service_role key to insert new submissions
-GRANT INSERT ON public.intake_submissions TO service_role;
+-- Cloudflare Worker uses the service_role key to insert and read submissions
+GRANT SELECT, INSERT ON public.intake_submissions TO service_role;
