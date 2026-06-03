@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="brand_assets/logo.png" />
+  <title>Help Center — Loss Ally</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --cream: #f6f1e6;
+      --warm-white: #FAF8F4;
+      --sage: #8D9D6A;
+      --forest: #5b6e5b;
+      --evergreen: #2D4D0C;
+      --charcoal: #2C2C28;
+      --mist: #E2DDD4;
+      --gold: #C9A870;
+      --sand: #E8C987;
+      --warm-ochre: #B4952A;
+      --deep-sage: #2D4D0C;
+      --terracotta: #C4724A;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--warm-white);
+      color: var(--charcoal);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.5;
+    }
+
+    .label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--sage);
+    }
+
+    .display-font { font-family: 'Cormorant Garamond', Georgia, serif; }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: var(--forest);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 0.875rem;
+      padding: 0.75rem 1.6rem;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
+      box-shadow: 0 2px 14px rgba(71,102,39,0.25);
+    }
+    .btn-primary:hover { background: var(--evergreen); transform: translateY(-1px); box-shadow: 0 6px 22px rgba(71,102,39,0.32); }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: transparent;
+      color: var(--charcoal);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 0.875rem;
+      padding: 0.75rem 1.6rem;
+      border-radius: 6px;
+      border: 1px solid var(--mist);
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.18s ease, background 0.18s ease, transform 0.15s ease;
+    }
+    .btn-outline:hover { border-color: var(--sage); background: rgba(138,158,140,0.06); transform: translateY(-1px); }
+    .btn-outline:active { transform: translateY(0); }
+    .btn-outline:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+    .nav-link {
+      font-size: 0.875rem;
+      font-weight: 300;
+      color: var(--charcoal);
+      text-decoration: none;
+      opacity: 0.65;
+      transition: opacity 0.18s;
+      letter-spacing: 0.005em;
+    }
+    .nav-link:hover { opacity: 1; }
+    .nav-link:focus-visible { outline: 2px solid var(--gold); border-radius: 2px; }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.in { opacity: 1; transform: translateY(0); }
+
+    /* Search */
+    .search-wrap {
+      position: relative;
+      max-width: 580px;
+      margin: 0 auto;
+    }
+    .search-wrap svg {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+    #faq-search {
+      width: 100%;
+      background: #fff;
+      border: 1.5px solid var(--mist);
+      border-radius: 10px;
+      padding: 0.875rem 1rem 0.875rem 2.875rem;
+      font-size: 0.95rem;
+      color: var(--charcoal);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      outline: none;
+      transition: border-color 0.18s, box-shadow 0.18s;
+      box-shadow: 0 2px 12px rgba(44,44,42,0.05);
+    }
+    #faq-search:focus { border-color: var(--sage); box-shadow: 0 2px 18px rgba(141,157,106,0.15); }
+    #faq-search::placeholder { color: var(--charcoal); opacity: 0.35; }
+
+    /* Accordion */
+    .faq-section { margin-bottom: 3rem; }
+    .faq-section-head {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.875rem;
+      padding-bottom: 0.875rem;
+      border-bottom: 1.5px solid var(--mist);
+    }
+    .faq-section-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(91,110,91,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .faq-section-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.35rem;
+      font-weight: 500;
+      color: var(--charcoal);
+      letter-spacing: -0.01em;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--mist);
+    }
+    .faq-item:last-child { border-bottom: none; }
+
+    .faq-q {
+      width: 100%;
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.1rem 0;
+      text-align: left;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: var(--charcoal);
+      line-height: 1.5;
+      transition: color 0.18s;
+    }
+    .faq-q:hover { color: var(--forest); }
+    .faq-q:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 2px; }
+
+    .faq-chevron {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--cream);
+      border: 1px solid var(--mist);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.15em;
+      transition: background 0.18s, transform 0.22s ease;
+    }
+    .faq-q[aria-expanded="true"] .faq-chevron {
+      background: var(--forest);
+      border-color: var(--forest);
+      transform: rotate(180deg);
+    }
+    .faq-q[aria-expanded="true"] .faq-chevron svg { stroke: #fff; }
+
+    .faq-a {
+      display: none;
+      padding: 0 0 1.25rem 0;
+      font-size: 0.875rem;
+      line-height: 1.82;
+      color: var(--charcoal);
+      opacity: 0.68;
+      font-weight: 300;
+      max-width: 700px;
+    }
+    .faq-a.open { display: block; }
+
+    .faq-a a {
+      color: var(--forest);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      transition: color 0.15s;
+    }
+    .faq-a a:hover { color: var(--evergreen); }
+
+    /* No results */
+    #no-results {
+      display: none;
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--charcoal);
+      opacity: 0.45;
+      font-size: 0.9rem;
+    }
+
+    /* Highlighted match */
+    mark {
+      background: rgba(180,149,42,0.18);
+      color: inherit;
+      border-radius: 2px;
+      padding: 0 1px;
+    }
+
+    @media (min-width: 768px) {
+      #desk-nav { display: flex !important; }
+      #mob-ham  { display: none  !important; }
+    }
+    @media (max-width: 767px) {
+      #desk-nav { display: none  !important; }
+      #mob-ham  { display: flex  !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAV ══════════════════════════════════════════════ -->
+<header id="site-nav" style="position:sticky;top:0;z-index:50;background:var(--warm-white);border-bottom:1px solid var(--mist);transition:box-shadow 0.2s;">
+  <div style="max-width:1200px;margin:0 auto;padding:0 1.75rem;height:64px;display:flex;align-items:center;justify-content:space-between;">
+
+    <a href="/" style="display:flex;align-items:center;gap:0.625rem;text-decoration:none;flex-shrink:0;">
+      <img src="brand_assets/logo.png" alt="Loss Ally" style="height:34px;width:auto;mix-blend-mode:multiply;" />
+      <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.2rem;font-weight:500;color:var(--charcoal);letter-spacing:0.01em;">Loss Ally</span>
+    </a>
+
+    <nav id="desk-nav" style="display:flex;align-items:center;gap:2.25rem;">
+      <a href="/#services"     class="nav-link">Services</a>
+      <a href="/#how-it-works" class="nav-link">How It Works</a>
+      <a href="/#pricing"      class="nav-link">Plans</a>
+      <a href="/#contact" class="btn-primary" style="padding:0.6rem 1.25rem;font-size:0.82rem;">Get Support</a>
+    </nav>
+
+    <button id="mob-ham" aria-label="Open menu" style="display:none;flex-direction:column;gap:5px;padding:8px;background:none;border:none;cursor:pointer;">
+      <span id="h1" style="display:block;width:20px;height:1.5px;background:var(--charcoal);border-radius:2px;transition:transform 0.2s,opacity 0.2s;"></span>
+      <span id="h2" style="display:block;width:20px;height:1.5px;background:var(--charcoal);border-radius:2px;transition:opacity 0.2s;"></span>
+      <span id="h3" style="display:block;width:20px;height:1.5px;background:var(--charcoal);border-radius:2px;transition:transform 0.2s;"></span>
+    </button>
+  </div>
+
+  <div id="mob-menu" style="display:none;border-top:1px solid var(--mist);background:var(--warm-white);">
+    <div style="max-width:1200px;margin:0 auto;padding:1.25rem 1.75rem;display:flex;flex-direction:column;gap:0.75rem;">
+      <a href="/#services"     class="nav-link" style="padding:0.4rem 0;" onclick="closeMob()">Services</a>
+      <a href="/#how-it-works" class="nav-link" style="padding:0.4rem 0;" onclick="closeMob()">How It Works</a>
+      <a href="/#pricing"      class="nav-link" style="padding:0.4rem 0;" onclick="closeMob()">Plans</a>
+      <a href="/#contact" class="btn-primary" style="align-self:flex-start;margin-top:0.5rem;" onclick="closeMob()">Get Support</a>
+    </div>
+  </div>
+</header>
+
+
+<!-- ══ PAGE HERO ═════════════════════════════════════════ -->
+<section style="padding:4rem 1.75rem 3.5rem;background:var(--warm-white);position:relative;overflow:hidden;">
+  <div style="position:absolute;top:-100px;right:-60px;width:500px;height:500px;background:radial-gradient(ellipse,rgba(138,158,140,0.07) 0%,transparent 65%);pointer-events:none;"></div>
+  <div style="position:absolute;bottom:-80px;left:-40px;width:400px;height:400px;background:radial-gradient(ellipse,rgba(180,149,42,0.04) 0%,transparent 65%);pointer-events:none;"></div>
+
+  <div style="max-width:800px;margin:0 auto;text-align:center;position:relative;">
+    <div class="fade-up">
+      <span class="label" style="display:block;margin-bottom:1.25rem;">— Help Center</span>
+      <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.6rem,5vw,4rem);font-weight:400;line-height:1.08;letter-spacing:-0.02em;color:var(--charcoal);margin-bottom:1.25rem;">
+        Questions, answered <em style="font-style:italic;color:var(--warm-ochre);">honestly.</em>
+      </h1>
+      <p style="font-size:0.95rem;line-height:1.8;color:var(--charcoal);opacity:0.55;max-width:520px;margin:0 auto 2.25rem;">
+        Estate administration raises more questions than most people expect. We've gathered the ones we hear most often — along with straightforward answers — so you can begin to get your bearings.
+      </p>
+    </div>
+
+    <!-- Search -->
+    <div class="fade-up" style="transition-delay:0.1s;">
+      <div class="search-wrap">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="search" id="faq-search" placeholder="Search questions…" autocomplete="off" aria-label="Search frequently asked questions" />
+      </div>
+      <p id="search-count" style="font-size:0.72rem;color:var(--charcoal);opacity:0.38;margin-top:0.625rem;"></p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ DISCLAIMER ════════════════════════════════════════ -->
+<div style="background:rgba(180,149,42,0.07);border-top:1px solid rgba(180,149,42,0.18);border-bottom:1px solid rgba(180,149,42,0.18);padding:0.875rem 1.75rem;">
+  <div style="max-width:900px;margin:0 auto;display:flex;align-items:flex-start;gap:0.75rem;">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--warm-ochre)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:0.1rem;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <p style="font-size:0.78rem;color:var(--charcoal);opacity:0.65;line-height:1.65;font-weight:300;">
+      <strong style="font-weight:500;color:var(--warm-ochre);">A note before you read:</strong> Nothing on this page constitutes legal, financial, or tax advice. Every estate is different, and this information is meant to orient you — not to serve as a guide for your specific situation. For advice tailored to your circumstances, speak with a qualified attorney or financial professional.
+    </p>
+  </div>
+</div>
+
+
+<!-- ══ FAQ CONTENT ═══════════════════════════════════════ -->
+<main style="padding:3.5rem 1.75rem 5rem;background:var(--warm-white);">
+  <div style="max-width:900px;margin:0 auto;">
+
+    <div id="no-results">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 0.875rem;display:block;opacity:0.3;"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <p>No questions match your search. Try different words, or <a href="/#contact" style="color:var(--forest);text-decoration:underline;">ask us directly</a>.</p>
+    </div>
+
+    <!-- ─── SECTION 1: Getting Started ─── -->
+    <div class="faq-section fade-up" data-section="getting-started">
+      <div class="faq-section-head">
+        <div class="faq-section-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--forest)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <h2 class="faq-section-title">Getting Started</h2>
+      </div>
+
+      <div class="faq-item" data-q="What exactly does Loss Ally do?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What exactly does Loss Ally do?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">When someone dies, families face a staggering amount of administrative work — hundreds of tasks across dozens of institutions, agencies, and accounts. Loss Ally guides families through all of it: what needs to happen, in what order, and how. Depending on your plan, we either show you what to do, or we handle it alongside you — making calls, drafting letters, tracking accounts, and coordinating with attorneys and other professionals. Think of us as a knowledgeable partner who knows the system and keeps everything moving while you focus on what matters most. A <a href="/#contact">free consultation call</a> is the best way to understand what your specific situation needs.</div>
+      </div>
+
+      <div class="faq-item" data-q="How quickly can we get started after a death?">
+        <button class="faq-q" aria-expanded="false">
+          <span>How quickly can we get started after a death?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">There's no mandatory waiting period, and in many cases starting quickly is genuinely helpful — some notifications are time-sensitive. That said, we've worked with families who came to us weeks or months after the fact, and we met them right where they were. If you're ready, we're ready. <a href="/#contact">Book a consultation</a> and we'll figure out together where to begin.</div>
+      </div>
+
+      <div class="faq-item" data-q="What information do I need to have ready for the first call?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What information do I need to have ready for the first call?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Not much. We don't need documents, account numbers, or anything official for an introductory conversation. Having a general sense of who passed, where they lived, whether there's a will, and what you know about their assets is plenty to get started. We'll help you figure out what gaps to fill in as we go. The first call is really about understanding your situation and deciding what support makes sense — nothing more is required of you to show up.</div>
+      </div>
+
+      <div class="faq-item" data-q="What is an executor and how do I know if I am one?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What is an executor and how do I know if I am one?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">An executor is the person named in a will to administer an estate — to gather assets, pay debts, and distribute what remains to beneficiaries. If you've been named, it's typically spelled out clearly in the will itself. If there's no will, or no executor is named, the court appoints someone, usually a close family member. Being named executor carries real legal responsibility, but that doesn't mean you have to navigate it alone. We work closely with executors to make the process understandable and manageable. <a href="/#contact">A consultation</a> is a good first step.</div>
+      </div>
+
+      <div class="faq-item" data-q="What if I was just named executor and have no idea what I'm doing?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What if I was just named executor and have no idea what I'm doing?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">That's one of the most common situations we work with. Most people have never done this before — there's no reason you would know what to do. The role carries genuine responsibility, but it doesn't require you to become an expert overnight. Loss Ally helps executors understand what's expected of them, what order things should happen in, and when to involve an attorney or other professional. <a href="/#contact">A consultation</a> is the ideal place to start.</div>
+      </div>
+
+      <div class="faq-item" data-q="Can Loss Ally help even if the person passed away weeks or months ago?">
+        <button class="faq-q" aria-expanded="false">
+          <span>Can Loss Ally help even if the person passed away weeks or months ago?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Absolutely. Families come to us at all stages — sometimes the day of the death, sometimes six months later when they've realized the pile of unfinished tasks isn't going away on its own. It's never too late to get organized. Some tasks do have time-sensitive components, so the sooner we can assess your specific situation, the better — but there's no point at which it's "too late" to get help. <a href="/#contact">Book a call</a> and we'll figure out where you stand.</div>
+      </div>
+
+      <div class="faq-item" data-q="Do you work with families who are out of state or managing an estate remotely?">
+        <button class="faq-q" aria-expanded="false">
+          <span>Do you work with families who are out of state or managing an estate remotely?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Yes — and we're genuinely well-suited for it. Settling an estate from a distance is its own kind of challenge: coordinating between local contacts, managing paperwork across time zones, and staying on top of tasks you can't physically handle yourself. Many of our clients are adult children managing a parent's estate from another state. We handle the coordination that's hardest to do remotely, and we communicate in whatever way works best for you. <a href="/#contact">A consultation</a> will help us map out what remote management looks like for your situation specifically.</div>
+      </div>
+
+      <div class="faq-item" data-q="What if there are multiple family members involved — who do you work with?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What if there are multiple family members involved — who do you work with?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">We typically establish one primary point of contact — often the executor or the family member most involved — and work through them. That said, families are complicated, and we understand that. Sometimes siblings need to be kept in the loop; sometimes a spouse is the real decision-maker even when someone else holds the executor title. We try to be flexible and communicate in a way that reduces friction rather than creating it. Tell us about your family dynamics on your first call and we'll figure out the best approach together.</div>
+      </div>
+    </div>
+
+
+    <!-- ─── SECTION 2: Understanding the Process ─── -->
+    <div class="faq-section fade-up" data-section="understanding-process" style="transition-delay:0.05s;">
+      <div class="faq-section-head">
+        <div class="faq-section-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--forest)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h2 class="faq-section-title">Understanding the Process</h2>
+      </div>
+
+      <div class="faq-item" data-q="How long does estate administration typically take?">
+        <button class="faq-q" aria-expanded="false">
+          <span>How long does estate administration typically take?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">It depends on the size and complexity of the estate, whether probate is required, and how quickly institutions process requests. A relatively straightforward estate might be largely settled in three to six months. More complex situations — real estate, business interests, family disputes, or assets in multiple states — can stretch to a year or longer. We'll give you a realistic picture of your timeline once we understand your specific situation. <a href="/#contact">A consultation</a> is where that mapping starts.</div>
+      </div>
+
+      <div class="faq-item" data-q="What is probate and does my family need it?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What is probate and does my family need it?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Probate is the court-supervised process of validating a will and authorizing an executor to administer the estate. Not every estate requires it — it depends on what assets the person owned and how those assets were titled. Some estates qualify for simplified procedures; others bypass probate entirely through trusts, joint ownership, or beneficiary designations. Whether probate is needed in your situation is one of the first things we help families understand. <a href="/#contact">A consultation</a> will get you a clear answer specific to your circumstances.</div>
+      </div>
+
+      <div class="faq-item" data-q="What happens if there is no will?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What happens if there is no will?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">When someone dies without a will, they're said to have died "intestate." State law then dictates how assets are distributed — typically to a spouse, children, or other close relatives in a specific priority order. This process can be more complicated than it sounds, and it often requires court involvement to appoint an administrator. The steps are still manageable, but the timeline and requirements vary significantly by state. <a href="/#contact">A consultation</a> will help you understand exactly what applies in your situation.</div>
+      </div>
+
+      <div class="faq-item" data-q="What is a small estate and does it qualify for simplified procedures?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What is a small estate and does it qualify for simplified procedures?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Many states have streamlined procedures for smaller estates — sometimes called small estate affidavits or summary administration. The dollar threshold varies significantly by state (anywhere from $25,000 to over $150,000), and the rules about what counts can be complicated. Whether you qualify is worth knowing early, because it can significantly simplify the process. We help clients figure this out as part of our initial assessment. <a href="/#contact">Book a consultation</a> to find out if simplified procedures apply to you.</div>
+      </div>
+
+      <div class="faq-item" data-q="What is the difference between probate assets and non-probate assets?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What is the difference between probate assets and non-probate assets?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Probate assets are things the person owned solely in their own name, with no designated beneficiary — these typically go through the court process. Non-probate assets — like life insurance with a named beneficiary, joint bank accounts, retirement accounts, and assets held in a trust — transfer directly to beneficiaries outside of probate. Understanding which category each asset falls into shapes the entire administration process. This is one of the first things we walk through with families, and it determines a lot about what needs to happen next. <a href="/#contact">Let's talk about your situation.</a></div>
+      </div>
+
+      <div class="faq-item" data-q="What are the most commonly missed steps in estate administration?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What are the most commonly missed steps in estate administration?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">The honest answer: a lot of them. Most families handle the obvious items but overlook recurring charges, small accounts, digital assets, pension survivor benefits, state tax obligations, and the formal process of officially closing the estate. We've seen situations where an overlooked account or missed filing created real complications years later. Closing an estate correctly — rather than just stopping when the obvious tasks are done — matters more than most people realize. Loss Ally is built around exactly this problem: making sure nothing falls through the cracks. <a href="/#contact">A consultation</a> is the best place to see what might be missing in your situation.</div>
+      </div>
+    </div>
+
+
+    <!-- ─── SECTION 3: What Loss Ally Does and Doesn't Do ─── -->
+    <div class="faq-section fade-up" data-section="does-doesnt" style="transition-delay:0.05s;">
+      <div class="faq-section-head">
+        <div class="faq-section-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--forest)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h2 class="faq-section-title">What Loss Ally Does and Doesn't Do</h2>
+      </div>
+
+      <div class="faq-item" data-q="What is the difference between the three service plans — Guided, Supported, and Full Service?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What is the difference between the three service plans — Guided, Supported, and Full Service?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Guided is our starting plan — you get a personalized estate checklist and priority map, government notification support, three hours of advisor calls, and access to our template letter library. It's designed for families who want clear direction but are comfortable doing most of the legwork themselves. Supported adds significantly more hands-on involvement: a dedicated named advisor, 20 hours of advisor time, and we make calls and send letters on your behalf. Full Service is our most comprehensive offering, designed for complex estates — it includes probate navigation, real estate coordination, multi-state management, and unlimited advisor hours. <a href="/#contact">A consultation</a> will help us figure out which fits your situation best.</div>
+      </div>
+
+      <div class="faq-item" data-q="What do I actually have to do versus what does Loss Ally handle?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What do I actually have to do versus what does Loss Ally handle?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">It varies by plan and situation. Even in our most hands-on offering, certain things require the executor or a family member to take action — signing legal documents, appearing in court if required, and making final decisions about distributions. What we take off your plate is everything we possibly can: the research, the calls to institutions, tracking down accounts, preparing letters, coordinating with professionals, and keeping everything organized. We'll be specific with you on your first call about exactly what to expect from your plan.</div>
+      </div>
+
+      <div class="faq-item" data-q="What happens when my included advisor hours run out?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What happens when my included advisor hours run out?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">You'll never be left without direction. We give advance notice as your hours approach their limit, and we'll discuss options together: additional hour blocks, a plan upgrade, or clear guidance on what remains and how to handle it independently. We don't suddenly disappear when the clock runs out. If your situation has become more complex than initially anticipated, we'll be upfront about that and work with you on a path forward.</div>
+      </div>
+
+      <div class="faq-item" data-q="Does Loss Ally provide legal advice?">
+        <button class="faq-q" aria-expanded="false">
+          <span>Does Loss Ally provide legal advice?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">No. We're not attorneys, and we don't provide legal advice. What we do provide is practical guidance — helping you understand the landscape, identify when you need legal counsel, and in many cases, connecting you with a qualified attorney for the specific things that require one. Think of us as the people who help you get organized and ask the right questions before you sit down with a lawyer — and who stay alongside you throughout the entire process.</div>
+      </div>
+
+      <div class="faq-item" data-q="Does Loss Ally provide financial or tax advice?">
+        <button class="faq-q" aria-expanded="false">
+          <span>Does Loss Ally provide financial or tax advice?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">No. We're not CPAs or financial advisors, and we don't provide tax or investment advice. What we can do is help you understand what tax and financial steps are typically required as part of estate administration, identify when you need professional help, and facilitate introductions to trusted professionals. We make sure the right things happen — even when we're not the ones doing them.</div>
+      </div>
+
+      <div class="faq-item" data-q="Can Loss Ally file taxes on behalf of the estate?">
+        <button class="faq-q" aria-expanded="false">
+          <span>Can Loss Ally file taxes on behalf of the estate?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">We don't prepare or file tax returns. What we do is make sure you know what tax obligations exist, what deadlines apply, and who you need to work with to fulfill them. For clients who need a CPA, we provide referrals and help coordinate the information-gathering process. Taxes are one area where professional expertise is genuinely necessary, and we'll make sure you're never navigating that alone.</div>
+      </div>
+
+      <div class="faq-item" data-q="Can Loss Ally appear in court or sign legal documents on my behalf?">
+        <button class="faq-q" aria-expanded="false">
+          <span>Can Loss Ally appear in court or sign legal documents on my behalf?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">No. Only an attorney can represent you in court, and only the executor or designated legal agent can sign estate documents on behalf of the estate. What we can do is prepare you thoroughly — helping you understand what to expect, what documents are needed, and what questions to ask. We work closely with attorneys when court involvement is required, so you're never walking in uninformed.</div>
+      </div>
+
+      <div class="faq-item" data-q="Does Loss Ally work with attorneys and CPAs, or instead of them?">
+        <button class="faq-q" aria-expanded="false">
+          <span>Does Loss Ally work with attorneys and CPAs, or instead of them?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Alongside them — always. We're not a replacement for legal or financial professionals; we're the layer that coordinates, organizes, and keeps things moving between them and you. Many of our clients work with attorneys for probate and CPAs for taxes, and we act as the connective tissue: tracking what each party needs, making sure nothing falls through the cracks, and translating between the professional world and the family. If you don't have an attorney or CPA, we can help you find the right ones for your situation.</div>
+      </div>
+    </div>
+
+
+    <!-- ─── SECTION 4: Working with Your Advisor ─── -->
+    <div class="faq-section fade-up" data-section="working-advisor" style="transition-delay:0.05s;">
+      <div class="faq-section-head">
+        <div class="faq-section-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--forest)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <h2 class="faq-section-title">Working with Your Advisor</h2>
+      </div>
+
+      <div class="faq-item" data-q="Who will I be working with?">
+        <button class="faq-q" aria-expanded="false">
+          <span>Who will I be working with?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">You'll be matched with a dedicated Loss Ally advisor based on your situation and location. Your advisor is a real person — not a chatbot or a call center — and they'll stay with you from first contact through final closure. You'll know their name, and they'll know yours. On our Guided plan, you have access to scheduled advisor calls; on Supported and Full Service, your advisor is actively working on your behalf throughout the process.</div>
+      </div>
+
+      <div class="faq-item" data-q="How do you communicate with clients?">
+        <button class="faq-q" aria-expanded="false">
+          <span>How do you communicate with clients?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">However works best for you. Most clients prefer a combination of scheduled calls and email updates. We can also communicate via text for quick check-ins if that fits your life better. Your advisor will establish a communication rhythm with you in the first week — typically a regular check-in call and asynchronous updates as tasks are completed. We adapt to you, not the other way around.</div>
+      </div>
+
+      <div class="faq-item" data-q="How quickly does my advisor respond?">
+        <button class="faq-q" aria-expanded="false">
+          <span>How quickly does my advisor respond?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">We aim for same-business-day responses. Our team operates Monday through Friday, 8am–6pm, and we respond to all messages within four hours during those windows. If you're in a time-sensitive situation, let us know upfront and we'll make sure you're not waiting.</div>
+      </div>
+
+      <div class="faq-item" data-q="What if I have an urgent situation outside of business hours?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What if I have an urgent situation outside of business hours?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Some estate matters genuinely can't wait — securing a property, stopping a financial action, dealing with something that's emerged unexpectedly. If you're a current client facing an urgent situation, contact your advisor directly and flag it as urgent; we'll do our best to respond quickly. For true emergencies involving legal or safety concerns, you'll also want to contact an attorney or local authorities. This is something we discuss with all new clients so you always have a plan.</div>
+      </div>
+
+      <div class="faq-item" data-q="Can I change advisors if it's not a good fit?">
+        <button class="faq-q" aria-expanded="false">
+          <span>Can I change advisors if it's not a good fit?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Yes. We want the relationship to work, and sometimes it just doesn't click — that's human. If you'd like to work with a different advisor, tell us and we'll make it happen without friction. There's no penalty and no awkward conversation required on your end.</div>
+      </div>
+
+      <div class="faq-item" data-q="What if my situation changes after we've started — can I upgrade my plan?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What if my situation changes after we've started — can I upgrade my plan?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Absolutely. Estates often reveal themselves to be more complex than they first appeared — a business interest no one knew about, real property that needs court involvement, or family dynamics that complicate distribution. You can upgrade your plan at any point, and whatever you've already paid applies toward the new plan. We'll discuss the specifics when the time comes.</div>
+      </div>
+    </div>
+
+
+    <!-- ─── SECTION 5: Documents and Paperwork ─── -->
+    <div class="faq-section fade-up" data-section="documents" style="transition-delay:0.05s;">
+      <div class="faq-section-head">
+        <div class="faq-section-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--forest)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <h2 class="faq-section-title">Documents and Paperwork</h2>
+      </div>
+
+      <div class="faq-item" data-q="How many death certificates do I need and where do I get them?">
+        <button class="faq-q" aria-expanded="false">
+          <span>How many death certificates do I need and where do I get them?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">More than most people expect. Death certificates are required by virtually every institution — banks, insurance companies, the Social Security Administration, pension providers, the DMV, and many more. Most families need at least eight to twelve certified copies, and complex estates may need more. Certified copies come from the vital records office in the county or state where the death occurred. This is one of the first things we help clients sort out, because the number you order upfront affects how quickly everything else moves. <a href="/#contact">A consultation</a> will give you a sense of how many you'll likely need.</div>
+      </div>
+
+      <div class="faq-item" data-q="What is a Letter Testamentary?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What is a Letter Testamentary?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">A Letter Testamentary is a court-issued document that formally grants an executor the legal authority to act on behalf of the estate. Most financial institutions won't release funds or transfer accounts without seeing one. It's obtained through the probate court, and like death certificates, you'll often need multiple certified copies. If probate is required, getting this document early is important. We walk clients through this process and help coordinate the steps involved.</div>
+      </div>
+
+      <div class="faq-item" data-q="What accounts and institutions typically need to be notified?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What accounts and institutions typically need to be notified?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">The list is longer than people expect, and the specific answer depends on the individual's life. At minimum: banks and credit unions, investment and brokerage accounts, retirement account custodians, insurance companies (life, health, auto, home, long-term care), the Social Security Administration, the IRS and state tax authorities, the DMV, pension providers, employers, and subscription services. There are also digital accounts, healthcare providers, and potentially professional licensing boards. Creating a comprehensive notification list is one of the first things Loss Ally does with every client.</div>
+      </div>
+
+      <div class="faq-item" data-q="What documents should I never throw away?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What documents should I never throw away?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">As a general rule: death certificates, original wills and trust documents, Letters Testamentary, deeds, tax filings, account closing statements, and any correspondence related to the estate should all be retained for years — in some cases indefinitely. The specific retention rules vary by document type and jurisdiction, and this is a detailed conversation we have with every client at the close of their engagement. For now, the simple guidance is: when in doubt, keep it. <a href="/#contact">A consultation</a> can give you a more specific picture.</div>
+      </div>
+
+      <div class="faq-item" data-q="How do I find accounts and assets I don't know about?">
+        <button class="faq-q" aria-expanded="false">
+          <span>How do I find accounts and assets I don't know about?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">This is genuinely one of the harder parts of estate administration, and discovering unknown accounts is more common than people realize. Bank statements, tax returns, mail, safe deposit boxes, and email inboxes can all be sources. There are also state unclaimed property databases that may hold forgotten accounts. We have a systematic process for asset discovery that we run with every client — it takes time, but it's worth doing thoroughly. <a href="/#contact">A consultation</a> is a good starting point for understanding what we'd look for in your specific case.</div>
+      </div>
+
+      <div class="faq-item" data-q="What do I do with a safe deposit box?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What do I do with a safe deposit box?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Access rules for safe deposit boxes vary by state and by bank. If you're a co-owner or are named in the box agreement, access is typically straightforward. If you're not, you'll likely need Letters Testamentary — and sometimes a bank officer present — to gain access legally. Inside, you might find a will, deeds, jewelry, or other valuables, some of which may have their own legal implications. We help clients navigate the process of gaining access and documenting what's found.</div>
+      </div>
+    </div>
+
+
+    <!-- ─── SECTION 6: Financial Closure ─── -->
+    <div class="faq-section fade-up" data-section="financial" style="transition-delay:0.05s;">
+      <div class="faq-section-head">
+        <div class="faq-section-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--forest)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <h2 class="faq-section-title">Financial Closure</h2>
+      </div>
+
+      <div class="faq-item" data-q="How do I handle outstanding bills and debts?">
+        <button class="faq-q" aria-expanded="false">
+          <span>How do I handle outstanding bills and debts?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">The estate is generally responsible for paying valid debts before distributing assets to heirs — but not every creditor has to be paid immediately, and not every debt is necessarily valid or collectible. There are legal procedures that govern how creditors are notified and how long they have to file claims. Paying off debts in the wrong order, or paying things you didn't legally need to, is a common and costly mistake. This is one of the areas where having a knowledgeable advisor makes a real difference. <a href="/#contact">A consultation</a> will help you understand what you're dealing with.</div>
+      </div>
+
+      <div class="faq-item" data-q="What happens if the estate doesn't have enough money to pay all the debts?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What happens if the estate doesn't have enough money to pay all the debts?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">This is called an insolvent estate, and it's more common than people expect. When there isn't enough to go around, state law dictates the order in which debts are paid — typically funeral expenses and administrative costs first, then secured debts, then unsecured. Heirs are generally not personally responsible for the deceased's debts, with some important exceptions. Understanding what you owe, and what you don't, requires a careful look at your specific situation. This is exactly the kind of complexity where Loss Ally's guidance — and a good attorney — can protect you. <a href="/#contact">Talk to us.</a></div>
+      </div>
+
+      <div class="faq-item" data-q="What happens to accounts with a named beneficiary?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What happens to accounts with a named beneficiary?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Accounts with designated beneficiaries — payable-on-death bank accounts, transfer-on-death investment accounts, and accounts with named beneficiaries — typically pass directly to those beneficiaries outside of probate. That's generally good news. But the process still requires notifying the institution, providing a death certificate and the beneficiary's identification, and following each institution's specific procedures. We help clients identify which accounts fall into this category and coordinate the transfer process.</div>
+      </div>
+
+      <div class="faq-item" data-q="What happens to a 401k or IRA?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What happens to a 401k or IRA?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Retirement accounts with named beneficiaries generally pass outside of probate, but the rules around distributions are genuinely complex. The timing and method of required distributions can have significant tax implications, and the rules differ based on the relationship between the deceased and the beneficiary, the type of account, and other factors. We strongly encourage beneficiaries to speak with a financial advisor or CPA before taking any distributions. We help clients understand the landscape and connect with the right professionals.</div>
+      </div>
+
+      <div class="faq-item" data-q="What happens to life insurance policies?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What happens to life insurance policies?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Life insurance policies with named beneficiaries pay out directly to those beneficiaries — they're not part of the probate estate. Filing a claim typically involves submitting a death certificate and a completed claim form to the insurance company. Most policies pay relatively quickly once the claim is filed correctly. Where it gets more complicated is when beneficiaries are deceased, contested, or when the policy is owned by a trust. We help clients identify all policies, gather the necessary documentation, and navigate any complications that come up.</div>
+      </div>
+    </div>
+
+
+    <!-- ─── SECTION 7: Property and Real Estate ─── -->
+    <div class="faq-section fade-up" data-section="property" style="transition-delay:0.05s;">
+      <div class="faq-section-head">
+        <div class="faq-section-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--forest)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <h2 class="faq-section-title">Property and Real Estate</h2>
+      </div>
+
+      <div class="faq-item" data-q="What happens to a house that was owned by the deceased?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What happens to a house that was owned by the deceased?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">It depends on how it was owned. If it was jointly owned with right of survivorship, it typically passes directly to the surviving owner. If it was solely owned, it generally becomes part of the probate estate and must go through a formal process before it can be transferred or sold. In the meantime, things like mortgage payments, insurance, utilities, and property taxes still need to be managed. Real estate is often the single most complex part of estate administration — logistically and emotionally. We help clients understand what they're dealing with and what steps are required. <a href="/#contact">A consultation</a> will give you a clearer picture.</div>
+      </div>
+
+      <div class="faq-item" data-q="What do I do with a leased vehicle?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What do I do with a leased vehicle?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">A leased vehicle is a liability, not an asset — there's typically no equity to transfer. Most auto leases have specific provisions for what happens in the event of the lessee's death, and early termination fees may or may not apply. The leasing company will need to be notified and a death certificate provided. Some leases allow a family member to assume the lease; others require the vehicle to be returned. We help clients identify these obligations and work through the process with the right contacts.</div>
+      </div>
+
+      <div class="faq-item" data-q="What do I do with personal belongings, furniture, and household items?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What do I do with personal belongings, furniture, and household items?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">This is one of the most emotionally complex parts of estate administration, and it's rarely covered in legal guidance. Personal property must be inventoried and may need to be appraised if items have significant value. After that, distribution follows the will if one exists, or in its absence, state law and family agreement. Many families work with estate sale services, donation organizations, or professional appraisers. We help clients think through this process systematically — without making it feel like a transaction. Your <a href="/#contact">consultation</a> is a good place to start talking through your specific situation.</div>
+      </div>
+
+      <div class="faq-item" data-q="What happens to a business owned by the deceased?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What happens to a business owned by the deceased?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">This is one of the most complex estate situations there is. The answer depends on the type of business, its legal structure, whether there are partners or co-owners, and whether there's a succession plan or buy-sell agreement in place. Without proper planning, a business can be significantly harmed or lost entirely in the immediate aftermath of an owner's death. An estate attorney with business experience is essential here. We help clients identify what they're dealing with, what questions to ask, and who to involve — and we coordinate with legal and financial professionals throughout.</div>
+      </div>
+    </div>
+
+
+    <!-- ─── SECTION 8: Digital Estate ─── -->
+    <div class="faq-section fade-up" data-section="digital" style="transition-delay:0.05s;">
+      <div class="faq-section-head">
+        <div class="faq-section-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--forest)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        </div>
+        <h2 class="faq-section-title">Digital Estate</h2>
+      </div>
+
+      <div class="faq-item" data-q="What do I do with social media accounts?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What do I do with social media accounts?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Most major platforms — Facebook, Instagram, LinkedIn — have processes for memorializing or removing an account after death. The specifics vary by platform, and some require documentation including a death certificate and proof of relationship. Some people leave instructions in their will or a digital legacy document; many do not. We help clients identify active accounts, understand the options for each, and manage the process. It's worth knowing that a memorialized account looks and behaves differently from an active one, and families often have different preferences about which direction to go.</div>
+      </div>
+
+      <div class="faq-item" data-q="What happens to subscriptions and recurring charges?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What happens to subscriptions and recurring charges?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">They keep charging until someone cancels them. This is one of the most commonly overlooked areas — streaming services, software subscriptions, gym memberships, and other recurring charges can continue for months if no one acts. The first step is identifying what subscriptions exist, which usually requires looking at bank and credit card statements. We help clients inventory and cancel these systematically, prioritizing the ones most likely to keep accruing charges.</div>
+      </div>
+
+      <div class="faq-item" data-q="What do I do with cryptocurrency or digital assets?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What do I do with cryptocurrency or digital assets?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Cryptocurrency is one of the most complex digital estate issues. Unlike a bank account, there's no institution to call — access depends entirely on the private keys or seed phrases, and if those are lost, the assets may be unrecoverable. If you find evidence of cryptocurrency holdings but don't have access information, a digital asset recovery specialist may be needed. We help clients identify what they have, understand what may be recoverable, and take appropriate steps — which depends heavily on the specifics. <a href="/#contact">Reach out</a> if this is part of your situation.</div>
+      </div>
+
+      <div class="faq-item" data-q="How do I find and cancel online accounts I don't know about?">
+        <button class="faq-q" aria-expanded="false">
+          <span>How do I find and cancel online accounts I don't know about?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Email inboxes are usually the best starting point — subscription confirmation emails, billing notifications, and welcome messages reveal a lot. Bank and credit card statements also show recurring charges tied to online services. Browser bookmarks and saved passwords can be useful as well. We have a systematic approach to digital account discovery that we work through with every client, and we coordinate cancellations once accounts are identified.</div>
+      </div>
+    </div>
+
+
+    <!-- ─── SECTION 9: Costs and Payments ─── -->
+    <div class="faq-section fade-up" data-section="costs" style="transition-delay:0.05s;">
+      <div class="faq-section-head">
+        <div class="faq-section-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--forest)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        </div>
+        <h2 class="faq-section-title">Costs and Payments</h2>
+      </div>
+
+      <div class="faq-item" data-q="How does pricing work?">
+        <button class="faq-q" aria-expanded="false">
+          <span>How does pricing work?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Loss Ally charges flat fees, not hourly rates — so you always know what you're paying upfront. Our plans are $895 for Guided, $1,895 for Supported, and $3,500+ for Full Service (quoted based on estate complexity). We believe flat pricing is especially important in this context: the last thing a family in a difficult time needs is to feel like every phone call is running a tab. <a href="/#contact">A consultation</a> is always free, with no obligation to commit.</div>
+      </div>
+
+      <div class="faq-item" data-q="When is payment due?">
+        <button class="faq-q" aria-expanded="false">
+          <span>When is payment due?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Payment is due at the time of engagement — when you decide to move forward with a plan. We want to be clear about this upfront so there are no surprises. We can discuss payment timing and any available options on your consultation call.</div>
+      </div>
+
+      <div class="faq-item" data-q="What is the refund policy?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What is the refund policy?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">If you decide not to move forward after signing up, we have a partial refund policy based on how much work has been completed. The details are spelled out in our client agreement. We encourage you to ask about this on your consultation call so you understand exactly what to expect before committing — we have nothing to hide.</div>
+      </div>
+
+      <div class="faq-item" data-q="What happens if my case takes longer than expected?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What happens if my case takes longer than expected?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Your plan covers your estate administration from start to closure — not a specific number of months. If your situation takes longer due to probate delays, an unresponsive institution, or evolving family circumstances, we don't rush you out or start charging extra. That said, if the scope of your estate is significantly different from what we initially assessed, we'll have an open conversation about your options. No surprises.</div>
+      </div>
+
+      <div class="faq-item" data-q="Are there costs outside of the Loss Ally fee that I should expect?">
+        <button class="faq-q" aria-expanded="false">
+          <span>Are there costs outside of the Loss Ally fee that I should expect?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Yes, and we're upfront about this. Common third-party costs include court filing fees if probate is required, certified death certificates, notary fees, postage for certified mail, attorney fees, CPA fees, and appraisal costs. These vary significantly by state and estate complexity. We help clients anticipate these costs so there are no surprises — and we'll give you a realistic picture during your consultation based on your specific situation.</div>
+      </div>
+
+      <div class="faq-item" data-q="How do I pay?">
+        <button class="faq-q" aria-expanded="false">
+          <span>How do I pay?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">We accept major credit cards and ACH bank transfers. Payment details are provided at the time of engagement. We keep the process simple — one of the many things you won't have to spend energy on during an already demanding time.</div>
+      </div>
+    </div>
+
+
+    <!-- ─── SECTION 10: Sensitive Situations ─── -->
+    <div class="faq-section fade-up" data-section="sensitive" style="transition-delay:0.05s;">
+      <div class="faq-section-head">
+        <div class="faq-section-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--forest)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <h2 class="faq-section-title">Sensitive Situations</h2>
+      </div>
+
+      <div class="faq-item" data-q="What if family members disagree about the estate?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What if family members disagree about the estate?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Family disagreements are more common in estate administration than most people expect — they can range from minor friction to serious disputes. The executor has legal authority over the administration process, but that doesn't always resolve underlying tension. Having a neutral third party — like a Loss Ally advisor — manage the process and communicate factually with all parties can help reduce conflict. For actual legal disputes, an attorney is essential. We'll help you understand the distinction and navigate accordingly. <a href="/#contact">Talk to us</a> about what you're dealing with.</div>
+      </div>
+
+      <div class="faq-item" data-q="What if we find debt the deceased didn't tell anyone about?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What if we find debt the deceased didn't tell anyone about?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">This happens more often than families anticipate, and discovering unexpected debt — credit card balances, loans, liens on property — is disorienting on top of everything else. The important thing to understand: heirs are generally not personally responsible for the deceased's debts (with some exceptions). Creditors must be notified, and the estate is responsible for valid debts within its means. We help clients figure out what they're dealing with and what steps to take. Getting oriented quickly really matters here — <a href="/#contact">we're here to help.</a></div>
+      </div>
+
+      <div class="faq-item" data-q="What if the estate is very small — is it still worth using Loss Ally?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What if the estate is very small — is it still worth using Loss Ally?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">The administrative burden of settling an estate doesn't scale proportionally to its size. Even a modest estate requires dozens of notifications, documentation, and follow-up across multiple institutions. Many of our clients come to us thinking they don't need help — and quickly discover that the logistics are still overwhelming regardless of dollar amounts. Whether Loss Ally makes sense for your situation is something we can assess honestly together on a <a href="/#contact">free consultation call.</a></div>
+      </div>
+
+      <div class="faq-item" data-q="What if the estate is very large or very complex?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What if the estate is very large or very complex?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Our Full Service plan is designed for exactly these situations — estates with real estate holdings, business interests, significant assets, or other complicating factors. We work closely with attorneys and financial professionals in these cases, and we serve as the coordinator and central point of contact for all parties. If your situation sounds complex, <a href="/#contact">a consultation</a> is the best way to assess what level of support makes sense.</div>
+      </div>
+
+      <div class="faq-item" data-q="What if the deceased had assets in multiple states?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What if the deceased had assets in multiple states?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">This is a meaningful complication. Each state has its own probate laws, and an estate with real property in multiple states may require what's called ancillary probate — a separate court proceeding in each state where real property is located. This adds time, cost, and coordination complexity. It's manageable, but it requires knowing what's involved and staying organized across multiple jurisdictions. Our Full Service plan is designed with exactly this kind of situation in mind. <a href="/#contact">A consultation</a> will help us assess your specific situation.</div>
+      </div>
+
+      <div class="faq-item" data-q="What if there is a dispute over the will?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What if there is a dispute over the will?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Formal challenges to the validity of a will — called will contests — are relatively rare but do happen. They must be filed in court and resolved through the legal system. Loss Ally can help you understand what a will contest looks like and what it might mean for the administration process, but legal representation is essential if a contest is filed or threatened. We'll help you get oriented and connect you with an attorney who handles these matters.</div>
+      </div>
+    </div>
+
+
+    <!-- ─── SECTION 11: Record Keeping ─── -->
+    <div class="faq-section fade-up" data-section="records" style="transition-delay:0.05s;">
+      <div class="faq-section-head">
+        <div class="faq-section-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--forest)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h2 class="faq-section-title">Record Keeping</h2>
+      </div>
+
+      <div class="faq-item" data-q="What records do I need to keep and for how long?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What records do I need to keep and for how long?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Longer than you might think. Tax returns and related documents typically need to be kept for at least three to seven years. Documents related to property sales, account closures, and distributions should be retained for a similar period — and in some cases longer. Original documents like wills, deeds, and court orders should generally be kept indefinitely, or until you're certain they're no longer relevant. The specific guidance on retention varies by document type and is something we walk through with every client at the close of their engagement. For now: when in doubt, keep it.</div>
+      </div>
+
+      <div class="faq-item" data-q="What documents should I pass to the heirs?">
+        <button class="faq-q" aria-expanded="false">
+          <span>What documents should I pass to the heirs?</span>
+          <span class="faq-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--charcoal)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="faq-a">Some documents belong with the estate's permanent records; others should be passed on to heirs, particularly if they've inherited assets with ongoing tax or legal implications. Generally, heirs should receive copies of any documents affecting property they've inherited, relevant tax information, and records of transactions affecting their inheritance. The specifics depend on what was inherited and by whom. We provide a final documentation package at the close of every engagement to help families understand exactly what they're handing off and why.</div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+
+<!-- ══ CTA SECTION ═══════════════════════════════════════ -->
+<section style="padding:6rem 1.75rem;background:#1F3A2B;position:relative;overflow:hidden;">
+  <div style="position:absolute;top:-120px;left:-80px;width:500px;height:500px;background:radial-gradient(circle,rgba(191,160,106,0.1) 0%,transparent 68%);pointer-events:none;"></div>
+  <div style="position:absolute;bottom:-100px;right:-60px;width:520px;height:520px;background:radial-gradient(circle,rgba(191,160,106,0.07) 0%,transparent 68%);pointer-events:none;"></div>
+
+  <div style="max-width:720px;margin:0 auto;text-align:center;position:relative;z-index:1;">
+    <span style="font-size:0.7rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:1.25rem;">— Still Have Questions?</span>
+    <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.4rem,4.5vw,3.5rem);font-weight:400;line-height:1.1;letter-spacing:-0.02em;color:#FAF8F4;margin-bottom:1.5rem;">
+      Every situation is <em style="font-style:italic;color:var(--gold);">different.</em><br>Let's talk about yours.
+    </h2>
+    <p style="font-size:0.95rem;color:rgba(250,248,244,0.62);line-height:1.82;max-width:520px;margin:0 auto 0.875rem;font-weight:300;">
+      This page covers the questions we hear most often, but no two estates are alike. If your situation raises something you didn't find an answer to here, we'd be glad to talk it through — without any pressure and without any obligation.
+    </p>
+    <p style="font-size:0.95rem;color:rgba(250,248,244,0.62);line-height:1.82;max-width:520px;margin:0 auto 2.5rem;font-weight:300;">
+      Consultations are always free. We respond within four business hours.
+    </p>
+    <div style="display:flex;flex-wrap:wrap;gap:0.875rem;justify-content:center;">
+      <a href="/#contact" class="btn-primary" style="background:var(--gold);box-shadow:0 2px 18px rgba(201,168,112,0.3);">
+        Schedule a Free Consultation
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="/#pricing" style="display:inline-flex;align-items:center;gap:0.45rem;background:transparent;color:rgba(250,248,244,0.75);font-family:'DM Sans',sans-serif;font-weight:300;font-size:0.875rem;padding:0.75rem 1.6rem;border-radius:6px;border:1px solid rgba(255,255,255,0.2);text-decoration:none;transition:border-color 0.18s,color 0.18s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.45)';this.style.color='rgba(250,248,244,1)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)';this.style.color='rgba(250,248,244,0.75)';">View Our Plans</a>
+    </div>
+    <p style="font-size:0.72rem;color:rgba(250,248,244,0.28);margin-top:2rem;line-height:1.65;font-weight:300;">
+      Loss Ally is not a law firm and does not provide legal, financial, or tax advice. For specific legal matters, we connect you with qualified professionals in your area.
+    </p>
+  </div>
+</section>
+
+
+<!-- ══ FOOTER ══════════════════════════════════════════════ -->
+<footer style="background:#1a2218;padding:3.5rem 1.75rem 2rem;">
+  <div style="max-width:1200px;margin:0 auto;">
+
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:2rem;padding-bottom:2rem;border-bottom:1px solid rgba(255,255,255,0.06);">
+
+      <!-- Brand -->
+      <div style="flex-shrink:0;">
+        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.875rem;">
+          <img src="brand_assets/logo.png" alt="Loss Ally" style="height:30px;width:auto;" />
+          <span style="font-size:0.95rem;font-weight:400;color:rgba(250,248,244,0.8);">Loss Ally</span>
+        </div>
+        <p style="font-size:0.78rem;color:rgba(250,248,244,0.3);line-height:1.75;max-width:200px;font-weight:300;">
+          Estate and life administration support. Compassionate. Practical. Always here.
+        </p>
+      </div>
+
+      <!-- Links -->
+      <nav style="display:flex;flex-wrap:wrap;gap:0.625rem 2.25rem;align-items:center;">
+        <a href="help-center.html" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;white-space:nowrap;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Help Center</a>
+        <a href="state-by-state-guide.html" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;white-space:nowrap;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">State-by-State Guide</a>
+        <a href="grief-resources.html" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;white-space:nowrap;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Grief Resources</a>
+        <a href="privacy-policy.html" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;white-space:nowrap;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Privacy Policy</a>
+        <a href="terms-of-service.html" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;white-space:nowrap;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Terms of Service</a>
+      </nav>
+
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;padding-top:1.5rem;flex-wrap:wrap;gap:0.75rem;">
+      <p style="font-size:0.72rem;color:rgba(250,248,244,0.22);font-weight:300;">© 2026 Loss Ally. All rights reserved.</p>
+      <p style="font-size:0.72rem;color:rgba(250,248,244,0.22);font-weight:300;">Not a legal services firm.</p>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ══ SCRIPTS ════════════════════════════════════════════ -->
+<script>
+  // Mobile nav
+  const ham = document.getElementById('mob-ham');
+  const mob = document.getElementById('mob-menu');
+  let open = false;
+  ham.addEventListener('click', () => {
+    open = !open;
+    mob.style.display = open ? 'block' : 'none';
+    document.getElementById('h1').style.transform = open ? 'translateY(6.5px) rotate(45deg)' : '';
+    document.getElementById('h2').style.opacity   = open ? '0' : '1';
+    document.getElementById('h3').style.transform = open ? 'translateY(-6.5px) rotate(-45deg)' : '';
+  });
+  function closeMob() {
+    open = false;
+    mob.style.display = 'none';
+    document.getElementById('h1').style.transform = '';
+    document.getElementById('h2').style.opacity   = '1';
+    document.getElementById('h3').style.transform = '';
+  }
+
+  // Sticky nav shadow
+  const nav = document.getElementById('site-nav');
+  window.addEventListener('scroll', () => {
+    nav.style.boxShadow = window.scrollY > 10 ? '0 1px 20px rgba(44,44,42,0.06)' : 'none';
+  }, { passive: true });
+
+  // Fade-up on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+  document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+
+  // ── Accordion ──────────────────────────────────────────
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const isOpen = btn.getAttribute('aria-expanded') === 'true';
+      const answer = btn.nextElementSibling;
+
+      // Close all others in same section
+      const section = btn.closest('.faq-section');
+      section.querySelectorAll('.faq-q').forEach(b => {
+        b.setAttribute('aria-expanded', 'false');
+        b.nextElementSibling.classList.remove('open');
+      });
+
+      // Toggle clicked
+      if (!isOpen) {
+        btn.setAttribute('aria-expanded', 'true');
+        answer.classList.add('open');
+      }
+    });
+  });
+
+  // ── Real-time Search ───────────────────────────────────
+  const searchInput = document.getElementById('faq-search');
+  const noResults   = document.getElementById('no-results');
+  const countEl     = document.getElementById('search-count');
+  const allItems    = document.querySelectorAll('.faq-item');
+  const allSections = document.querySelectorAll('.faq-section');
+
+  function escapeRx(s) {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function highlight(text, query) {
+    if (!query) return text;
+    const rx = new RegExp(`(${escapeRx(query)})`, 'gi');
+    return text.replace(rx, '<mark>$1</mark>');
+  }
+
+  function resetHighlights() {
+    allItems.forEach(item => {
+      const btn = item.querySelector('.faq-q span:first-child');
+      const ans = item.querySelector('.faq-a');
+      btn.innerHTML = btn.getAttribute('data-orig') || btn.innerHTML;
+      ans.innerHTML = ans.getAttribute('data-orig-a') || ans.innerHTML;
+    });
+  }
+
+  // Store originals
+  allItems.forEach(item => {
+    const btn = item.querySelector('.faq-q span:first-child');
+    const ans = item.querySelector('.faq-a');
+    btn.setAttribute('data-orig', btn.innerHTML);
+    ans.setAttribute('data-orig-a', ans.innerHTML);
+  });
+
+  searchInput.addEventListener('input', () => {
+    const raw = searchInput.value.trim();
+    const q   = raw.toLowerCase();
+
+    if (!q) {
+      allItems.forEach(item => { item.style.display = ''; });
+      allSections.forEach(sec => { sec.style.display = ''; });
+      noResults.style.display = 'none';
+      countEl.textContent = '';
+      resetHighlights();
+      return;
+    }
+
+    let visible = 0;
+
+    allItems.forEach(item => {
+      const question = item.getAttribute('data-q') || '';
+      const ansEl    = item.querySelector('.faq-a');
+      const ansText  = ansEl ? (ansEl.getAttribute('data-orig-a') || ansEl.textContent) : '';
+      const haystack = (question + ' ' + ansText).toLowerCase();
+      const matches  = haystack.includes(q);
+
+      item.style.display = matches ? '' : 'none';
+
+      if (matches) {
+        visible++;
+        // Highlight question
+        const span = item.querySelector('.faq-q span:first-child');
+        const origQ = span.getAttribute('data-orig') || question;
+        span.innerHTML = highlight(origQ, raw);
+
+        // Highlight answer
+        const origA = ansEl.getAttribute('data-orig-a') || ansEl.innerHTML;
+        ansEl.innerHTML = highlight(origA, raw);
+
+        // Auto-open matching item
+        item.querySelector('.faq-q').setAttribute('aria-expanded', 'true');
+        ansEl.classList.add('open');
+      }
+    });
+
+    // Hide empty sections
+    allSections.forEach(sec => {
+      const anyVisible = [...sec.querySelectorAll('.faq-item')].some(i => i.style.display !== 'none');
+      sec.style.display = anyVisible ? '' : 'none';
+    });
+
+    noResults.style.display = visible === 0 ? 'block' : 'none';
+    countEl.textContent = visible > 0 ? `${visible} result${visible !== 1 ? 's' : ''} found` : '';
+  });
+</script>
+
+</body>
+</html>

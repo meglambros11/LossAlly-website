@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="brand_assets/logo.png" />
+  <title>Loss Ally — Book a Free Consultation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --cream: #f6f1e6;
+      --warm-white: #FAF8F4;
+      --sage: #8D9D6A;
+      --forest: #5b6e5b;
+      --evergreen: #2D4D0C;
+      --charcoal: #2C2C28;
+      --mist: #E2DDD4;
+      --gold: #C9A870;
+      --sand: #E8C987;
+      --warm-ochre: #B4952A;
+      --deep-sage: #2D4D0C;
+      --terracotta: #C4724A;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--charcoal);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.5;
+    }
+
+    .label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--sage);
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: var(--forest);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 0.875rem;
+      padding: 0.75rem 1.6rem;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
+      box-shadow: 0 2px 14px rgba(71,102,39,0.25);
+    }
+    .btn-primary:hover { background: var(--evergreen); transform: translateY(-1px); box-shadow: 0 6px 22px rgba(71,102,39,0.32); }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: transparent;
+      color: var(--charcoal);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 0.875rem;
+      padding: 0.75rem 1.6rem;
+      border-radius: 6px;
+      border: 1px solid var(--mist);
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.18s ease, background 0.18s ease, transform 0.15s ease;
+    }
+    .btn-outline:hover { border-color: var(--sage); background: rgba(138,158,140,0.06); transform: translateY(-1px); }
+    .btn-outline:active { transform: translateY(0); }
+    .btn-outline:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+    .btn-gold {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: var(--gold);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 0.875rem;
+      padding: 0.75rem 1.6rem;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
+      box-shadow: 0 2px 12px rgba(191,160,106,0.28);
+    }
+    .btn-gold:hover { background: #a8894e; transform: translateY(-1px); box-shadow: 0 6px 22px rgba(191,160,106,0.38); }
+    .btn-gold:active { transform: translateY(0); }
+
+    .nav-link {
+      font-size: 0.875rem;
+      font-weight: 300;
+      color: var(--charcoal);
+      text-decoration: none;
+      opacity: 0.65;
+      transition: opacity 0.18s;
+      letter-spacing: 0.005em;
+    }
+    .nav-link:hover { opacity: 1; }
+    .nav-link:focus-visible { outline: 2px solid var(--gold); border-radius: 2px; }
+
+    /* ── Form styles ──────────────────────────────────────────── */
+
+    .form-step { display: none; }
+    .form-step.active { display: block; }
+
+    .field-group { margin-bottom: 1.5rem; }
+
+    .field-label {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      color: var(--charcoal);
+      opacity: 0.5;
+      margin-bottom: 0.4rem;
+      text-transform: uppercase;
+    }
+
+    .field-hint {
+      font-size: 0.78rem;
+      color: var(--charcoal);
+      opacity: 0.45;
+      line-height: 1.55;
+      margin-top: 0.35rem;
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    .field-note {
+      font-size: 0.78rem;
+      color: var(--sage);
+      line-height: 1.55;
+      margin-top: 0.5rem;
+      font-weight: 300;
+    }
+
+    .form-input {
+      width: 100%;
+      background: var(--warm-white);
+      border: 1px solid var(--mist);
+      border-radius: 8px;
+      padding: 0.7rem 0.875rem;
+      font-size: 0.875rem;
+      color: var(--charcoal);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      outline: none;
+      transition: border-color 0.18s ease;
+    }
+    .form-input:focus { border-color: var(--sage); box-shadow: 0 0 0 3px rgba(141,157,106,0.12); }
+
+    select.form-input {
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232C2C28' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.875rem center;
+      background-size: 16px;
+      padding-right: 2.5rem;
+    }
+
+    textarea.form-input {
+      resize: vertical;
+      min-height: 110px;
+      line-height: 1.65;
+    }
+
+    /* Option cards (radio + checkbox) */
+    .option-card {
+      display: flex;
+      align-items: center;
+      gap: 0.875rem;
+      padding: 0.875rem 1rem;
+      border: 1.5px solid var(--mist);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: border-color 0.18s ease, background 0.18s ease;
+      background: var(--warm-white);
+      user-select: none;
+      margin-bottom: 0.5rem;
+    }
+    .option-card:last-child { margin-bottom: 0; }
+    .option-card:hover { border-color: var(--sage); background: rgba(141,157,106,0.05); }
+    .option-card.selected { border-color: var(--forest); background: rgba(91,110,91,0.06); }
+    .option-card input { display: none; }
+
+    .opt-radio {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1.5px solid var(--mist);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.18s, background 0.18s;
+      background: #fff;
+    }
+    .option-card.selected .opt-radio { border-color: var(--forest); background: var(--forest); }
+    .option-card.selected .opt-radio::after {
+      content: '';
+      display: block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #fff;
+    }
+
+    .opt-check {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      border: 1.5px solid var(--mist);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.18s, background 0.18s;
+      background: #fff;
+    }
+    .option-card.selected .opt-check { border-color: var(--forest); background: var(--forest); }
+    .option-card.selected .opt-check::after {
+      content: '';
+      display: block;
+      width: 10px;
+      height: 6px;
+      border-left: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      transform: translateY(-1px) rotate(-45deg);
+    }
+
+    .opt-text {
+      font-size: 0.875rem;
+      color: var(--charcoal);
+      font-weight: 300;
+      line-height: 1.4;
+    }
+
+    /* Checkbox grid for assets */
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+    }
+    .checkbox-grid .option-card {
+      margin-bottom: 0;
+      padding: 0.7rem 0.875rem;
+      align-items: flex-start;
+    }
+    .checkbox-grid .opt-text { font-size: 0.82rem; }
+
+    /* Progress indicator */
+    .step-circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--mist);
+      background: var(--warm-white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: var(--charcoal);
+      opacity: 0.4;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .step-circle.active { border-color: var(--forest); background: var(--forest); color: #fff; opacity: 1; }
+    .step-circle.done { border-color: var(--sage); background: var(--sage); color: #fff; opacity: 1; }
+
+    .step-label {
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--charcoal);
+      opacity: 0.35;
+      margin-top: 6px;
+      text-align: center;
+      transition: opacity 0.3s;
+      white-space: nowrap;
+    }
+    .step-label.active, .step-label.done { opacity: 0.72; }
+
+    .step-connector {
+      flex: 1;
+      height: 1.5px;
+      background: var(--mist);
+      margin-bottom: 22px;
+      transition: background 0.3s;
+      min-width: 20px;
+    }
+    .step-connector.done { background: var(--sage); }
+
+    /* Consent */
+    .consent-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      cursor: pointer;
+    }
+    .consent-box {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      border: 1.5px solid var(--mist);
+      background: var(--warm-white);
+      flex-shrink: 0;
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.18s, background 0.18s;
+    }
+    .consent-box.checked { border-color: var(--forest); background: var(--forest); }
+
+    /* Confirmation */
+    .confirmation-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: rgba(91,110,91,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.75rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .checkbox-grid { grid-template-columns: 1fr; }
+      .step-label { display: none; }
+      .step-connector { margin-bottom: 0; }
+    }
+    @media (min-width: 768px) {
+      #desk-nav { display: flex !important; }
+      #mob-ham  { display: none  !important; }
+    }
+    @media (max-width: 767px) {
+      #desk-nav { display: none  !important; }
+      #mob-ham  { display: flex  !important; }
+    }
+  </style>
+  <script src="https://app.termly.io/resource-blocker/e9fd6e24-20b3-49d3-b189-7e89d49afe42?autoBlock=on"></script>
+</head>
+<body>
+
+<!-- ══ NAV ══════════════════════════════════════════════════ -->
+<header id="site-nav" style="position:sticky;top:0;z-index:50;background:var(--warm-white);border-bottom:1px solid var(--mist);transition:box-shadow 0.2s;">
+  <div style="max-width:1200px;margin:0 auto;padding:0 1.75rem;height:64px;display:flex;align-items:center;justify-content:space-between;">
+
+    <a href="/" style="display:flex;align-items:center;gap:0.625rem;text-decoration:none;flex-shrink:0;">
+      <img src="brand_assets/logo.png" alt="Loss Ally" style="height:34px;width:auto;mix-blend-mode:multiply;" />
+      <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.2rem;font-weight:500;color:var(--charcoal);letter-spacing:0.01em;">Loss Ally</span>
+    </a>
+
+    <nav id="desk-nav" style="display:flex;align-items:center;gap:2.25rem;">
+      <a href="index.html#services"     class="nav-link">Services</a>
+      <a href="index.html#how-it-works" class="nav-link">How It Works</a>
+      <a href="index.html#pricing"      class="nav-link">Plans</a>
+      <a href="intake.html" class="btn-primary" style="padding:0.6rem 1.25rem;font-size:0.82rem;">Book a Consultation</a>
+    </nav>
+
+    <button id="mob-ham" aria-label="Open menu" style="display:none;flex-direction:column;gap:5px;padding:8px;background:none;border:none;cursor:pointer;">
+      <span id="h1" style="display:block;width:20px;height:1.5px;background:var(--charcoal);border-radius:2px;transition:transform 0.2s,opacity 0.2s;"></span>
+      <span id="h2" style="display:block;width:20px;height:1.5px;background:var(--charcoal);border-radius:2px;transition:opacity 0.2s;"></span>
+      <span id="h3" style="display:block;width:20px;height:1.5px;background:var(--charcoal);border-radius:2px;transition:transform 0.2s;"></span>
+    </button>
+  </div>
+
+  <div id="mob-menu" style="display:none;border-top:1px solid var(--mist);background:var(--warm-white);">
+    <div style="max-width:1200px;margin:0 auto;padding:1.25rem 1.75rem;display:flex;flex-direction:column;gap:0.75rem;">
+      <a href="index.html#services"     class="nav-link" style="padding:0.4rem 0;" onclick="closeMob()">Services</a>
+      <a href="index.html#how-it-works" class="nav-link" style="padding:0.4rem 0;" onclick="closeMob()">How It Works</a>
+      <a href="index.html#pricing"      class="nav-link" style="padding:0.4rem 0;" onclick="closeMob()">Pricing</a>
+      <a href="intake.html" class="btn-primary" style="align-self:flex-start;margin-top:0.5rem;" onclick="closeMob()">Book a Free Consultation</a>
+    </div>
+  </div>
+</header>
+
+
+<!-- ══ PAGE INTRO ════════════════════════════════════════════ -->
+<section style="padding:3.5rem 1.75rem 0;background:var(--cream);">
+  <div style="max-width:720px;margin:0 auto;text-align:center;">
+    <span class="label" style="display:block;margin-bottom:0.875rem;">— Book a Free Consultation</span>
+    <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2rem,4vw,3rem);font-weight:400;letter-spacing:-0.02em;color:var(--charcoal);line-height:1.1;margin-bottom:1rem;">
+      Let's start at the beginning.
+    </h1>
+    <p style="font-size:0.95rem;line-height:1.8;color:var(--charcoal);opacity:0.58;max-width:520px;margin:0 auto;">
+      This form takes about eight minutes. Every answer helps your advisor show up prepared — so your first conversation can actually move things forward.
+    </p>
+  </div>
+</section>
+
+
+<!-- ══ FORM AREA ══════════════════════════════════════════════ -->
+<section style="padding:2.5rem 1.75rem 6rem;background:var(--cream);">
+  <div style="max-width:720px;margin:0 auto;">
+
+    <!-- Progress indicator -->
+    <div id="progress-container" style="margin-bottom:2rem;">
+      <!-- Circle row -->
+      <div style="display:flex;align-items:center;">
+        <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:70px;">
+          <div id="sc-1" class="step-circle active">1</div>
+          <div id="sl-1" class="step-label active">About Them</div>
+        </div>
+        <div id="line-1" class="step-connector"></div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:70px;">
+          <div id="sc-2" class="step-circle">2</div>
+          <div id="sl-2" class="step-label">The Estate</div>
+        </div>
+        <div id="line-2" class="step-connector"></div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:80px;">
+          <div id="sc-3" class="step-circle">3</div>
+          <div id="sl-3" class="step-label">Your Situation</div>
+        </div>
+        <div id="line-3" class="step-connector"></div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:70px;">
+          <div id="sc-4" class="step-circle">4</div>
+          <div id="sl-4" class="step-label">Contact</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form card -->
+    <form id="intake-form" action="https://formspree.io/f/mqejygzd" method="POST">
+    <input type="hidden" name="_subject" value="New Consultation Request — Loss Ally" />
+    <div id="form-card" style="background:#fff;border:1px solid var(--mist);border-radius:16px;padding:2.5rem 2.25rem;box-shadow:0 4px 28px rgba(44,44,42,0.07);">
+
+      <!-- ══ STEP 1 — About the person who passed ══════════════ -->
+      <div id="step-1" class="form-step active">
+        <div style="margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--mist);">
+          <span class="label" style="display:block;margin-bottom:0.5rem;">Step 1 of 4</span>
+          <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.75rem;font-weight:400;color:var(--charcoal);letter-spacing:-0.01em;margin-bottom:0.5rem;line-height:1.2;">About the person you lost.</h2>
+          <p style="font-size:0.875rem;color:var(--charcoal);opacity:0.5;line-height:1.65;font-weight:300;">Take it at your own pace. There are no wrong answers here.</p>
+        </div>
+
+        <!-- Name row -->
+        <div class="field-group">
+          <div id="name-grid-1" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div>
+              <label class="field-label" for="dec-first">Their first name</label>
+              <input type="text" id="dec-first" name="deceased_first_name" class="form-input" placeholder="First name" autocomplete="off" />
+            </div>
+            <div>
+              <label class="field-label" for="dec-last">Their last name</label>
+              <input type="text" id="dec-last" name="deceased_last_name" class="form-input" placeholder="Last name" autocomplete="off" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Date of passing -->
+        <div class="field-group">
+          <label class="field-label" for="date-passing">Date of passing</label>
+          <input type="date" id="date-passing" name="date_of_passing" class="form-input" />
+          <p class="field-hint">Approximate is completely fine — please don't worry about getting the exact date.</p>
+        </div>
+
+        <!-- State -->
+        <div class="field-group">
+          <label class="field-label" for="dec-state">State where they lived</label>
+          <select id="dec-state" name="state" class="form-input">
+            <option value="">Select a state…</option>
+            <option>Alabama</option><option>Alaska</option><option>Arizona</option>
+            <option>Arkansas</option><option>California</option><option>Colorado</option>
+            <option>Connecticut</option><option>Delaware</option><option>District of Columbia</option>
+            <option>Florida</option><option>Georgia</option><option>Hawaii</option>
+            <option>Idaho</option><option>Illinois</option><option>Indiana</option>
+            <option>Iowa</option><option>Kansas</option><option>Kentucky</option>
+            <option>Louisiana</option><option>Maine</option><option>Maryland</option>
+            <option>Massachusetts</option><option>Michigan</option><option>Minnesota</option>
+            <option>Mississippi</option><option>Missouri</option><option>Montana</option>
+            <option>Nebraska</option><option>Nevada</option><option>New Hampshire</option>
+            <option>New Jersey</option><option>New Mexico</option><option>New York</option>
+            <option>North Carolina</option><option>North Dakota</option><option>Ohio</option>
+            <option>Oklahoma</option><option>Oregon</option><option>Pennsylvania</option>
+            <option>Rhode Island</option><option>South Carolina</option><option>South Dakota</option>
+            <option>Tennessee</option><option>Texas</option><option>Utah</option>
+            <option>Vermont</option><option>Virginia</option><option>Washington</option>
+            <option>West Virginia</option><option>Wisconsin</option><option>Wyoming</option>
+          </select>
+        </div>
+
+        <!-- Relationship -->
+        <div class="field-group">
+          <label class="field-label" style="margin-bottom:0.75rem;">Your relationship to them</label>
+          <label class="option-card" onclick="selectOption(this,'relationship')">
+            <input type="radio" name="relationship" value="parent" /><div class="opt-radio"></div>
+            <span class="opt-text">Parent</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'relationship')">
+            <input type="radio" name="relationship" value="spouse" /><div class="opt-radio"></div>
+            <span class="opt-text">Spouse or partner</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'relationship')">
+            <input type="radio" name="relationship" value="sibling" /><div class="opt-radio"></div>
+            <span class="opt-text">Sibling</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'relationship')">
+            <input type="radio" name="relationship" value="child" /><div class="opt-radio"></div>
+            <span class="opt-text">Child</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'relationship')">
+            <input type="radio" name="relationship" value="grandparent" /><div class="opt-radio"></div>
+            <span class="opt-text">Grandparent</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'relationship')">
+            <input type="radio" name="relationship" value="other" /><div class="opt-radio"></div>
+            <span class="opt-text">Friend or other</span>
+          </label>
+        </div>
+
+        <!-- Where in the process -->
+        <div class="field-group">
+          <label class="field-label" style="margin-bottom:0.75rem;">Where are you in the process?</label>
+          <label class="option-card" onclick="selectOption(this,'stage')">
+            <input type="radio" name="stage" value="just-happened" /><div class="opt-radio"></div>
+            <span class="opt-text">This just happened — within the past week</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'stage')">
+            <input type="radio" name="stage" value="few-weeks" /><div class="opt-radio"></div>
+            <span class="opt-text">A few weeks in — figuring out where to start</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'stage')">
+            <input type="radio" name="stage" value="months-stuck" /><div class="opt-radio"></div>
+            <span class="opt-text">Several months in — feeling stuck or overwhelmed</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'stage')">
+            <input type="radio" name="stage" value="planning-ahead" /><div class="opt-radio"></div>
+            <span class="opt-text">Planning ahead — my family member is still living and I want to prepare</span>
+          </label>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--mist);">
+          <button type="button" class="btn-primary" onclick="nextStep()">
+            Continue
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+
+      <!-- ══ STEP 2 — About the estate ════════════════════════ -->
+      <div id="step-2" class="form-step">
+        <div style="margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--mist);">
+          <span class="label" style="display:block;margin-bottom:0.5rem;">Step 2 of 4</span>
+          <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.75rem;font-weight:400;color:var(--charcoal);letter-spacing:-0.01em;margin-bottom:0.5rem;line-height:1.2;">About the estate.</h2>
+          <p style="font-size:0.875rem;color:var(--charcoal);opacity:0.5;line-height:1.65;font-weight:300;">Share what you know. "Not sure" is always a valid answer — that's part of what we're here to help with.</p>
+        </div>
+
+        <!-- Executor status -->
+        <div class="field-group">
+          <label class="field-label" style="margin-bottom:0.75rem;">Are you the named executor?</label>
+          <label class="option-card" onclick="selectOption(this,'executor_status')">
+            <input type="radio" name="executor_status" value="yes" /><div class="opt-radio"></div>
+            <span class="opt-text">Yes — I am named executor in the will</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'executor_status')">
+            <input type="radio" name="executor_status" value="handling-no-will" /><div class="opt-radio"></div>
+            <span class="opt-text">I am handling things, but there's no will — or I'm not sure</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'executor_status')">
+            <input type="radio" name="executor_status" value="other-executor" /><div class="opt-radio"></div>
+            <span class="opt-text">Someone else is executor, but I'm helping</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'executor_status')">
+            <input type="radio" name="executor_status" value="not-sure" /><div class="opt-radio"></div>
+            <span class="opt-text">Not sure yet</span>
+          </label>
+        </div>
+
+        <!-- Will / trust -->
+        <div class="field-group">
+          <label class="field-label" style="margin-bottom:0.75rem;">Do you know if there was a will or trust?</label>
+          <label class="option-card" onclick="selectOption(this,'will_or_trust')">
+            <input type="radio" name="will_or_trust" value="will" /><div class="opt-radio"></div>
+            <span class="opt-text">Yes — there is a will</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'will_or_trust')">
+            <input type="radio" name="will_or_trust" value="trust" /><div class="opt-radio"></div>
+            <span class="opt-text">Yes — there is a trust</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'will_or_trust')">
+            <input type="radio" name="will_or_trust" value="both" /><div class="opt-radio"></div>
+            <span class="opt-text">Both</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'will_or_trust')">
+            <input type="radio" name="will_or_trust" value="none" /><div class="opt-radio"></div>
+            <span class="opt-text">No will or trust</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'will_or_trust')">
+            <input type="radio" name="will_or_trust" value="not-sure" /><div class="opt-radio"></div>
+            <span class="opt-text">Not sure</span>
+          </label>
+        </div>
+
+        <!-- Assets checkboxes -->
+        <div class="field-group">
+          <label class="field-label" style="margin-bottom:0.75rem;">Check everything that applies — to the best of your knowledge</label>
+          <div class="checkbox-grid">
+            <label class="option-card" onclick="toggleCheck(this)">
+              <input type="checkbox" name="assets" value="home" /><div class="opt-check"></div>
+              <span class="opt-text">Owned a home or property</span>
+            </label>
+            <label class="option-card" onclick="toggleCheck(this)">
+              <input type="checkbox" name="assets" value="multi-state-property" /><div class="opt-check"></div>
+              <span class="opt-text">Property in multiple states</span>
+            </label>
+            <label class="option-card" onclick="toggleCheck(this)">
+              <input type="checkbox" name="assets" value="bank" /><div class="opt-check"></div>
+              <span class="opt-text">Bank or savings accounts</span>
+            </label>
+            <label class="option-card" onclick="toggleCheck(this)">
+              <input type="checkbox" name="assets" value="investments" /><div class="opt-check"></div>
+              <span class="opt-text">Investment or brokerage accounts</span>
+            </label>
+            <label class="option-card" onclick="toggleCheck(this)">
+              <input type="checkbox" name="assets" value="401k" /><div class="opt-check"></div>
+              <span class="opt-text">401k or IRA</span>
+            </label>
+            <label class="option-card" onclick="toggleCheck(this)">
+              <input type="checkbox" name="assets" value="life-insurance" /><div class="opt-check"></div>
+              <span class="opt-text">Life insurance policy</span>
+            </label>
+            <label class="option-card" onclick="toggleCheck(this)">
+              <input type="checkbox" name="assets" value="pension" /><div class="opt-check"></div>
+              <span class="opt-text">Pension or annuity</span>
+            </label>
+            <label class="option-card" onclick="toggleCheck(this)">
+              <input type="checkbox" name="assets" value="social-security" /><div class="opt-check"></div>
+              <span class="opt-text">Social Security benefits</span>
+            </label>
+            <label class="option-card" onclick="toggleCheck(this)">
+              <input type="checkbox" name="assets" value="veterans" /><div class="opt-check"></div>
+              <span class="opt-text">Veterans or military benefits</span>
+            </label>
+            <label class="option-card" onclick="toggleCheck(this)">
+              <input type="checkbox" name="assets" value="business" /><div class="opt-check"></div>
+              <span class="opt-text">Business ownership</span>
+            </label>
+            <label class="option-card" onclick="toggleCheck(this)">
+              <input type="checkbox" name="assets" value="vehicles" /><div class="opt-check"></div>
+              <span class="opt-text">Vehicles</span>
+            </label>
+            <label class="option-card" onclick="toggleCheck(this)">
+              <input type="checkbox" name="assets" value="personal-property" /><div class="opt-check"></div>
+              <span class="opt-text">Significant personal property — art, jewelry, or collections</span>
+            </label>
+            <label class="option-card" onclick="toggleCheck(this)">
+              <input type="checkbox" name="assets" value="crypto" /><div class="opt-check"></div>
+              <span class="opt-text">Cryptocurrency or digital assets</span>
+            </label>
+            <label class="option-card" onclick="toggleCheck(this)">
+              <input type="checkbox" name="assets" value="debts" /><div class="opt-check"></div>
+              <span class="opt-text">Debts or outstanding loans</span>
+            </label>
+            <label class="option-card" onclick="toggleCheck(this)">
+              <input type="checkbox" name="assets" value="subscriptions" /><div class="opt-check"></div>
+              <span class="opt-text">Ongoing subscriptions or accounts</span>
+            </label>
+            <label class="option-card" onclick="toggleCheck(this)">
+              <input type="checkbox" name="assets" value="not-sure" /><div class="opt-check"></div>
+              <span class="opt-text">I'm not sure what they had</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Attorney -->
+        <div class="field-group">
+          <label class="field-label" style="margin-bottom:0.75rem;">Have you already retained an estate attorney?</label>
+          <label class="option-card" onclick="selectOption(this,'attorney_status')">
+            <input type="radio" name="attorney_status" value="yes" /><div class="opt-radio"></div>
+            <span class="opt-text">Yes</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'attorney_status')">
+            <input type="radio" name="attorney_status" value="no-referral" /><div class="opt-radio"></div>
+            <span class="opt-text">No, but we'd welcome a referral</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'attorney_status')">
+            <input type="radio" name="attorney_status" value="no-handling" /><div class="opt-radio"></div>
+            <span class="opt-text">No, and we plan to handle things without one</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'attorney_status')">
+            <input type="radio" name="attorney_status" value="not-sure" /><div class="opt-radio"></div>
+            <span class="opt-text">Not sure yet</span>
+          </label>
+        </div>
+
+        <!-- Urgent items -->
+        <div class="field-group">
+          <label class="field-label" for="urgent-items">Is there anything with an urgent deadline — or that feels most pressing right now?</label>
+          <textarea id="urgent-items" name="urgent_items" class="form-input" placeholder="For example: a bill is about to come out of their account, the landlord needs a response, there's a creditor calling — anything that's keeping you up at night."></textarea>
+          <p class="field-note">Your advisor will prioritize these items first.</p>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--mist);">
+          <button type="button" class="btn-outline" onclick="prevStep()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back
+          </button>
+          <button type="button" class="btn-primary" onclick="nextStep()">
+            Continue
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+
+      <!-- ══ STEP 3 — About your situation ════════════════════ -->
+      <div id="step-3" class="form-step">
+        <div style="margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--mist);">
+          <span class="label" style="display:block;margin-bottom:0.5rem;">Step 3 of 4</span>
+          <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.75rem;font-weight:400;color:var(--charcoal);letter-spacing:-0.01em;margin-bottom:0.5rem;line-height:1.2;">How are you doing — really?</h2>
+          <p style="font-size:0.875rem;color:var(--charcoal);opacity:0.5;line-height:1.65;font-weight:300;">This helps us understand your situation beyond the paperwork, so we can show up the right way.</p>
+        </div>
+
+        <!-- Capacity -->
+        <div class="field-group">
+          <label class="field-label" style="margin-bottom:0.75rem;">How would you describe your capacity to manage this right now?</label>
+          <label class="option-card" onclick="selectOption(this,'capacity')">
+            <input type="radio" name="capacity" value="overwhelmed" /><div class="opt-radio"></div>
+            <span class="opt-text">Completely overwhelmed — I need someone to take the wheel</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'capacity')">
+            <input type="radio" name="capacity" value="struggling" /><div class="opt-radio"></div>
+            <span class="opt-text">Managing, but struggling — I need a guide and some hands-on help</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'capacity')">
+            <input type="radio" name="capacity" value="mostly-okay" /><div class="opt-radio"></div>
+            <span class="opt-text">Mostly okay — I just want a clear map and someone to check in with</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'capacity')">
+            <input type="radio" name="capacity" value="exploring" /><div class="opt-radio"></div>
+            <span class="opt-text">Still figuring out what I need — just exploring for now</span>
+          </label>
+        </div>
+
+        <!-- Family involvement -->
+        <div class="field-group">
+          <label class="field-label" style="margin-bottom:0.75rem;">Is there family involved in managing the estate?</label>
+          <label class="option-card" onclick="selectOption(this,'family_involvement')">
+            <input type="radio" name="family_involvement" value="alone" /><div class="opt-radio"></div>
+            <span class="opt-text">I'm handling this mostly alone</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'family_involvement')">
+            <input type="radio" name="family_involvement" value="one-two" /><div class="opt-radio"></div>
+            <span class="opt-text">One or two other family members are helping</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'family_involvement')">
+            <input type="radio" name="family_involvement" value="several" /><div class="opt-radio"></div>
+            <span class="opt-text">Several family members are involved — coordination is a challenge</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'family_involvement')">
+            <input type="radio" name="family_involvement" value="tension" /><div class="opt-radio"></div>
+            <span class="opt-text">There's some family tension or disagreement about the estate</span>
+          </label>
+        </div>
+
+        <!-- Proximity -->
+        <div class="field-group">
+          <label class="field-label" style="margin-bottom:0.75rem;">Do you live near where they lived?</label>
+          <label class="option-card" onclick="selectOption(this,'distance')">
+            <input type="radio" name="distance" value="same-city" /><div class="opt-radio"></div>
+            <span class="opt-text">Same city or nearby</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'distance')">
+            <input type="radio" name="distance" value="diff-city-same-state" /><div class="opt-radio"></div>
+            <span class="opt-text">Different city, same state</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'distance')">
+            <input type="radio" name="distance" value="diff-state" /><div class="opt-radio"></div>
+            <span class="opt-text">Different state</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'distance')">
+            <input type="radio" name="distance" value="diff-country" /><div class="opt-radio"></div>
+            <span class="opt-text">Different country</span>
+          </label>
+        </div>
+
+        <!-- How are you doing -->
+        <div class="field-group">
+          <label class="field-label" for="how-doing">How are you doing personally?</label>
+          <textarea id="how-doing" name="how_doing" class="form-input" placeholder="Anything at all. There's no right way to answer this."></textarea>
+          <p class="field-note">There is no right answer here. Your advisor genuinely wants to know how you're holding up — not just where the paperwork stands.</p>
+        </div>
+
+        <!-- What hoping to get -->
+        <div class="field-group">
+          <label class="field-label" for="consultation-hope">Is there anything specific you're hoping to get from this consultation?</label>
+          <textarea id="consultation-hope" name="consultation_goal" class="form-input" placeholder="For example: "I just want to understand what I'm supposed to do first," or "I need someone to take the Social Security call off my plate," or "I don't know what I don't know.""></textarea>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--mist);">
+          <button type="button" class="btn-outline" onclick="prevStep()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back
+          </button>
+          <button type="button" class="btn-primary" onclick="nextStep()">
+            Continue
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+
+      <!-- ══ STEP 4 — Contact details ═══════════════════════════ -->
+      <div id="step-4" class="form-step">
+        <div style="margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--mist);">
+          <span class="label" style="display:block;margin-bottom:0.5rem;">Step 4 of 4</span>
+          <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.75rem;font-weight:400;color:var(--charcoal);letter-spacing:-0.01em;margin-bottom:0.5rem;line-height:1.2;">Last step. How should we reach you?</h2>
+          <p style="font-size:0.875rem;color:var(--charcoal);opacity:0.5;line-height:1.65;font-weight:300;">We'll use this to confirm your consultation time. That's it — no spam, no automated sequences.</p>
+        </div>
+
+        <!-- Name row -->
+        <div class="field-group">
+          <div id="name-grid-4" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div>
+              <label class="field-label" for="contact-first">Your first name <span style="color:var(--terracotta);">*</span></label>
+              <input type="text" id="contact-first" name="first_name" class="form-input" placeholder="First name" autocomplete="given-name" />
+            </div>
+            <div>
+              <label class="field-label" for="contact-last">Your last name <span style="color:var(--terracotta);">*</span></label>
+              <input type="text" id="contact-last" name="last_name" class="form-input" placeholder="Last name" autocomplete="family-name" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="field-group">
+          <label class="field-label" for="contact-email">Email address <span style="color:var(--terracotta);">*</span></label>
+          <input type="email" id="contact-email" name="email" class="form-input" placeholder="your@email.com" autocomplete="email" />
+        </div>
+
+        <!-- Phone -->
+        <div class="field-group">
+          <label class="field-label" for="contact-phone">Phone number <span style="opacity:0.45;font-size:0.62rem;font-weight:300;text-transform:none;letter-spacing:0;">optional</span></label>
+          <input type="tel" id="contact-phone" name="phone" class="form-input" placeholder="(555) 000-0000" autocomplete="tel" />
+        </div>
+
+        <!-- Availability -->
+        <div class="field-group">
+          <label class="field-label" style="margin-bottom:0.75rem;">When are you generally available for the consultation call?</label>
+          <label class="option-card" onclick="selectOption(this,'availability')">
+            <input type="radio" name="availability" value="weekday-morning" /><div class="opt-radio"></div>
+            <span class="opt-text">Weekday mornings — 8am to 12pm</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'availability')">
+            <input type="radio" name="availability" value="weekday-afternoon" /><div class="opt-radio"></div>
+            <span class="opt-text">Weekday afternoons — 12pm to 5pm</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'availability')">
+            <input type="radio" name="availability" value="weekday-evening" /><div class="opt-radio"></div>
+            <span class="opt-text">Weekday evenings — 5pm to 8pm</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'availability')">
+            <input type="radio" name="availability" value="weekend" /><div class="opt-radio"></div>
+            <span class="opt-text">Weekend mornings or afternoons</span>
+          </label>
+        </div>
+
+        <!-- Time zone -->
+        <div class="field-group">
+          <label class="field-label" for="timezone">Your time zone</label>
+          <select id="timezone" name="timezone" class="form-input">
+            <option value="">Select a time zone…</option>
+            <option value="eastern">Eastern (ET)</option>
+            <option value="central">Central (CT)</option>
+            <option value="mountain">Mountain (MT)</option>
+            <option value="pacific">Pacific (PT)</option>
+            <option value="alaska">Alaska (AKT)</option>
+            <option value="hawaii">Hawaii (HST)</option>
+          </select>
+        </div>
+
+        <!-- How did you hear -->
+        <div class="field-group">
+          <label class="field-label" for="referral-source">How did you hear about Loss Ally?</label>
+          <select id="referral-source" name="referral_source" class="form-input">
+            <option value="">Select one…</option>
+            <option value="attorney-advisor">Referred by an attorney or financial advisor</option>
+            <option value="funeral-hospice">Referred by a funeral home or hospice</option>
+            <option value="friend-family">Referred by a friend or family member</option>
+            <option value="google">Found through a Google search</option>
+            <option value="social-media">Social media</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <!-- Anything else -->
+        <div class="field-group">
+          <label class="field-label" for="anything-else">Is there anything else you'd like your advisor to know before the call?</label>
+          <textarea id="anything-else" name="anything_else" class="form-input" placeholder="Anything at all — something you'd find hard to say out loud, a sensitivity we should be aware of, or simply a hope for this conversation."></textarea>
+        </div>
+
+        <!-- Consent -->
+        <div class="field-group" style="margin-bottom:1rem;">
+          <div class="consent-row" onclick="toggleConsent()">
+            <div id="consent-box" class="consent-box">
+              <svg id="consent-check-icon" width="12" height="8" viewBox="0 0 12 8" fill="none" style="display:none;"><polyline points="1 4 4.5 7 11 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span style="font-size:0.875rem;color:var(--charcoal);font-weight:300;line-height:1.55;cursor:pointer;">I consent to being contacted by Loss Ally by phone and email regarding my inquiry. <span style="color:var(--terracotta);">*</span></span>
+          </div>
+          <input type="checkbox" id="consent-hidden" name="consent" value="yes" style="display:none;" />
+        </div>
+
+        <!-- Privacy note -->
+        <div style="background:rgba(141,157,106,0.07);border:1px solid rgba(141,157,106,0.2);border-radius:8px;padding:1rem 1.125rem;margin-bottom:1.5rem;">
+          <p style="font-size:0.78rem;color:var(--charcoal);opacity:0.65;line-height:1.65;font-weight:300;">
+            Everything shared in this form is held in strict confidence and shared only with your assigned advisor. We will never sell your data or share it with third parties. You can review our full privacy policy at <a href="privacy-policy.html" style="color:var(--sage);text-decoration:none;border-bottom:1px solid rgba(141,157,106,0.4);" onmouseover="this.style.color='var(--forest)'" onmouseout="this.style.color='var(--sage)'">lossally.com/privacy-policy</a>.
+          </p>
+        </div>
+
+        <!-- Error message -->
+        <div id="form-error" style="display:none;background:rgba(196,114,74,0.08);border:1px solid rgba(196,114,74,0.25);border-radius:8px;padding:0.875rem 1rem;margin-bottom:1rem;">
+          <p id="error-text" style="font-size:0.82rem;color:var(--terracotta);font-weight:300;line-height:1.5;"></p>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--mist);">
+          <button type="button" class="btn-outline" onclick="prevStep()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back
+          </button>
+          <button type="submit" id="submit-btn" class="btn-gold" style="font-size:0.875rem;padding:0.8rem 1.8rem;">
+            Submit — Book My Consultation
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </div><!-- end form-card -->
+    </form>
+
+
+    <!-- ══ CONFIRMATION ══════════════════════════════════════════ -->
+    <div id="confirmation" style="display:none;background:#fff;border:1px solid var(--mist);border-radius:16px;padding:3.5rem 2.25rem;box-shadow:0 4px 28px rgba(44,44,42,0.07);text-align:center;">
+
+      <div class="confirmation-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--forest)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+
+      <span class="label" style="display:block;margin-bottom:1rem;">— You're all set</span>
+      <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2rem,4vw,2.75rem);font-weight:400;color:var(--charcoal);letter-spacing:-0.02em;line-height:1.1;margin-bottom:1rem;">
+        Thank you. We'll be in touch.
+      </h2>
+      <p style="font-size:1rem;color:var(--charcoal);opacity:0.6;line-height:1.8;max-width:480px;margin:0 auto 2.5rem;font-weight:300;">
+        Your advisor will review everything you've shared and reach out within four hours to confirm your consultation time.
+      </p>
+
+      <div style="background:var(--cream);border:1px solid var(--mist);border-radius:12px;padding:1.75rem 2rem;text-align:left;max-width:480px;margin:0 auto 2.5rem;">
+        <div style="font-size:0.65rem;font-weight:500;letter-spacing:0.11em;text-transform:uppercase;color:var(--sage);margin-bottom:1.25rem;padding-bottom:0.75rem;border-bottom:1px solid var(--mist);">What happens next</div>
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+          <div style="display:flex;gap:0.875rem;align-items:flex-start;">
+            <div style="width:6px;height:6px;border-radius:50%;background:var(--forest);flex-shrink:0;margin-top:0.5em;"></div>
+            <p style="font-size:0.875rem;color:var(--charcoal);opacity:0.7;line-height:1.65;font-weight:300;">Your advisor reads through your intake form before the call — so you'll never have to repeat yourself.</p>
+          </div>
+          <div style="display:flex;gap:0.875rem;align-items:flex-start;">
+            <div style="width:6px;height:6px;border-radius:50%;background:var(--forest);flex-shrink:0;margin-top:0.5em;"></div>
+            <p style="font-size:0.875rem;color:var(--charcoal);opacity:0.7;line-height:1.65;font-weight:300;">The first call is a conversation, not an interview. Ask anything. There's no agenda except listening.</p>
+          </div>
+          <div style="display:flex;gap:0.875rem;align-items:flex-start;">
+            <div style="width:6px;height:6px;border-radius:50%;background:var(--forest);flex-shrink:0;margin-top:0.5em;"></div>
+            <p style="font-size:0.875rem;color:var(--charcoal);opacity:0.7;line-height:1.65;font-weight:300;">There's no obligation after the consultation. If we're not the right fit, we'll say so — and do our best to point you in the right direction.</p>
+          </div>
+        </div>
+      </div>
+
+      <a href="index.html" style="font-size:0.82rem;color:var(--charcoal);opacity:0.45;text-decoration:none;font-weight:300;transition:opacity 0.18s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='0.45'">← Back to Loss Ally</a>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══ FOOTER ══════════════════════════════════════════════ -->
+<footer style="background:#1a2218;padding:3.5rem 1.75rem 2rem;">
+  <div style="max-width:1200px;margin:0 auto;">
+
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:2rem;padding-bottom:2rem;border-bottom:1px solid rgba(255,255,255,0.06);">
+
+      <div style="flex-shrink:0;">
+        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.875rem;">
+          <img src="brand_assets/logo.png" alt="Loss Ally" style="height:30px;width:auto;" />
+          <span style="font-size:0.95rem;font-weight:400;color:rgba(250,248,244,0.8);">Loss Ally</span>
+        </div>
+        <p style="font-size:0.78rem;color:rgba(250,248,244,0.3);line-height:1.75;max-width:200px;font-weight:300;">
+          Estate and life administration support. Compassionate. Practical. Always here.
+        </p>
+      </div>
+
+      <nav style="display:flex;flex-wrap:wrap;gap:0.625rem 2.25rem;align-items:center;">
+        <a href="help-center.html" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;white-space:nowrap;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Help Center</a>
+        <a href="state-by-state-guide.html" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;white-space:nowrap;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">State-by-State Guide</a>
+        <a href="grief-resources.html" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;white-space:nowrap;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Grief Resources</a>
+        <a href="privacy-policy.html" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;white-space:nowrap;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Privacy Policy</a>
+        <a href="terms-of-service.html" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;white-space:nowrap;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Terms of Service</a>
+      </nav>
+
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;padding-top:1.5rem;flex-wrap:wrap;gap:0.75rem;">
+      <p style="font-size:0.72rem;color:rgba(250,248,244,0.22);font-weight:300;">© 2026 Loss Ally. All rights reserved.</p>
+      <p style="font-size:0.72rem;color:rgba(250,248,244,0.22);font-weight:300;">Not a legal services firm.</p>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ══ SCRIPTS ════════════════════════════════════════════════ -->
+<script>
+  // ── Mobile nav ──────────────────────────────────────────────
+  const ham = document.getElementById('mob-ham');
+  const mob = document.getElementById('mob-menu');
+  let mobOpen = false;
+  ham.addEventListener('click', () => {
+    mobOpen = !mobOpen;
+    mob.style.display = mobOpen ? 'block' : 'none';
+    document.getElementById('h1').style.transform = mobOpen ? 'translateY(6.5px) rotate(45deg)' : '';
+    document.getElementById('h2').style.opacity   = mobOpen ? '0' : '1';
+    document.getElementById('h3').style.transform = mobOpen ? 'translateY(-6.5px) rotate(-45deg)' : '';
+  });
+  function closeMob() {
+    mobOpen = false;
+    mob.style.display = 'none';
+    document.getElementById('h1').style.transform = '';
+    document.getElementById('h2').style.opacity   = '1';
+    document.getElementById('h3').style.transform = '';
+  }
+
+  // ── Sticky nav shadow ────────────────────────────────────────
+  const siteNav = document.getElementById('site-nav');
+  window.addEventListener('scroll', () => {
+    siteNav.style.boxShadow = window.scrollY > 10 ? '0 1px 20px rgba(44,44,42,0.06)' : 'none';
+  }, { passive: true });
+
+  // ── Responsive name grids ────────────────────────────────────
+  const ng1 = document.getElementById('name-grid-1');
+  const ng4 = document.getElementById('name-grid-4');
+  function layoutNameGrids() {
+    const cols = window.innerWidth < 580 ? '1fr' : '1fr 1fr';
+    if (ng1) ng1.style.gridTemplateColumns = cols;
+    if (ng4) ng4.style.gridTemplateColumns = cols;
+  }
+  layoutNameGrids();
+  window.addEventListener('resize', layoutNameGrids, { passive: true });
+
+  // ── Multi-step form logic ────────────────────────────────────
+  let currentStep = 1;
+
+  function updateProgress(n) {
+    for (let i = 1; i <= 4; i++) {
+      const sc   = document.getElementById('sc-' + i);
+      const sl   = document.getElementById('sl-' + i);
+      const line = i < 4 ? document.getElementById('line-' + i) : null;
+
+      sc.className = 'step-circle';
+      sl.className = 'step-label';
+      if (line) line.className = 'step-connector';
+
+      if (i < n) {
+        sc.classList.add('done');
+        sc.innerHTML = '<svg width="11" height="8" viewBox="0 0 12 8" fill="none"><polyline points="1 4 4.5 7 11 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        sl.classList.add('done');
+        if (line) line.classList.add('done');
+      } else if (i === n) {
+        sc.classList.add('active');
+        sc.textContent = i;
+        sl.classList.add('active');
+      } else {
+        sc.textContent = i;
+      }
+    }
+  }
+
+  function showStep(n) {
+    document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+    const stepEl = document.getElementById('step-' + n);
+    if (stepEl) stepEl.classList.add('active');
+    updateProgress(n);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function nextStep() {
+    if (currentStep < 4) {
+      currentStep++;
+      showStep(currentStep);
+    }
+  }
+
+  function prevStep() {
+    if (currentStep > 1) {
+      currentStep--;
+      showStep(currentStep);
+    }
+  }
+
+  // ── Option card selection (radio) ────────────────────────────
+  function selectOption(card, groupName) {
+    document.querySelectorAll('input[name="' + groupName + '"]').forEach(input => {
+      input.closest('.option-card').classList.remove('selected');
+    });
+    card.classList.add('selected');
+    const input = card.querySelector('input[type="radio"]');
+    if (input) input.checked = true;
+  }
+
+  // ── Checkbox toggle ──────────────────────────────────────────
+  function toggleCheck(card) {
+    const input = card.querySelector('input[type="checkbox"]');
+    if (!input) return;
+    input.checked = !input.checked;
+    card.classList.toggle('selected', input.checked);
+  }
+
+  // ── Consent toggle ───────────────────────────────────────────
+  function toggleConsent() {
+    const hidden = document.getElementById('consent-hidden');
+    const box    = document.getElementById('consent-box');
+    const icon   = document.getElementById('consent-check-icon');
+    hidden.checked = !hidden.checked;
+    if (hidden.checked) {
+      box.classList.add('checked');
+      icon.style.display = 'block';
+    } else {
+      box.classList.remove('checked');
+      icon.style.display = 'none';
+    }
+  }
+
+  // Init
+  updateProgress(1);
+</script>
+
+</body>
+</html>
