@@ -151,16 +151,76 @@
     details[open] > summary .chevron { transform: rotate(180deg); }
     .priority-tasks { padding: 0.25rem 0 0.5rem; }
 
-    /* ── Task rows ───────────────────────── */
-    .task-row {
-      display: flex; align-items: center; gap: 0.75rem;
-      padding: 0.55rem 0; border-bottom: 1px solid rgba(226,221,212,0.4);
-      transition: opacity 0.25s ease;
-    }
-    .task-row:last-child { border-bottom: none; }
-    .task-row.is-done { opacity: 0.35; }
+    /* ── Task items (wrapper) ────────────── */
+    .task-item { border-bottom: 1px solid rgba(226,221,212,0.4); }
+    .task-item:last-child { border-bottom: none; }
+    .task-item.is-done .task-row { opacity: 0.35; }
+    .task-item.is-done .task-title { text-decoration: line-through; }
+
+    .task-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.55rem 0; }
     .task-title { font-size: 0.84rem; color: var(--charcoal); line-height: 1.45; flex: 1; }
-    .task-row.is-done .task-title { text-decoration: line-through; }
+
+    /* ── Expand button ───────────────────── */
+    .expand-btn {
+      width: 26px; height: 26px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      border: none; background: none; cursor: pointer; border-radius: 6px; padding: 0;
+      color: var(--sage); opacity: 0.45;
+      transition: opacity 0.15s, transform 0.22s ease, background 0.15s;
+    }
+    .expand-btn:hover { opacity: 1; background: rgba(141,157,106,0.1); }
+    .expand-btn.open { transform: rotate(180deg); opacity: 0.75; }
+    .expand-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+    /* ── Task detail panel ───────────────── */
+    .task-detail { max-height: 0; overflow: hidden; transition: max-height 0.38s ease; }
+    .task-detail.open { max-height: 5000px; transition: max-height 0.55s ease; }
+    .task-detail-inner { padding: 0.25rem 0 1.25rem 2.5rem; }
+
+    /* ── Step list ───────────────────────── */
+    .step-list { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1rem; }
+    .step-list li { display: flex; gap: 0.65rem; font-size: 0.82rem; line-height: 1.6; color: var(--charcoal); }
+    .step-num {
+      flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%;
+      background: var(--forest); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.62rem; font-weight: 500; margin-top: 2px;
+    }
+
+    /* ── Callout boxes ───────────────────── */
+    .callout { border-radius: 6px; padding: 0.7rem 1rem; font-size: 0.8rem; line-height: 1.65; margin-bottom: 0.75rem; }
+    .callout-exec { background: rgba(91,110,91,0.07); border-left: 3px solid var(--forest); color: var(--forest); }
+    .callout-tip  { background: rgba(201,168,112,0.1);  border-left: 3px solid var(--gold);       color: #7a5718; }
+    .callout-warn { background: rgba(196,114,74,0.08);  border-left: 3px solid var(--terracotta);  color: #8B3A18; }
+
+    /* ── State-by-state table ────────────── */
+    .state-section { margin-top: 0.25rem; margin-bottom: 0.75rem; }
+    .state-section-label {
+      font-size: 0.62rem; font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--charcoal); opacity: 0.4; margin-bottom: 0.5rem;
+    }
+    .state-mini-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+    .state-mini-table th {
+      background: var(--charcoal); color: var(--cream);
+      font-size: 0.62rem; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; padding: 0.4rem 0.75rem; text-align: left;
+    }
+    .state-mini-table td {
+      padding: 0.45rem 0.75rem; border-bottom: 1px solid var(--mist);
+      vertical-align: top; line-height: 1.55; color: var(--charcoal);
+    }
+    .state-mini-table td:first-child { font-weight: 400; white-space: nowrap; min-width: 130px; }
+    .state-mini-table tr:last-child td { border-bottom: none; }
+    .state-mini-table tr:nth-child(even) td { background: var(--cream); }
+
+    /* ── Template link ───────────────────── */
+    .template-link-bar { margin-top: 0.875rem; padding-top: 0.875rem; border-top: 1px solid var(--mist); }
+    .template-link-bar a {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.78rem; color: var(--forest); text-decoration: none; font-weight: 400;
+      transition: color 0.15s;
+    }
+    .template-link-bar a:hover { color: var(--evergreen); text-decoration: underline; }
 
     /* ── Checkbox ────────────────────────── */
     .check-btn {
@@ -516,12 +576,12 @@ function applyFilters() {
     const matchTiming = timingFilter === 'all' || priority === timingFilter
     let sectionCount  = 0
 
-    section.querySelectorAll('.task-row').forEach(row => {
-      const task    = allTasks.find(t => t.id === row.dataset.taskId)
+    section.querySelectorAll('.task-item').forEach(item => {
+      const task    = allTasks.find(t => t.id === item.dataset.taskId)
       if (!task) return
       const matchCat = catFilter === 'all' || task.category === catFilter
       const show     = matchTiming && matchCat
-      row.style.display = show ? '' : 'none'
+      item.style.display = show ? '' : 'none'
       if (show) sectionCount++
     })
 
@@ -643,16 +703,23 @@ function renderChecklist() {
   container.style.display = ''
 
   if (!isReadOnly) {
-    container.querySelectorAll('.check-btn').forEach(btn => btn.addEventListener('click', handleCheck))
+    container.querySelectorAll('.task-item .check-btn').forEach(btn => btn.addEventListener('click', handleCheck))
   }
 }
 
-// ─── Build task row (no category badge) ──────────────────────────────────────
+// ─── Build task item (wrapper + optional expandable detail) ──────────────────
 function buildTaskRow(task, done, ctId) {
+  const hasDetail = !isReadOnly && (task.steps?.length || task.tip || task.warn || task.exec_note || task.states?.length)
+
+  // Outer wrapper
+  const item = document.createElement('div')
+  item.className      = `task-item${done ? ' is-done' : ''}`
+  item.dataset.taskId = task.id
+  item.dataset.ctId   = ctId
+
+  // ── Main row (always visible) ──
   const row = document.createElement('div')
-  row.className      = `task-row${done ? ' is-done' : ''}`
-  row.dataset.taskId = task.id
-  row.dataset.ctId   = ctId
+  row.className = 'task-row'
 
   const btn = document.createElement('button')
   btn.className = `check-btn${done ? ' is-done' : ''}`
@@ -669,7 +736,116 @@ function buildTaskRow(task, done, ctId) {
 
   row.appendChild(btn)
   row.appendChild(titleSpan)
-  return row
+
+  if (hasDetail) {
+    const expandBtn = document.createElement('button')
+    expandBtn.className = 'expand-btn'
+    expandBtn.setAttribute('aria-label', 'Show step-by-step instructions')
+    expandBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`
+
+    const detail = buildTaskDetail(task)
+
+    expandBtn.addEventListener('click', () => {
+      const isOpen = detail.classList.toggle('open')
+      expandBtn.classList.toggle('open', isOpen)
+      expandBtn.setAttribute('aria-label', isOpen ? 'Hide instructions' : 'Show step-by-step instructions')
+    })
+
+    row.appendChild(expandBtn)
+    item.appendChild(row)
+    item.appendChild(detail)
+  } else {
+    item.appendChild(row)
+  }
+
+  return item
+}
+
+// ─── Build task detail panel ──────────────────────────────────────────────────
+function buildTaskDetail(task) {
+  const panel = document.createElement('div')
+  panel.className = 'task-detail'
+
+  const inner = document.createElement('div')
+  inner.className = 'task-detail-inner'
+
+  // Exec note
+  if (task.exec_note) {
+    const box = document.createElement('div')
+    box.className = 'callout callout-exec'
+    box.innerHTML = `<strong>Executor's note:</strong> ${task.exec_note}`
+    inner.appendChild(box)
+  }
+
+  // Steps
+  if (task.steps?.length) {
+    const label = document.createElement('div')
+    label.className = 'state-section-label'
+    label.textContent = 'What to do — step by step'
+    inner.appendChild(label)
+
+    const ol = document.createElement('ol')
+    ol.className = 'step-list'
+    task.steps.forEach((step, i) => {
+      const li = document.createElement('li')
+      li.innerHTML = `<span class="step-num">${i + 1}</span><span>${step}</span>`
+      ol.appendChild(li)
+    })
+    inner.appendChild(ol)
+  }
+
+  // Tip
+  if (task.tip) {
+    const box = document.createElement('div')
+    box.className = 'callout callout-tip'
+    box.innerHTML = `<strong>Helpful to know:</strong> ${task.tip}`
+    inner.appendChild(box)
+  }
+
+  // Warning
+  if (task.warn) {
+    const box = document.createElement('div')
+    box.className = 'callout callout-warn'
+    box.innerHTML = `<strong>Important:</strong> ${task.warn}`
+    inner.appendChild(box)
+  }
+
+  // State-by-state table
+  if (task.states?.length) {
+    const section = document.createElement('div')
+    section.className = 'state-section'
+    const lbl = document.createElement('div')
+    lbl.className = 'state-section-label'
+    lbl.textContent = 'State-by-state differences'
+    section.appendChild(lbl)
+
+    const table = document.createElement('table')
+    table.className = 'state-mini-table'
+    table.innerHTML = `<thead><tr><th>State / Region</th><th>What Is Different</th></tr></thead>`
+    const tbody = document.createElement('tbody')
+    task.states.forEach(s => {
+      const tr = document.createElement('tr')
+      tr.innerHTML = `<td>${s.state}</td><td>${s.detail}</td>`
+      tbody.appendChild(tr)
+    })
+    table.appendChild(tbody)
+    section.appendChild(table)
+    inner.appendChild(section)
+  }
+
+  // Template link
+  if (task.template) {
+    const bar = document.createElement('div')
+    bar.className = 'template-link-bar'
+    bar.innerHTML = `<a href="#">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      View Template: ${task.template}
+    </a>`
+    inner.appendChild(bar)
+  }
+
+  panel.appendChild(inner)
+  return panel
 }
 
 // ─── Checkbox handler ─────────────────────────────────────────────────────────
@@ -678,18 +854,18 @@ async function handleCheck(e) {
   const ctId        = btn.dataset.ctId
   const currentDone = btn.dataset.done === 'true'
   const newDone     = !currentDone
-  const row         = btn.closest('.task-row')
-  const taskId      = row.dataset.taskId
-  const priority    = row.closest('details.priority-section')?.dataset.priority
+  const item        = btn.closest('.task-item')
+  const taskId      = item.dataset.taskId
+  const priority    = item.closest('details.priority-section')?.dataset.priority
 
-  applyDoneState(btn, row, taskId, newDone)
+  applyDoneState(btn, item, taskId, newDone)
   updatePriorityCount(priority)
   updateSidebarCounts()
   updateHeroProgress()
 
   const { error } = await supabase.from('client_tasks').update({ done: newDone }).eq('id', ctId)
   if (error) {
-    applyDoneState(btn, row, taskId, currentDone)
+    applyDoneState(btn, item, taskId, currentDone)
     updatePriorityCount(priority)
     updateSidebarCounts()
     updateHeroProgress()
@@ -697,12 +873,12 @@ async function handleCheck(e) {
   }
 }
 
-function applyDoneState(btn, row, taskId, done) {
+function applyDoneState(btn, item, taskId, done) {
   btn.dataset.done = done
   btn.setAttribute('aria-pressed', done)
   btn.classList.toggle('is-done', done)
   btn.innerHTML = done ? CHECK_SVG : ''
-  row.classList.toggle('is-done', done)
+  item.classList.toggle('is-done', done)
   if (ctMap[taskId]) ctMap[taskId].done = done
 }
 
