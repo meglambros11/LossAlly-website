@@ -567,15 +567,15 @@ function buildIntakeCard(r, i) {
 // ══════════════════════════════════════════════════════════════════════════════
 
 async function loadClients() {
-  const { data: clients, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('role', 'client')
-    .order('full_name')
+  const { data: { session } } = await supabase.auth.getSession()
+  const res = await fetch('/api/clients', {
+    headers: { 'Authorization': `Bearer ${session.access_token}` },
+  })
 
   document.getElementById('clients-loading').style.display = 'none'
 
-  if (error) { document.getElementById('clients-error').style.display = ''; return }
+  if (!res.ok) { document.getElementById('clients-error').style.display = ''; return }
+  const clients = await res.json()
   if (!clients?.length) { document.getElementById('clients-empty').style.display = ''; return }
 
   // Also load all template tasks once for use in every client panel

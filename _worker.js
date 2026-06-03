@@ -2,12 +2,15 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url)
 
-    // ── API routes (POST only) ──────────────────────────────────────────────────
+    // ── API routes ────────────────────────────────────────────────────────────────
     if (request.method === 'POST' && url.pathname === '/api/intake') {
       return handleIntake(request, env)
     }
     if (request.method === 'POST' && url.pathname === '/api/invite') {
       return handleInvite(request, env)
+    }
+    if (request.method === 'GET' && url.pathname === '/api/clients') {
+      return handleClients(request, env)
     }
 
     // ── Static asset serving + env-var injection ────────────────────────────────
@@ -353,6 +356,31 @@ async function handleInvite(request, env) {
   }).catch(err => console.error('[invite] Resend email failed:', err))
 
   return jsonResponse({ success: true, user_id: userId })
+}
+
+
+// ── /api/clients ─────────────────────────────────────────────────────────────
+// Returns all client profiles. Uses service role to bypass RLS.
+// Caller must have a valid advisor session (JWT verified).
+async function handleClients(request, env) {
+  const authHeader = request.headers.get('Authorization') || ''
+  if (!authHeader.startsWith('Bearer ')) return jsonResponse({ error: 'Unauthorized' }, 401)
+  const jwt = authHeader.slice(7)
+  const userRes = await fetch(`${env.SUPABASE_URL}/auth/v1/user`, {
+    headers: { 'Authorization': `Bearer ${jwt}`, 'apikey': env.SUPABASE_ANON_KEY },
+  })
+  if (!userRes.ok) return jsonResponse({ error: 'Invalid session' }, 401)
+
+  const res = await fetch(
+    `${env.SUPABASE_URL}/rest/v1/profiles?role=eq.client&order=full_name`,
+    { headers: serviceHeaders(env) }
+  )
+  if (!res.ok) {
+    const detail = await res.text()
+    return jsonResponse({ error: 'Failed to load clients', detail }, 500)
+  }
+  const clients = await res.json()
+  return jsonResponse(clients)
 }
 
 
