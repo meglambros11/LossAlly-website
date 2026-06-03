@@ -104,8 +104,10 @@ async function handleIntake(request, env) {
     }),
   })
 
+  let supabaseError = null
   if (!supabaseInsert.ok) {
-    console.error('[intake] Supabase insert failed:', await supabaseInsert.text())
+    supabaseError = await supabaseInsert.text()
+    console.error('[intake] Supabase insert failed:', supabaseError)
   }
 
   // Send notification email via Resend
@@ -162,6 +164,7 @@ async function handleIntake(request, env) {
     ${block("How they're doing", str(data.how_doing))}
     ${block("Anything else", str(data.anything_else))}
 
+    ${supabaseError ? `<div style="margin-top:16px;padding:10px 14px;background:#FDF0F0;border-left:3px solid #9E3030;font-size:12px;color:#9E3030;font-family:monospace;"><strong>⚠ Supabase insert failed — submission NOT saved to database:</strong><br>${supabaseError}</div>` : '<p style="font-size:11px;color:#8D9D6A;text-align:center;margin-top:12px;">✓ Saved to Supabase</p>'}
     <div style="margin-top:24px;padding-top:20px;border-top:1px solid #E2DDD4;text-align:center;">
       <a href="https://lossally.com/portal-advisor.html" style="display:inline-block;background:#5b6e5b;color:#fff;text-decoration:none;font-size:13px;padding:10px 22px;border-radius:6px;">View in Advisor Portal</a>
     </div>
