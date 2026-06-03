@@ -215,49 +215,49 @@ async function handleInvite(request, env) {
 
   if (!intake.email) return jsonResponse({ error: 'Intake submission has no email address' }, 422)
 
-  // Invite the user — Supabase sends them a "set your password" email
-  const inviteRes = await fetch(`${env.SUPABASE_URL}/auth/v1/invite`, {
+  // Generate the invite link via Supabase Admin API — this creates the auth user
+  // and returns the invite URL without relying on Supabase's unreliable shared SMTP.
+  const linkRes = await fetch(`${env.SUPABASE_URL}/auth/v1/admin/generate_link`, {
     method: 'POST',
-    headers: {
-      ...serviceHeaders(env),
-      'Content-Type': 'application/json',
-    },
+    headers: { ...serviceHeaders(env), 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      email: intake.email,
-      data: { full_name: fullName(intake.first_name, intake.last_name) },
+      type:        'invite',
+      email:       intake.email,
+      data:        { full_name: fullName(intake.first_name, intake.last_name) },
+      redirect_to: 'https://lossally.com/portal-dashboard.html',
     }),
   })
 
-  if (!inviteRes.ok) {
-    const detail = await inviteRes.text()
-    console.error('[invite] Supabase invite failed:', detail)
-    return jsonResponse({ error: 'Failed to send invite', detail }, 500)
+  if (!linkRes.ok) {
+    const detail = await linkRes.text()
+    console.error('[invite] generate_link failed:', detail)
+    return jsonResponse({ error: 'Failed to generate invite link', detail }, 500)
   }
 
-  const inviteData = await inviteRes.json()
-  const userId = inviteData.id
+  const linkData = await linkRes.json()
+  const inviteLink = linkData.properties?.action_link || linkData.action_link
+  const userId     = linkData.user?.id
+
+  if (!inviteLink) {
+    return jsonResponse({ error: 'Invite link missing from Supabase response', raw: linkData }, 500)
+  }
 
   // Build client_details from intake data
   const client_details = {
-    deceased_full_name:   fullName(intake.deceased_first_name, intake.deceased_last_name),
-    date_of_death:        intake.date_of_passing || '',
-    city_of_death:        intake.city_of_death || '',
-    estate_state:         intake.state || '',
-    executor_name:        fullName(intake.first_name, intake.last_name),
-    executor_email:       intake.email || '',
-    executor_phone:       intake.phone || '',
+    deceased_full_name:    fullName(intake.deceased_first_name, intake.deceased_last_name),
+    date_of_death:         intake.date_of_passing || '',
+    city_of_death:         intake.city_of_death || '',
+    estate_state:          intake.state || '',
+    executor_name:         fullName(intake.first_name, intake.last_name),
+    executor_email:        intake.email || '',
+    executor_phone:        intake.phone || '',
     executor_relationship: intake.relationship || '',
-    // executor_address and deceased_date_of_birth are filled in by the client via portal
   }
 
-  // Create the profile (the auth trigger may also create a stub — use upsert)
+  // Create the profile pre-populated with intake data
   await fetch(`${env.SUPABASE_URL}/rest/v1/profiles`, {
     method: 'POST',
-    headers: {
-      ...serviceHeaders(env),
-      'Content-Type': 'application/json',
-      'Prefer': 'resolution=merge-duplicates',
-    },
+    headers: { ...serviceHeaders(env), 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates' },
     body: JSON.stringify({
       id:             userId,
       full_name:      fullName(intake.first_name, intake.last_name),
@@ -277,6 +277,49 @@ async function handleInvite(request, env) {
       body: JSON.stringify({ status: 'client', profile_id: userId }),
     }
   )
+
+  // Send the invite email via Resend with Loss Ally branding
+  const clientName = fullName(intake.first_name, intake.last_name)
+  await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      from:    'Loss Ally <support@lossally.com>',
+      to:      [intake.email],
+      subject: 'Your Loss Ally portal is ready',
+      html: `
+<div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;color:#2C2C28;">
+  <div style="background:#f6f1e6;padding:28px 32px 20px;border-bottom:2px solid #E2DDD4;">
+    <p style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#8D9D6A;margin:0 0 8px;">Loss Ally</p>
+    <h1 style="font-family:Georgia,serif;font-size:26px;font-weight:400;margin:0;letter-spacing:-0.01em;">Your portal is ready, ${clientName.split(' ')[0]}.</h1>
+  </div>
+  <div style="padding:28px 32px;">
+    <p style="font-size:15px;line-height:1.8;color:#2C2C28;opacity:0.8;margin:0 0 20px;">
+      Thank you for choosing Loss Ally. We've set up your personal portal where you'll find your estate administration checklist, letter templates, and resources — everything you need, in one place.
+    </p>
+    <p style="font-size:15px;line-height:1.8;color:#2C2C28;opacity:0.8;margin:0 0 28px;">
+      Click the button below to create your password and access your portal. This link expires in 24 hours.
+    </p>
+    <div style="text-align:center;margin-bottom:28px;">
+      <a href="${inviteLink}" style="display:inline-block;background:#5b6e5b;color:#ffffff;text-decoration:none;font-size:15px;font-family:Georgia,serif;padding:14px 32px;border-radius:8px;letter-spacing:0.01em;">
+        Set Up My Portal →
+      </a>
+    </div>
+    <p style="font-size:13px;line-height:1.7;color:#2C2C28;opacity:0.5;margin:0 0 6px;">
+      If the button doesn't work, copy and paste this link into your browser:
+    </p>
+    <p style="font-size:12px;color:#5b6e5b;word-break:break-all;margin:0 0 28px;">
+      <a href="${inviteLink}" style="color:#5b6e5b;">${inviteLink}</a>
+    </p>
+    <div style="border-top:1px solid #E2DDD4;padding-top:20px;">
+      <p style="font-size:13px;line-height:1.7;color:#2C2C28;opacity:0.5;margin:0;">
+        Questions? Reply to this email or reach us at <a href="mailto:support@lossally.com" style="color:#5b6e5b;">support@lossally.com</a>.
+      </p>
+    </div>
+  </div>
+</div>`,
+    }),
+  }).catch(err => console.error('[invite] Resend email failed:', err))
 
   return jsonResponse({ success: true, user_id: userId })
 }
