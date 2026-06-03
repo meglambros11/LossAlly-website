@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loss Ally — Estate Administration Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1A1A18;--sage:#3D6142;--sage2:#6B9970;--terra:#B86840;
+  --gold:#A8843A;--cream:#F4EFE4;--warm:#FAFAF7;--mist:#E2DDD6;
+  --red:#9E3030;--amber:#8A5C10;--green:#2E5E32;--blue:#2A4A7A;
+  --red-bg:#FDF0F0;--amber-bg:#FDF6EA;--green-bg:#EFF5EF;--blue-bg:#EEF2FA;
+  --executor:#7A3A6A;--executor-bg:#F5EEF5;
+  --mono:'IBM Plex Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Source Sans 3',sans-serif;font-weight:300;
+  background:var(--warm);color:var(--ink);font-size:15px;line-height:1.65;
+}
+
+/* ── TOP BAR ── */
+.topbar{
+  background:var(--ink);color:var(--cream);
+  padding:14px 40px;display:flex;justify-content:space-between;align-items:center;
+  position:sticky;top:0;z-index:200;
+}
+.tlogo{font-family:'Playfair Display',serif;font-size:18px;letter-spacing:0.02em}
+.tlogo em{color:var(--gold);font-style:italic}
+.tcount{font-family:var(--mono);font-size:12px;color:rgba(244,239,228,0.5)}
+.tcount span{color:var(--gold);font-size:16px}
+
+/* ── HERO ── */
+.hero{
+  background:var(--cream);border-bottom:1px solid var(--mist);
+  padding:40px 40px 32px;
+}
+.hero-eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--terra);margin-bottom:12px;
+}
+.hero h1{
+  font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,48px);
+  font-weight:400;line-height:1.1;color:var(--ink);margin-bottom:14px;
+}
+.hero h1 em{font-style:italic;color:var(--sage)}
+.hero-sub{font-size:14px;color:var(--ink);opacity:0.6;max-width:680px;line-height:1.75;margin-bottom:24px}
+
+/* ── LEGEND ── */
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px}
+.leg{
+  display:flex;align-items:center;gap:6px;
+  font-size:11px;color:var(--ink);opacity:0.7;
+}
+.leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+
+/* ── CONTROLS ── */
+.controls{
+  background:white;border-bottom:1px solid var(--mist);
+  padding:16px 40px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;
+  position:sticky;top:52px;z-index:100;
+}
+.search-wrap{flex:1;min-width:200px;position:relative}
+.search-input{
+  width:100%;padding:9px 14px 9px 36px;
+  border:1px solid var(--mist);border-radius:4px;
+  font-family:'Source Sans 3',sans-serif;font-size:14px;color:var(--ink);
+  background:var(--warm);outline:none;transition:border-color 0.2s;
+}
+.search-input:focus{border-color:var(--sage)}
+.search-icon{
+  position:absolute;left:11px;top:50%;transform:translateY(-50%);
+  font-size:14px;opacity:0.35;pointer-events:none;
+}
+.filter-chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  padding:5px 12px;border-radius:20px;font-size:12px;cursor:pointer;
+  border:1.5px solid transparent;font-weight:400;transition:all 0.15s;
+  font-family:'Source Sans 3',sans-serif;
+}
+.chip-all{background:var(--ink);color:white;border-color:var(--ink)}
+.chip-urgent{background:var(--red-bg);color:var(--red);border-color:#E8C8C8}
+.chip-urgent.on{background:var(--red);color:white}
+.chip-soon{background:var(--amber-bg);color:var(--amber);border-color:#E8D4A8}
+.chip-soon.on{background:var(--amber);color:white}
+.chip-mid{background:var(--green-bg);color:var(--green);border-color:#B8D4B8}
+.chip-mid.on{background:var(--green);color:white}
+.chip-long{background:var(--blue-bg);color:var(--blue);border-color:#B8C8E4}
+.chip-long.on{background:var(--blue);color:white}
+.chip-exec{background:var(--executor-bg);color:var(--executor);border-color:#D4B8D4}
+.chip-exec.on{background:var(--executor);color:white}
+
+/* ── LAYOUT ── */
+.layout{display:grid;grid-template-columns:220px 1fr}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  border-right:1px solid var(--mist);background:white;
+  position:sticky;top:101px;height:calc(100vh - 101px);overflow-y:auto;
+  padding:20px 0;
+}
+.sb-label{
+  font-family:var(--mono);font-size:10px;letter-spacing:0.15em;
+  text-transform:uppercase;color:var(--ink);opacity:0.35;
+  padding:0 20px 10px;
+}
+.sb-item{
+  display:flex;align-items:center;gap:9px;padding:9px 20px;
+  cursor:pointer;font-size:13px;color:var(--ink);opacity:0.6;
+  border-left:3px solid transparent;transition:all 0.15s;
+}
+.sb-item:hover{opacity:1;background:var(--cream)}
+.sb-item.active{border-left-color:var(--sage);opacity:1;background:var(--cream);font-weight:500}
+.sb-icon{font-size:15px;flex-shrink:0}
+.sb-ct{font-family:var(--mono);font-size:10px;margin-left:auto;opacity:0.4}
+
+/* ── MAIN ── */
+.main{padding:0 0 80px}
+
+/* ── CATEGORY ── */
+.cat-block{padding:32px 36px 40px;border-bottom:2px solid var(--mist)}
+.cat-header{
+  display:flex;align-items:center;gap:14px;
+  margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--mist);
+}
+.cat-icon-wrap{
+  width:48px;height:48px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:24px;
+}
+.cat-info{}
+.cat-title{
+  font-family:'Playfair Display',serif;font-size:22px;font-weight:400;
+  color:var(--ink);margin-bottom:2px;
+}
+.cat-sub{font-size:12px;color:var(--ink);opacity:0.5}
+
+/* ── TASK CARD ── */
+.task-card{
+  border:1px solid var(--mist);border-radius:6px;
+  background:white;margin-bottom:10px;overflow:hidden;
+  transition:box-shadow 0.2s;
+}
+.task-card:hover{box-shadow:0 2px 12px rgba(0,0,0,0.06)}
+.task-card.hidden{display:none}
+
+.task-head{
+  display:flex;align-items:flex-start;gap:8px;padding:12px 16px;
+  cursor:pointer;user-select:none;
+}
+.task-left{display:flex;align-items:flex-start;gap:10px;flex:1;min-width:0}
+.phase-bar{width:4px;border-radius:2px;flex-shrink:0;margin-top:2px;align-self:stretch}
+.task-text-wrap{flex:1}
+.task-title{font-size:14px;font-weight:500;line-height:1.4;margin-bottom:4px}
+.task-brief{font-size:12px;color:var(--ink);opacity:0.55;line-height:1.5}
+
+.task-badges{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.badge{
+  font-family:var(--mono);font-size:10px;padding:2px 7px;
+  border-radius:3px;letter-spacing:0.03em;
+}
+.b-urgent{background:var(--red-bg);color:var(--red)}
+.b-soon{background:var(--amber-bg);color:var(--amber)}
+.b-mid{background:var(--green-bg);color:var(--green)}
+.b-long{background:var(--blue-bg);color:var(--blue)}
+.b-exec{background:var(--executor-bg);color:var(--executor)}
+.b-dc{background:#EEF2FA;color:var(--blue)}
+.b-form{background:#F5F0E8;color:var(--terra)}
+.b-call{background:var(--green-bg);color:var(--green)}
+.b-atty{background:var(--red-bg);color:var(--red)}
+.b-state{background:#FBF5EA;color:var(--amber)}
+
+.expand-icon{
+  font-size:12px;color:var(--ink);opacity:0.3;
+  flex-shrink:0;margin-top:3px;transition:transform 0.2s;
+}
+.task-card.open .expand-icon{transform:rotate(180deg)}
+
+/* ── TASK BODY ── */
+.task-body{display:none;padding:0 16px 20px 30px}
+.task-card.open .task-body{display:block}
+
+.body-section{margin-bottom:18px}
+.body-label{
+  font-family:var(--mono);font-size:10px;letter-spacing:0.15em;
+  text-transform:uppercase;color:var(--sage);margin-bottom:8px;
+}
+.body-label.red{color:var(--red)}
+.body-label.amber{color:var(--amber)}
+.body-label.exec{color:var(--executor)}
+
+.steps-list{display:flex;flex-direction:column;gap:8px}
+.step-item{
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:13px;line-height:1.55;
+}
+.step-num{
+  font-family:var(--mono);font-size:11px;font-weight:500;
+  color:white;background:var(--sage);
+  width:20px;height:20px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:1px;
+}
+.step-text{flex:1}
+.step-text strong{font-weight:500;color:var(--ink)}
+
+.tip-box{
+  background:var(--amber-bg);border-left:3px solid var(--gold);
+  border-radius:4px;padding:10px 14px;font-size:12px;
+  color:var(--ink);line-height:1.65;
+}
+.warn-box{
+  background:var(--red-bg);border-left:3px solid var(--red);
+  border-radius:4px;padding:10px 14px;font-size:12px;
+  color:var(--red);line-height:1.65;
+}
+.exec-box{
+  background:var(--executor-bg);border-left:3px solid var(--executor);
+  border-radius:4px;padding:10px 14px;font-size:12px;
+  color:var(--executor);line-height:1.65;
+}
+
+/* ── STATE TABLE ── */
+.state-table-wrap{overflow-x:auto;margin-top:8px}
+.state-table{
+  width:100%;border-collapse:collapse;font-size:12px;
+}
+.state-table th{
+  background:var(--ink);color:var(--cream);font-weight:500;
+  font-family:var(--mono);font-size:10px;letter-spacing:0.1em;
+  text-transform:uppercase;padding:8px 12px;text-align:left;
+}
+.state-table td{
+  padding:7px 12px;border-bottom:1px solid var(--mist);
+  vertical-align:top;line-height:1.5;
+}
+.state-table tr:nth-child(even) td{background:var(--cream)}
+.state-table tr:hover td{background:#EAF0EA}
+.state-name{font-weight:500;white-space:nowrap}
+.note-chip{
+  display:inline-block;font-family:var(--mono);font-size:10px;
+  padding:1px 6px;border-radius:3px;margin-left:4px;
+}
+.nc-cp{background:#FDF5EA;color:var(--amber)}
+.nc-notable{background:var(--executor-bg);color:var(--executor)}
+
+.no-results{
+  text-align:center;padding:60px 20px;
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:20px;color:var(--ink);opacity:0.3;
+  display:none;
+}
+
+/* ── UTIL ── */
+.divider-sm{height:1px;background:var(--mist);margin:14px 0}
+a{color:var(--sage);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ── CHECKBOX ── */
+.task-cb-wrap{
+  width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;margin-top:1px;
+}
+.task-checkbox{
+  width:20px;height:20px;border-radius:4px;
+  border:2px solid var(--mist);background:white;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;transition:all 0.15s;
+  color:white;
+}
+.task-checkbox.checked{background:var(--sage);border-color:var(--sage)}
+.task-checkbox:hover{border-color:var(--sage)}
+.task-done .task-checkbox{background:var(--sage);border-color:var(--sage)}
+.task-done{opacity:0.6}
+.done-title{text-decoration:line-through;opacity:0.5}
+
+/* ── MARK DONE BUTTON ── */
+.mark-done-row{padding:12px 0 4px;border-top:1px solid var(--mist);margin-top:12px}
+.mark-done-btn{
+  padding:8px 18px;background:var(--sage);color:white;border:none;
+  border-radius:4px;font-family:'Source Sans 3',sans-serif;font-size:12px;
+  font-weight:500;cursor:pointer;transition:all 0.15s;letter-spacing:0.04em;
+}
+.mark-done-btn:hover{background:#2e5032}
+.mark-done-btn.done-btn{background:#EFF5EF;color:var(--sage);border:1px solid var(--sage)}
+.mark-done-btn.done-btn:hover{background:var(--red-bg);color:var(--red);border-color:var(--red)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="tlogo">Loss <em>Ally</em> — Your Estate Administration Guide</div>
+  <div class="tcount"><span id="doneCount" style="color:var(--gold);font-size:16px">0</span> of <span id="totalCount">0</span> tasks completed</div>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">Loss Ally Guided Plan · Your Step-by-Step Reference</div>
+  <h1>Your complete guide to every<br>estate administration <em>task.</em></h1>
+  <p class="hero-sub">Step-by-step instructions for every task you will need to complete as executor. Each task includes exactly what to do, who to call, what to say, and how to handle state-specific differences. Check off each task as you complete it — your progress is saved automatically.</p>
+  <div style="background:white;border:1px solid var(--mist);border-radius:6px;padding:14px 18px;margin-bottom:16px;max-width:500px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <span style="font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;opacity:0.5">Your overall progress</span>
+      <span id="heroPct" style="font-family:var(--mono);font-size:13px;font-weight:500;color:var(--sage)">0%</span>
+    </div>
+    <div style="height:6px;background:var(--mist);border-radius:6px;overflow:hidden">
+      <div id="heroBar" style="height:6px;background:var(--sage);border-radius:6px;width:0%;transition:width 0.4s"></div>
+    </div>
+    <div style="font-size:11px;opacity:0.45;margin-top:7px"><span id="heroCount">0</span> tasks completed — your progress is saved in this browser</div>
+  </div>
+  <div class="legend">
+    <div class="leg"><div class="leg-dot" style="background:var(--red)"></div> Urgent — Days 1–14</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--amber)"></div> Month 1</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--green)"></div> Months 2–6</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--blue)"></div> Long-term</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--executor)"></div> Your signature required</div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <div class="search-icon">🔍</div>
+    <input class="search-input" type="text" id="searchInput" placeholder="Search tasks, agencies, states…" oninput="doSearch()">
+  </div>
+  <div class="filter-chips">
+    <div class="chip chip-all" id="chip-all" onclick="setFilter('all',this)">All</div>
+    <div class="chip chip-urgent" onclick="setFilter('urgent',this)">🔴 Urgent</div>
+    <div class="chip chip-soon" onclick="setFilter('soon',this)">🟡 Month 1</div>
+    <div class="chip chip-mid" onclick="setFilter('mid',this)">🟢 Months 2–6</div>
+    <div class="chip chip-long" onclick="setFilter('long',this)">🔵 Long-term</div>
+    <div class="chip chip-exec" onclick="setFilter('exec',this)">🔏 Your signature required</div>
+    <div class="chip" style="background:#EFF5EF;color:var(--green);border:1.5px solid #B8D4B8" onclick="setFilter('done',this)">✓ Completed</div>
+    <div class="chip" style="background:#FDF6EA;color:var(--amber);border:1.5px solid #E4D0A0" onclick="setFilter('todo',this)">○ Not yet done</div>
+  </div>
+</div>
+
+<div class="layout">
+<nav class="sidebar" id="sidebar"></nav>
+<div class="main" id="main"></div>
+</div>
+<div class="no-results" id="noResults">No tasks match your search.</div>
+
+<script>
+const U='urgent',S='soon',M='mid',L='long';
+const PHASE_COLOR={urgent:'var(--red)',soon:'var(--amber)',mid:'var(--green)',long:'var(--blue)'};
+
+// ─────────────────────────────────────────────────
+// DATA
+// ─────────────────────────────────────────────────
+const CATS=[
+{id:'gov',icon:'🏛️',bg:'#EEF2FA',title:'Government & Benefits',sub:'Federal agencies, state records, and benefits programs',
+tasks:[
+
+{phase:U,exec:false,title:'Notify Social Security Administration (SSA)',
+brief:'Report the death and stop benefit payments immediately. Overpayments must be returned.',
+tags:['call'],
+steps:[
+  'Call SSA at <strong>1-800-772-1213</strong> (TTY: 1-800-325-0778), Mon–Fri 8am–7pm. Expect hold times of 30–90 minutes — call early.',
+  'Have ready: deceased\'s full legal name, Social Security number, date of birth, date of death, and your own name and relationship.',
+  'Inform SSA of the death. They will flag the account and stop future payments.',
+  '<strong>Critical:</strong> Any SSA payment deposited after the date of death must be returned. If direct deposit, SSA will claw it back from the bank automatically. If check, do not cash it — return via mail to the local SSA office.',
+  'Ask SSA about <strong>survivor benefits</strong> at this same call: a surviving spouse age 60+ (50+ if disabled), minor children under 18, or dependent parents may qualify.',
+  'SSA will mail a confirmation. Keep this for your records.',
+],
+tip:'Many banks will automatically return SSA deposits if notified of the death — contact the bank before SSA reaches them to coordinate.',
+warn:'Cashing or keeping an SSA payment made after the date of death is a federal offense. Return it immediately.',
+states:[
+  {state:'All states',detail:'SSA is a federal program with uniform rules. State of residence does not change the process.'},
+]},
+
+{phase:U,exec:false,title:'Apply for SSA Survivor Benefits',
+brief:'Surviving spouses, minor children, and some parents may receive monthly payments.',
+tags:['call','form'],
+steps:[
+  'Eligibility: surviving spouse age 60+ (any age if caring for deceased\'s child under 16), divorced spouse (marriage lasted 10+ years), children under 18 (or 19 if still in high school), disabled children of any age, dependent parents 62+.',
+  'Apply at <strong>1-800-772-1213</strong> or in person at your local SSA office. You cannot apply online for survivor benefits.',
+  'Documents needed: death certificate, your Social Security number and the deceased\'s, marriage certificate (for spouses), birth certificates (for children), proof of citizenship, most recent W-2 or tax return.',
+  'Benefit amount is based on the deceased\'s earnings record. SSA will calculate and inform you.',
+  'A surviving spouse who is full retirement age receives 100% of the deceased\'s benefit. Reduced amounts apply for earlier ages.',
+  'Lump-sum death payment of <strong>$255</strong> is also available to eligible surviving spouses or dependent children — request this at the same call.',
+],
+tip:'If the deceased had recently claimed their own SSA benefits, survivor benefits may be higher than expected if the deceased delayed claiming.',
+states:[
+  {state:'Community property states (AZ, CA, ID, LA, NM, NV, TX, WA, WI)',detail:'SSA survivor rules are federal and uniform regardless of community property laws. However, community property may affect how the estate\'s assets interact with surviving spouse\'s benefits claims.',notable:true},
+]},
+
+{phase:U,exec:false,title:'Obtain Certified Death Certificates',
+brief:'Order 15–20 certified copies immediately. Nearly every institution requires an original.',
+tags:['form'],
+steps:[
+  'The funeral home typically orders death certificates on your behalf — confirm how many they will order and whether you need to request more.',
+  'If ordering yourself: contact the <strong>vital records office</strong> of the state where the death occurred (not where the deceased lived). Each state has its own process — most can be ordered online, by mail, or in person.',
+  'National online services (VitalChek is the most widely used) can order on your behalf for a convenience fee of $10–20 in addition to the state fee.',
+  'Standard fee per certified copy: $5–$25 depending on state. Order generously — you cannot undo having too many, but running out causes real delays.',
+  'Quantity guide: 1 for each bank, 1 for each insurance policy, 1 for SSA, 1 for each investment account, 1 for DMV, 1 for probate court, 1 for VA (if applicable), plus 3–5 spares.',
+  'Keep all originals in a secure fireproof location. Some institutions will return originals after review; others will not.',
+],
+tip:'Order at least 20. Most families under-order and spend weeks waiting for more copies while critical tasks stall.',
+states:[
+  {state:'California',detail:'Order from CDPH Vital Records or county registrar. Fee: $21/copy. Online via VitalChek. Processing: 2–3 weeks standard, ~$11 extra for expedited.',notable:false},
+  {state:'Texas',detail:'Order from DSHS or county clerk. Fee: $20/copy. Online via VitalChek or txapplication.com. Processing: 10–15 business days.',notable:false},
+  {state:'Florida',detail:'Order from FDOH Bureau of Vital Statistics or county health dept. Fee: $10 first copy, $4 each additional. Online via VitalChek.',notable:false},
+  {state:'New York',detail:'NYC deaths: NYC Office of Vital Records. All other NY: NYS DOH. Fee: $15/copy. Allow 4–6 weeks by mail; same-day in person at NYC office.',notable:true},
+  {state:'Illinois',detail:'IDPH Vital Records. Fee: $19/copy. Online via VitalChek. Allow 4–8 weeks for mail orders.',notable:false},
+  {state:'Pennsylvania',detail:'PA Dept of Health. Fee: $20/copy. Allow 6–8 weeks by mail. County courthouses may have copies faster for recent deaths.',notable:true},
+]},
+
+{phase:S,exec:false,title:'Notify Medicare and Medicaid',
+brief:'Stop Medicare coverage to avoid fraudulent billing; notify Medicaid to end coverage.',
+tags:['call'],
+steps:[
+  '<strong>Medicare:</strong> SSA handles Medicare Part A and B — when you notify SSA of the death (see above), Medicare Part A and B are automatically stopped.',
+  'However, <strong>Medicare Part D</strong> (prescription drug plan) and <strong>Medicare Advantage</strong> (Part C) are private plans — contact each plan separately to cancel.',
+  'Contact number for Medicare: <strong>1-800-MEDICARE</strong> (1-800-633-4227).',
+  'Return any unused Medicare cards and request confirmation of cancellation in writing.',
+  '<strong>Medicaid:</strong> Contact your state Medicaid office directly (not CMS). Each state administers its own Medicaid program.',
+  'Important: Medicaid may have a <strong>estate recovery claim</strong> — in most states, Medicaid can seek repayment from the estate for benefits paid to individuals 55+. Notify your estate attorney immediately if the deceased received Medicaid benefits.',
+  'Cancel any Medigap (Medicare Supplement) policies with the private insurer.',
+],
+warn:'Medicaid estate recovery can significantly reduce what heirs receive. This claim takes priority over most other estate debts. Do not distribute estate assets until Medicaid claims are resolved.',
+states:[
+  {state:'California',detail:'Medi-Cal (CA Medicaid) estate recovery is administered by DHCS. CA has one of the broadest recovery programs — recovers from the full estate, not just probate assets.',notable:true},
+  {state:'Texas',detail:'TX Medicaid estate recovery is limited to nursing facility services, home/community-based waiver services, and related hospital and prescription drug services for those 55+.',notable:false},
+  {state:'New York',detail:'NY does not seek estate recovery from the community spouse\'s estate. NY recovery is limited to nursing home Medicaid recipients.',notable:true},
+  {state:'Florida',detail:'FL estate recovery applies to Medicaid services for individuals 55+ in long-term care. Contact FL AHCA for claim amount.',notable:false},
+  {state:'Oregon',detail:'OR has aggressive estate recovery — one of the broadest in the nation. Recovers from the full estate for all Medicaid services to recipients 21+.',notable:true},
+]},
+
+{phase:S,exec:false,title:'Notify Veterans Affairs (VA)',
+brief:'Apply for burial benefits, survivor pension, and Dependency and Indemnity Compensation.',
+tags:['call','form'],
+steps:[
+  'Call the VA at <strong>1-800-827-1000</strong> or visit your nearest VA regional office.',
+  '<strong>Burial benefits:</strong> The VA provides burial allowances for eligible veterans. Amount varies by circumstances ($300–$796 for non-service-connected death; $2,000 for service-connected death). Apply within 2 years of burial using VA Form 21P-530.',
+  '<strong>Headstone/grave marker:</strong> Apply for a free government headstone or marker for veterans buried in a private cemetery using VA Form 40-1330.',
+  '<strong>DIC (Dependency and Indemnity Compensation):</strong> Monthly payment to surviving spouse if veteran died from a service-connected disability, or if veteran had a total disability rating for 10+ continuous years before death. Apply using VA Form 21P-534EZ.',
+  '<strong>Survivor\'s pension:</strong> Available to surviving spouse of a wartime veteran who meets income and net worth limits. Apply using VA Form 21P-534EZ.',
+  'Gather documents: DD-214 (discharge papers), death certificate, marriage certificate, your SSN and financial information.',
+  'If you cannot find the DD-214, request a copy from the National Personnel Records Center (archives.gov).',
+],
+tip:'The VA process is slow — often 6–12 months. File immediately and request confirmation of receipt. A VA-accredited claims agent (free service) can significantly improve approval rates and speed.',
+states:[
+  {state:'All states',detail:'VA benefits are federal. However, many states offer additional state-level veterans benefits including property tax exemptions, additional burial benefits, and state veterans homes. Search your state veterans affairs office for local programs.',notable:true},
+  {state:'Texas',detail:'Texas Veterans Commission provides free claims assistance. Texas has no state estate tax and significant property tax exemptions for surviving spouses of 100% disabled veterans.',notable:true},
+  {state:'Florida',detail:'FL Dept of Veterans\' Affairs offers additional homestead property tax exemptions for surviving spouses.',notable:false},
+]},
+
+{phase:S,exec:false,title:'Cancel Driver\'s License (DMV)',
+brief:'Prevent identity fraud by cancelling the deceased\'s license with the state DMV.',
+tags:['call','form'],
+steps:[
+  'Contact your state DMV — most have a specific process for reporting a deceased license holder.',
+  'Provide: death certificate, deceased\'s license number (if known), full name, and date of birth.',
+  'Physically destroy or surrender the physical license if you have it.',
+  'Vehicle titles must be transferred separately — the DMV notification of death does not automatically transfer ownership of vehicles.',
+  'Request written confirmation of cancellation for your records.',
+],
+states:[
+  {state:'California',detail:'Submit REG 5 form (Notice of Transfer) to DMV. Can be done by mail. CA has a simplified title transfer for surviving spouses without probate via REG 5.',notable:false},
+  {state:'Texas',detail:'Report to TX DPS. Vehicle title transfer to heirs can be done via Affidavit of Heirship (Form VTR-262) without probate for vehicles under $10,000.',notable:true},
+  {state:'Florida',detail:'Notify FL DHSMV. FL allows title transfer to surviving spouse without probate regardless of value.',notable:true},
+  {state:'New York',detail:'Notify NY DMV via mail with death certificate. NY requires probate or Letters Testamentary for most vehicle title transfers.',notable:false},
+]},
+
+{phase:M,exec:true,title:'File Final Federal Income Tax Return (IRS Form 1040)',
+brief:'The executor must file a final 1040 for the deceased covering January 1 to date of death.',
+tags:['form'],
+steps:[
+  'The final return covers income from January 1 of the year of death through the date of death.',
+  'Filing deadline: same as normal — April 15 of the year following death (extensions available via Form 4868).',
+  'The executor or administrator is responsible for filing. Write "DECEASED" and the date of death across the top of the return.',
+  'If the deceased was married, a joint return may be filed with the surviving spouse for the year of death.',
+  'A tax professional (CPA or enrolled agent) is strongly recommended. Estate tax situations are complex.',
+  'If a refund is due, file Form 1310 (Statement of Person Claiming Refund Due a Deceased Taxpayer) unless you are the surviving spouse filing jointly.',
+  'Final return must include all income up to the date of death: wages, Social Security, investment income, etc.',
+],
+exec_note:'Only the executor or court-appointed administrator can sign and file this return on behalf of the deceased.',
+tip:'If the deceased made estimated tax payments, these can be credited against any balance due on the final return.',
+states:[
+  {state:'California',detail:'CA state final return (Form 540) also required, covering same period. CA FTB deadline mirrors federal. CA has no separate inheritance tax.',notable:false},
+  {state:'Texas',detail:'TX has no state income tax — no state return required.',notable:true},
+  {state:'Florida',detail:'FL has no state income tax — no state return required.',notable:true},
+  {state:'New York',detail:'NY state final return (IT-201) required. NY has an estate tax starting at $7.16M (2024) with a "cliff" — estates just above the threshold can face a tax on the full amount, not just the excess.',notable:true},
+  {state:'Illinois',detail:'IL state final return required. IL estate tax threshold is $4M — significantly lower than federal.',notable:true},
+  {state:'Oregon',detail:'OR estate tax threshold is $1M — one of the lowest in the nation. OR income tax return also required.',notable:true},
+  {state:'Massachusetts',detail:'MA estate tax threshold is $2M. MA also requires a final state income tax return.',notable:true},
+  {state:'Washington State',detail:'WA has no state income tax but has an estate tax starting at $2.193M (2024). WA is also a community property state.',notable:true},
+]},
+
+{phase:M,exec:true,title:'Obtain Estate EIN from IRS',
+brief:'The estate may need its own tax ID number for banking, income, and filings.',
+tags:['online','form'],
+steps:[
+  'An EIN is required if: the estate goes through probate, the estate earns any income after death (interest, rent, dividends), or an estate bank account is needed.',
+  'Apply free at <strong>IRS.gov/EIN</strong> — the online application takes about 5 minutes and the EIN is issued immediately.',
+  'You will need: the executor\'s name and SSN, deceased\'s name and SSN, date of death, and the estate\'s legal name ("Estate of [Full Name]").',
+  'Select "Estate" as the entity type on the application.',
+  'Keep the EIN confirmation letter (CP 575) — you will need this number for opening estate bank accounts and filing estate tax returns.',
+],
+exec_note:'Only the executor can apply for the estate EIN, as they are responsible for the estate\'s tax obligations.',
+states:[
+  {state:'All states',detail:'EIN application is federal (IRS) and uniform across all states.',notable:false},
+]},
+
+{phase:L,exec:true,title:'File Estate Income Tax Return (IRS Form 1041)',
+brief:'Required if the estate earns $600+ in income during the administration period.',
+tags:['form'],
+steps:[
+  'Form 1041 covers income the estate itself earns after death: interest, dividends, rental income, business income.',
+  'Required if gross income is $600 or more, or if any beneficiary is a nonresident alien.',
+  'Fiscal year can be chosen (vs. calendar year) — can offer tax planning opportunities.',
+  'Deductions available: executor fees, attorney fees, accounting fees, and certain administration expenses.',
+  'A CPA experienced in estate taxation should prepare this return.',
+  'Deadline: 15th day of the 4th month after the estate\'s fiscal year ends.',
+],
+exec_note:'Executor signs Form 1041 as the fiduciary responsible for the estate.',
+states:[
+  {state:'Most states',detail:'States with income tax require a separate state fiduciary income tax return, typically due on the same schedule as the federal return.',notable:false},
+  {state:'California',detail:'CA Form 541 (Fiduciary Income Tax Return) required if estate has CA source income.',notable:false},
+  {state:'New York',detail:'NY Form IT-205 required.',notable:false},
+]},
+
+]},// end gov
+
+{id:'probate',icon:'⚖️',bg:'#FDF0F0',title:'Legal & Probate',sub:'Will execution, court authority, asset distribution',
+tasks:[
+
+{phase:U,exec:false,title:'Locate and Secure the Original Will',
+brief:'The original document must be found — courts do not accept photocopies in most states.',
+tags:[],
+steps:[
+  'Check the deceased\'s home files and personal safe — look for a folder labeled "Important Documents," "Estate," or "Legal."',
+  'Check any bank safe deposit boxes. Note: you may need Letters Testamentary to access the box, but many states allow access just to retrieve a will. Bring the death certificate and your ID.',
+  'Contact their estate attorney — attorneys typically hold the original will for clients.',
+  'Check with the county probate court — some individuals file their will with the court during their lifetime.',
+  'Search home thoroughly: filing cabinets, fireproof boxes, desk drawers, and even stored boxes.',
+  'If the will cannot be found: most states allow a copy or a reconstructed will to be admitted if witnesses can attest to its contents, but this is complex and requires legal counsel.',
+  'Secure the will immediately — do not let any interested party (especially a potential beneficiary) possess it unsupervised.',
+],
+warn:'Never alter, destroy, or conceal a will — this is a crime in all 50 states.',
+states:[
+  {state:'Most states',detail:'A lost will creates a presumption that it was revoked by the testator. This presumption can be rebutted but requires significant evidence and legal proceedings.',notable:true},
+  {state:'California',detail:'CA Probate Code Section 6124 creates a rebuttable presumption that a missing will was revoked. CA does allow admission of a copy if the proponent can establish the will\'s terms and that the original was not revoked.',notable:true},
+  {state:'Texas',detail:'TX allows a copy of a lost will to be probated if two witnesses can testify it was not revoked. Strongly recommend an attorney.',notable:true},
+]},
+
+{phase:U,exec:false,title:'Determine Whether Probate Is Required',
+brief:'Not all estates require probate. The answer depends on asset types, values, and state law.',
+tags:['atty'],
+steps:[
+  'Assets that <strong>avoid probate entirely</strong> (regardless of state): joint tenancy assets (pass to surviving owner), assets with named beneficiaries (life insurance, retirement accounts, POD/TOD accounts), assets held in a living trust.',
+  'Assets that typically <strong>require probate</strong>: individually owned real property, bank accounts in the deceased\'s name only with no beneficiary designation, personal property over state thresholds.',
+  'If the estate consists entirely of non-probate assets, no court involvement is needed.',
+  'If probate is required, consult an estate attorney in the state where the deceased resided (the domicile state).',
+  'If the deceased owned real property in multiple states, <strong>ancillary probate</strong> may be required in each state where property is located.',
+  'Many states have simplified procedures for small estates — check your state\'s threshold.',
+],
+tip:'A living trust, if properly funded, avoids probate entirely and is often the most efficient estate plan. If one exists, work with the trustee rather than through probate court.',
+states:[
+  {state:'California',detail:'CA probate threshold: $184,500 (2022, adjusts periodically). Below this, a simple Affidavit (Probate Code 13100) can be used. Probate above this threshold is slow (18–24 months) and expensive (attorney fees are statutory: ~4% on first $100K, scaling down).',notable:true},
+  {state:'Texas',detail:'TX $75,000 threshold for muniment of title (simplified process). TX has efficient Independent Administration which avoids most court supervision.',notable:true},
+  {state:'Florida',detail:'FL $75,000 threshold for summary administration. FL also has disposition without administration for very small estates. Standard FL probate is relatively efficient.',notable:true},
+  {state:'New York',detail:'NY small estate threshold: $50,000. NY Surrogate\'s Court handles probate — can be slow in NYC. NY allows voluntary administration for estates under $50K.',notable:true},
+  {state:'Illinois',detail:'IL small estate threshold: $100,000. IL probate is handled in county Circuit Courts.',notable:false},
+  {state:'Texas',detail:'TX has a unique "Muniment of Title" process — if the only probate asset is real property with no debts, the will can be admitted to record title without full administration.',notable:true},
+  {state:'Wisconsin',detail:'WI is a community property state with a marital property agreement system — surviving spouses can transfer community property with a simple affidavit in many cases.',notable:true},
+]},
+
+{phase:S,exec:true,title:'File the Will with Probate Court and Open Probate',
+brief:'If probate is required, the executor files a petition to open the estate with the court.',
+tags:['atty','form'],
+steps:[
+  'Hire an estate attorney in the state of domicile — probate filings vary significantly by county court and state statute.',
+  'File a petition to admit the will to probate and for appointment of executor (or administrator if no will) with the appropriate court: Probate Court, Surrogate\'s Court, or Circuit Court depending on state.',
+  'File the original will and a certified death certificate with the petition.',
+  'The court sets a hearing date (typically 2–8 weeks out). In most states, all heirs and beneficiaries must be notified of the hearing.',
+  'At the hearing, the court admits the will and formally appoints the executor.',
+  'The court issues <strong>Letters Testamentary</strong> (if will exists) or <strong>Letters of Administration</strong> (if no will). These are the documents that give you legal authority to act.',
+  'Most courts charge a filing fee of $50–$400 depending on estate value and state.',
+],
+exec_note:'Only the named executor (or proposed administrator) can file the petition and be appointed. This cannot be delegated to Afterlight, though Afterlight can prepare all documents for the executor to review and sign.',
+states:[
+  {state:'California',detail:'File in Superior Court, Probate Division, of the county where deceased resided. Statutory notice period: 15–30 days. Publication of notice required. Full probate typically takes 18–24 months.',notable:true},
+  {state:'Texas',detail:'File in the county Probate Court (or District Court if no Probate Court). TX favors Independent Administration — once appointed, executor acts without ongoing court approval.',notable:true},
+  {state:'Florida',detail:'File in Circuit Court in the county of domicile. FL has Formal and Summary Administration. Formal administration typically takes 6–12 months.',notable:false},
+  {state:'New York',detail:'File in Surrogate\'s Court in the county of domicile. NYC Surrogate\'s Court can be slow. NY requires an attorney for most probate proceedings; self-represented parties are rare.',notable:true},
+  {state:'Pennsylvania',detail:'File in the Register of Wills in the county of domicile. PA has a relatively streamlined probate process.',notable:false},
+  {state:'Michigan',detail:'MI has a relatively straightforward probate process with Independent Administration available. File in Probate Court in county of residence.',notable:false},
+]},
+
+{phase:S,exec:true,title:'Petition for Letters Testamentary / Letters of Administration',
+brief:'This court-issued document is the executor\'s legal authority to manage the estate.',
+tags:['atty','form'],
+steps:[
+  'Letters Testamentary are issued when a will names an executor. Letters of Administration are issued when there is no will (intestate) or the named executor cannot serve.',
+  'Request multiple certified copies — typically 10–15. Each institution will require its own original certified copy.',
+  'Cost: typically $5–$20 per certified copy, paid to the court.',
+  'Letters have an expiration date in some states — check and renew if needed for long administrations.',
+  'Present Letters Testamentary when: opening estate bank accounts, accessing individual financial accounts, signing real estate documents, filing court papers, or dealing with any institution that requires executor authority.',
+],
+exec_note:'Only the appointed executor can possess and use Letters Testamentary. Afterlight holds no authority under these letters.',
+states:[
+  {state:'California',detail:'CA Letters do not expire but some institutions may question Letters older than 6 months. You can obtain updated Letters from the court at minimal cost.',notable:false},
+  {state:'Texas',detail:'TX Letters expire after 4 years from issuance. Renew if needed.',notable:true},
+  {state:'Florida',detail:'FL Letters remain valid until the estate is closed.',notable:false},
+  {state:'New York',detail:'NY Letters expire at the discretion of the court — check the expiration date on your Letters.',notable:true},
+]},
+
+{phase:S,exec:true,title:'Notify Beneficiaries and Heirs',
+brief:'Most states require formal legal notification to all named beneficiaries and legal heirs.',
+tags:['form'],
+steps:[
+  'Identify all beneficiaries named in the will and all legal heirs (those who would inherit under state intestacy laws).',
+  'Send formal written notice by certified mail with return receipt requested — this creates a legal record.',
+  'Notice must typically include: name of deceased, date of death, name of executor, where the will was filed, and a statement of the right to contest.',
+  'Deadline for notice: varies by state — typically within 30–60 days of being appointed executor.',
+  'Keep signed return receipts as proof of notification.',
+  'If a beneficiary cannot be located: consult your attorney. Many states allow publication as alternative notice after diligent search.',
+],
+exec_note:'The executor is personally responsible for proper notification. Failure to notify can expose the executor to personal liability.',
+states:[
+  {state:'California',detail:'Notice must be sent within 30 days of appointment. All known heirs and beneficiaries must receive Notice of Petition to Administer Estate.',notable:false},
+  {state:'Texas',detail:'TX requires notice to all beneficiaries within a reasonable time. Intestate heirs must be identified and notified even if no will.',notable:false},
+  {state:'Florida',detail:'FL requires service of a Notice of Administration on all interested persons within 3 months of the appointment.',notable:true},
+]},
+
+{phase:M,exec:true,title:'Compile Full Estate Asset Inventory',
+brief:'A comprehensive list of all assets and their values, required for probate and taxes.',
+tags:['form'],
+steps:[
+  'List all assets in three categories: (1) probate assets (owned individually, no beneficiary), (2) non-probate assets (joint tenancy, beneficiary designations, trust assets), (3) personal property.',
+  'For financial accounts: gather the most recent statements for all accounts.',
+  'For real property: obtain a property appraisal or tax assessment as of the date of death.',
+  'For personal property of significant value (art, jewelry, vehicles, collectibles): obtain certified appraisals.',
+  'For business interests: obtain a business valuation from a qualified appraiser.',
+  'For digital assets: document all accounts, their contents, and estimated value.',
+  'Many courts require a formal inventory (with values as of the date of death) to be filed within 60–90 days of appointment.',
+  'This inventory becomes the basis for the estate tax return if applicable.',
+],
+exec_note:'The executor signs and files the inventory with the probate court. This is a formal legal document.',
+states:[
+  {state:'California',detail:'CA does not require a formal inventory filing with the court in most cases, but one must be prepared for the executor\'s records and for tax purposes.',notable:false},
+  {state:'Texas',detail:'TX requires an inventory, appraisement, and list of claims to be filed with the court within 90 days of appointment.',notable:true},
+  {state:'Florida',detail:'FL requires filing an inventory within 60 days of appointment.',notable:true},
+  {state:'New York',detail:'NY may require filing a detailed inventory depending on the type of administration.',notable:false},
+]},
+
+{phase:L,exec:true,title:'Distribute Assets to Heirs',
+brief:'The final step — transferring estate property to beneficiaries after all debts are paid.',
+tags:['atty'],
+steps:[
+  'Distributions can only be made after: all creditor claim periods have expired, all known debts and taxes are paid, all estate expenses are paid.',
+  'Follow the will\'s instructions exactly. Any deviation can expose the executor to personal liability.',
+  'For cash distributions: transfer from the estate bank account with full documentation.',
+  'For real property: executor signs and records a deed transferring title to the heir.',
+  'For personal property: create a receipt signed by each heir acknowledging receipt of specific items.',
+  'For retirement accounts and life insurance: these typically pass directly to named beneficiaries outside this process.',
+  'Obtain a signed <strong>Receipt and Release</strong> from each heir acknowledging full satisfaction of their interest.',
+  'Maintain complete records of all distributions for the final estate accounting.',
+  'In formal probate: file a petition for final distribution and obtain court approval before distributing.',
+],
+exec_note:'The executor is personally liable for improper distributions. Never distribute before all debts and taxes are settled.',
+warn:'If the executor distributes assets and a creditor later presents a valid claim, the executor may be personally responsible for paying it.',
+states:[
+  {state:'Texas',detail:'TX Independent Administration allows the executor to make distributions without court approval after notifying creditors and paying debts.',notable:true},
+  {state:'California',detail:'CA typically requires court approval for final distributions — a petition for final distribution must be filed and a hearing held.',notable:true},
+]},
+
+]},// end probate
+
+{id:'financial',icon:'🏦',bg:'#FBF5EA',title:'Financial Accounts',sub:'Banks, investments, insurance, and retirement accounts',
+tasks:[
+
+{phase:U,exec:false,title:'Inventory All Financial Accounts',
+brief:'Build a complete picture of all financial accounts before contacting any institution.',
+tags:[],
+steps:[
+  'Review the deceased\'s mail (physical and email) for statements, bill notifications, and account confirmations.',
+  'Check the most recent 2–3 years of federal tax returns — interest and dividend income (Schedule B) will reveal most investment and bank accounts.',
+  'Check for a password manager (1Password, Bitwarden, LastPass, Keychain) — may contain logins to financial institutions.',
+  'Review bank statements for direct deposits (reveals income sources) and recurring withdrawals (reveals loan payments, insurers, investment accounts).',
+  'Search email for keywords: "statement," "account," "portfolio," "e-delivery," "quarterly statement."',
+  'Check physical files for account paperwork, brokerage confirmations, and insurance policies.',
+  'Contact HR department of the last employer — group life insurance, 401(k), pension, and stock plans may not be known to the family.',
+  'Use the <strong>NAUPA unclaimed property database</strong> (missingmoney.com) to check for forgotten accounts.',
+],
+tip:'The most common overlooked accounts: old 401(k) from a previous employer, small savings accounts, whole life insurance policies purchased decades ago, and savings bonds.',},
+
+{phase:U,exec:false,title:'Cancel or Pause Auto-Draft Payments',
+brief:'Stop automatic payments immediately to prevent overdrafts after accounts are frozen.',
+tags:['call','online'],
+steps:[
+  'Identify all automatic payments from bank statements — subscriptions, insurance, utilities, loan payments, memberships.',
+  'For each auto-draft: contact the merchant directly to cancel or put on hold. Explain the account holder has passed away.',
+  'For credit card auto-pay: do not cancel credit cards before cancelling everything that auto-bills to them.',
+  'Keep track of which services have been cancelled vs. which need to continue (mortgage payments must continue until property is sold or transferred).',
+  'For services that must continue (utilities at an occupied home, mortgage), arrange for payment from the estate account rather than the deceased\'s personal account.',
+  'Contact the bank and flag the account to block new ACH debits while allowing existing commitments to be reviewed.',
+],
+tip:'A spreadsheet tracking every auto-payment — merchant, amount, cancellation status — prevents both missed cancellations and accidentally cutting off essential services.',},
+
+{phase:S,exec:false,title:'Notify All Banks and Credit Unions',
+brief:'Each institution has its own process. Joint accounts convert; individual accounts enter the estate.',
+tags:['call','dc'],
+steps:[
+  'Call the customer service number on the back of each card or statement. Ask to speak with the <strong>Estate Services</strong> or <strong>Bereavement</strong> team — these specialists handle this more effectively than general CSRs.',
+  'Provide: death certificate, the executor\'s name and contact information, and Letters Testamentary (if available).',
+  '<strong>Joint accounts:</strong> The surviving owner retains full access. Notify the bank to remove the deceased\'s name from the account. The surviving owner should update account documentation.',
+  '<strong>Individual accounts:</strong> The bank will freeze the account pending executor authority. The executor can access funds to pay estate expenses once Letters Testamentary are presented.',
+  '<strong>POD (Payable on Death) accounts:</strong> The named beneficiary can claim directly with a death certificate — no probate required. This is one of the most efficient asset transfer mechanisms.',
+  'Request a statement showing the account balance as of the date of death — needed for estate inventory.',
+  'Close accounts after all funds are transferred to the estate account (or to beneficiaries for POD accounts).',
+],
+states:[
+  {state:'Community property states (AZ, CA, ID, LA, NM, NV, TX, WA, WI)',detail:'Accounts held as community property vest automatically in the surviving spouse — but the bank still needs to be notified and documentation updated. The surviving spouse typically retains full access.',notable:true},
+  {state:'All states',detail:'The FDIC insures individual accounts up to $250,000. Joint accounts may be insured up to $250,000 per co-owner. In the period immediately after death, FDIC provides additional coverage — contact FDIC for specifics.',notable:false},
+]},
+
+{phase:S,exec:false,title:'Contact All Credit Card Companies',
+brief:'Cancel cards in the deceased\'s name; dispute any post-death charges.',
+tags:['call'],
+steps:[
+  'Call the number on the back of each card. Ask for the bereavement or estate department.',
+  'Provide the deceased\'s name, account number, and date of death. A death certificate will typically be required — they\'ll tell you how to submit it.',
+  'Request a final statement showing the balance due as of the date of death.',
+  'Debts on individual credit cards are estate debts — they must be paid from estate assets before distribution to heirs. Heirs do not personally inherit credit card debt.',
+  'For joint cards: the surviving cardholder remains fully liable for the balance. Continue paying to avoid credit damage.',
+  'Authorized users (not joint cardholders) on the deceased\'s card: cancel all authorized user cards. Authorized users have no liability for the balance.',
+  'Review final statements for any fraudulent charges made after death.',
+  'If the estate lacks funds to pay credit card debt: the card company may negotiate a reduced settlement. Consult the estate attorney.',
+],
+warn:'Do not let anyone convince you that you are personally responsible for the deceased\'s individual credit card debt. You are not — unless you were a joint account holder (not just an authorized user).',},
+
+{phase:S,exec:false,title:'File Life Insurance Claims',
+brief:'Life insurance pays directly to named beneficiaries — probate is not required.',
+tags:['call','dc','form'],
+steps:[
+  'Locate all policies: individual life insurance, employer group life, accidental death, mortgage life insurance, credit life insurance on loans.',
+  'Call each insurer\'s claims department. Request a certified claim form.',
+  'Submit: completed claim form, certified death certificate, and the original policy (if required — some insurers only need the policy number).',
+  'The insurer has 30 days in most states to pay a valid claim after receiving complete documentation.',
+  'Payment options: lump sum (most common), installments, or retained asset account. Lump sum is generally recommended.',
+  'If no beneficiary is named or the beneficiary predeceased the insured: the death benefit typically goes to the estate and becomes a probate asset.',
+  'For employer group life insurance: contact HR for the carrier\'s name and policy information.',
+  'VGLI (Veterans Group Life Insurance): separate process through OSGLI at 1-800-419-1473.',
+],
+tip:'Accelerated death benefits (ADB) paid before death due to terminal illness may reduce the death benefit. Request a complete statement from the insurer showing any ADB advances.',
+states:[
+  {state:'Most states',detail:'Insurers must pay within 30–45 days of receiving a complete claim. If payment is delayed without valid reason, most states require the insurer to pay interest.',notable:false},
+  {state:'California',detail:'CA Insurance Code requires payment within 30 days of proof of death. Interest accrues if delayed.',notable:false},
+  {state:'Florida',detail:'FL requires payment within 30 days. Delayed payment incurs interest at 8% per year.',notable:true},
+  {state:'Texas',detail:'TX requires payment within 15 days of receiving all required information.',notable:true},
+]},
+
+{phase:S,exec:false,title:'Contact Pension and Defined Benefit Plan Administrator',
+brief:'Survivor benefits may be available; the administrator must be notified promptly.',
+tags:['call','dc','form'],
+steps:[
+  'Locate pension information: employer HR files, annual statements, retirement plan documentation.',
+  'Contact the plan administrator (HR for employer plans; separate administrator for union plans).',
+  'Provide: death certificate, your relationship to the deceased, and the deceased\'s employee ID or plan number.',
+  'Ask specifically about: survivor annuity options, pre-retirement death benefits, and any lump sum options.',
+  'For a joint-and-survivor annuity elected before retirement: the surviving spouse receives a percentage (typically 50–100%) of the benefit for life.',
+  'If the employee died before retirement: a pre-retirement survivor benefit may be payable. Terms vary significantly by plan.',
+  'Federal employees: contact the Office of Personnel Management (OPM) at 1-888-767-6738 for CSRS or FERS survivor benefits.',
+  'Request a copy of the Summary Plan Description (SPD) if you don\'t have it — this explains all benefits in plain language.',
+],
+warn:'Some pension elections made at retirement eliminate survivor benefits in exchange for a higher monthly payment. Review the retirement election documents carefully — there may be no survivor benefit.',},
+
+{phase:S,exec:false,title:'Contact 401(k), IRA, and Retirement Account Administrators',
+brief:'Named beneficiaries receive directly. No beneficiary means the account enters the estate.',
+tags:['call','dc','form'],
+steps:[
+  'Contact Fidelity, Vanguard, Schwab, Merrill, or whichever institution holds the account.',
+  'Ask for the beneficiary designation on file — this determines who receives the assets.',
+  '<strong>Spouse beneficiary:</strong> Can roll over the account into their own IRA (most tax-efficient) or take distributions under the inherited IRA rules.',
+  '<strong>Non-spouse beneficiary:</strong> Must open an Inherited IRA. Under the SECURE 2.0 Act (2022), most non-spouse beneficiaries must fully distribute the account within 10 years.',
+  '<strong>No beneficiary named or beneficiary predeceased:</strong> Account goes to the estate (or per plan default rules). This makes it a probate asset and loses the tax-advantaged transfer.',
+  'For inherited IRAs: advise the beneficiary to consult a financial advisor before taking distributions — the tax implications are significant.',
+  'Required documents: death certificate, completed beneficiary claim form, and beneficiary\'s ID.',
+],
+warn:'Never roll a deceased spouse\'s 401(k) or IRA into your own account directly — you must roll it into an "Inherited IRA" first (or elect direct rollover). Taking a direct distribution triggers immediate taxation on the full amount.',
+states:[
+  {state:'Community property states',detail:'In community property states, the non-owner spouse may have a community property interest in the retirement account regardless of the beneficiary designation. This can create complex situations — consult an attorney before processing claims in AZ, CA, ID, LA, NM, NV, TX, WA, or WI.',notable:true},
+]},
+
+{phase:M,exec:false,title:'Contact Investment and Brokerage Accounts',
+brief:'TOD accounts pass directly to named beneficiaries; other accounts enter the estate.',
+tags:['call','dc','atty'],
+steps:[
+  'Contact the brokerage\'s estate services or transfer-on-death department.',
+  '<strong>TOD (Transfer on Death) accounts:</strong> The named beneficiary presents a death certificate and account information — assets transfer directly without probate.',
+  '<strong>Joint tenancy with right of survivorship:</strong> Surviving owner provides death certificate; their name is the sole owner.',
+  '<strong>Individual accounts without TOD:</strong> Require Letters Testamentary. The executor can direct the transfer or sale of assets.',
+  'Do not sell assets immediately without understanding the tax implications — assets receive a <strong>stepped-up cost basis</strong> to the date-of-death value, which can eliminate significant capital gains.',
+  'Request a statement showing all holdings and their fair market value as of the date of death — needed for estate inventory and tax filings.',
+  'If assets are to be distributed in kind (as securities, not cash) to heirs, the brokerage can facilitate an in-kind transfer to beneficiary accounts.',
+],
+tip:'The stepped-up cost basis is one of the most significant tax benefits of inherited assets. A stock bought for $10 that was worth $100 at death has a new basis of $100 — the $90 gain disappears for tax purposes.',},
+
+]},// end financial
+
+{id:'property',icon:'🏠',bg:'#EFF5EF',title:'Property & Home',sub:'Real estate, vehicles, belongings, and home management',
+tasks:[
+
+{phase:U,exec:false,title:'Secure the Home and Property',
+brief:'Ensure the property is physically safe, insured, and protected from unauthorized access.',
+tags:[],
+steps:[
+  'Confirm all doors and windows are locked. Change the locks if keys were given to anyone outside the immediate family.',
+  'If the deceased had a home security system: change the access code and update the account contacts with the monitoring company.',
+  'Contact the homeowner\'s or renter\'s insurance company immediately — vacancy status can affect coverage.',
+  'Walk through the property and document its condition with photos and video — timestamped — to protect against any later claims of damage.',
+  'If the home will be vacant: visit or arrange for someone to check in at least weekly. A vacant home invites problems — pipes, pests, break-ins.',
+  'Collect any spare keys held by neighbors, caregivers, or service providers.',
+  'Retrieve any vehicles on the property — secure them in a locked garage or notify insurance.',
+],
+warn:'Many homeowner\'s policies limit or exclude coverage after 30–60 days of vacancy. Call the insurer before this threshold.',},
+
+{phase:U,exec:false,title:'Forward Mail to Executor\'s Address',
+brief:'Redirecting mail prevents missed bills, legal notices, and identity theft.',
+tags:['online'],
+steps:[
+  'Set up mail forwarding at <strong>USPS.com</strong> (usps.com/manage/forward.htm) or at any post office. Cost: $1.10 identity verification fee online.',
+  'Forwarding lasts up to 12 months for First-Class mail. Premium mail forwarding (additional fee) extends this and includes some package classes.',
+  'Set up forwarding to the executor\'s address — not to any individual heir who may be in conflict with others.',
+  'Watch mail carefully: creditors, courts, government agencies, and financial institutions communicate by mail.',
+  'Set up a physical inbox or folder system to track and date-stamp incoming mail.',
+  'Also review the deceased\'s email account (if accessible) for electronic bills, statements, and notifications.',
+],},
+
+{phase:S,exec:false,title:'Notify Landlord or Property Manager (If Renting)',
+brief:'Most states allow lease termination upon a tenant\'s death — review the lease and state law.',
+tags:['call','dc'],
+steps:[
+  'Contact the landlord or property management company in writing (and by phone). Provide a certified death certificate.',
+  'Review the lease for any provisions about death — some leases have explicit death clauses.',
+  'Ask about termination: when is the last day you are obligated to pay rent? When must the property be vacated?',
+  'Request a walk-through and document the property\'s condition before returning keys.',
+  'Retrieve the security deposit per state law — the landlord must return it within the statutory period.',
+  'Remove all personal property promptly — landlords cannot hold or dispose of a deceased tenant\'s belongings without following state abandoned property laws.',
+],
+states:[
+  {state:'California',detail:'CA Civil Code Section 1934 allows the estate to terminate a lease with 30 days written notice after the tenant\'s death.',notable:true},
+  {state:'Texas',detail:'TX Property Code allows the executor to terminate the lease with 30 days written notice.',notable:true},
+  {state:'Florida',detail:'FL Statutes provide that a lease terminates automatically at death if the deceased was the sole tenant, with proper notice.',notable:true},
+  {state:'New York',detail:'NY allows the estate to terminate with notice — typically 30 days per the lease terms.',notable:false},
+  {state:'Illinois',detail:'IL allows early lease termination upon death with 2 months\' written notice.',notable:true},
+]},
+
+{phase:S,exec:false,title:'Transfer or Cancel Utilities',
+brief:'Ensure essential services continue if needed; cancel services at vacant properties.',
+tags:['call'],
+steps:[
+  'Make a list of all utilities: electric, gas, water/sewer, internet, cable/streaming, landline phone.',
+  '<strong>If property will continue to be occupied:</strong> Transfer each utility account to the heir, trust, or estate name. Call each provider, explain the situation, and request a transfer. You may need to provide a death certificate.',
+  '<strong>If property will be vacated or sold:</strong> Cancel each utility effective the date of vacancy — but keep electric and minimal heat on until the property transfers if weather requires it.',
+  'For internet/cable: check for contract termination fees. Most providers waive these upon proof of death.',
+  'Keep utilities connected through any estate sale or property showing — buyers expect a functioning home.',
+  'Gas and electric: request a final meter read for accurate billing on the closing date.',
+],},
+
+{phase:S,exec:true,title:'Notify Mortgage Servicer',
+brief:'The mortgage must continue to be paid; the servicer must be informed of the death.',
+tags:['call','dc'],
+steps:[
+  'Contact the mortgage servicer (the company you send payments to, not necessarily the original lender).',
+  'Provide a death certificate and explain who you are. Request to speak with the loss mitigation or bereavement department.',
+  'If the deceased was the sole borrower and there is a surviving occupant: the servicer may offer options, including assumption of the loan.',
+  'If there is a surviving co-borrower (e.g., spouse): they remain fully responsible for the mortgage and payments should continue uninterrupted.',
+  'Check whether a mortgage life insurance policy exists — this would pay off the remaining balance.',
+  'The <strong>Garn-St Germain Act</strong> (federal law) prevents lenders from calling the full loan due when a property passes to a family member — the heir can assume and continue the mortgage without refinancing.',
+  'Request a current payoff statement — needed if the property will be sold.',
+],
+exec_note:'Decisions about selling or refinancing the mortgaged property require the executor\'s authority.',
+states:[
+  {state:'All states',detail:'Federal law (Garn-St Germain Act) governs mortgage assumptions upon death uniformly across all states. A surviving heir who inherits the property has the right to assume and continue the mortgage.',notable:true},
+]},
+
+{phase:M,exec:true,title:'Transfer Real Property Deeds and Vehicle Titles',
+brief:'Title transfers require executor authority and vary significantly by state.',
+tags:['atty','form'],
+steps:[
+  '<strong>For real property:</strong> The executor signs a deed (typically an "Executor\'s Deed" or "Administrator\'s Deed") conveying the property to the heir or buyer.',
+  'The deed must be notarized and recorded with the county recorder/register of deeds in the county where the property is located.',
+  'If the property is subject to a mortgage, the lender must be notified of the transfer.',
+  'If the property was held in joint tenancy: the surviving tenant records an Affidavit of Death of Joint Tenant (with a certified death certificate attached) — no probate needed.',
+  '<strong>For vehicles:</strong> Contact the state DMV for the transfer process. Requirements vary by state.',
+  'Inherited vehicles may qualify for exemption from sales tax in many states.',
+  'If a vehicle has a loan, contact the lender — the loan typically must be paid off or assumed.',
+],
+exec_note:'Only the executor can sign the deed transferring real property from the estate. This is non-delegable.',
+states:[
+  {state:'California',detail:'CA allows a simplified transfer of real property for estates under $184,500 using a Petition to Determine Succession to Real Property. Otherwise, executor\'s deed after probate. CA REQUIRES court confirmation for most real estate sales by the estate.',notable:true},
+  {state:'Texas',detail:'TX Muniment of Title is a simplified process to transfer title using just the will without full administration. For intestate, an Affidavit of Heirship recorded at the county clerk can transfer title without probate for property held long-term.',notable:true},
+  {state:'Florida',detail:'FL allows use of a Lady Bird Deed (Enhanced Life Estate Deed) to avoid probate for real estate — but this must have been set up before death. Otherwise, executor\'s deed through formal administration.',notable:true},
+  {state:'California (vehicles)',detail:'CA DMV permits title transfer using REG 5 for surviving spouses without probate.',notable:false},
+  {state:'Texas (vehicles)',detail:'TX allows title transfer via Affidavit of Heirship (VTR-262) for vehicles under $10,000 without probate.',notable:true},
+]},
+
+{phase:S,exec:false,title:'Contact Vehicle Lessor for Any Leased Vehicle',
+brief:'Most leases have a death clause allowing early termination without penalty — but you must explicitly invoke it. Do not keep making payments before confirming the termination terms.',
+tags:['call','dc'],
+steps:[
+  'Locate the lease agreement in the deceased\'s files, email inbox, or the vehicle\'s glove compartment. The lessor\'s contact number is printed on the agreement and on any monthly billing statement.',
+  'Call the lessor and ask for the <strong>estate services or bereavement department</strong>. Provide the deceased\'s name, account number, and date of death.',
+  'Request the early termination provisions for death of lessee. Major lessors (Toyota Financial Services, Ford Motor Credit, BMW Financial Services, Ally Financial, Honda Financial Services, etc.) have formal death clauses that typically <strong>waive the early termination fee entirely</strong> — but this is not automatic. You must invoke it with documentation.',
+  'Documents you will typically need: certified death certificate, Letters Testamentary (confirming your executor authority), your government-issued photo ID, and a written termination request.',
+  'Ask the lessor directly: "Will you waive the early termination fee under your death of lessee clause?" Get this confirmed in writing.',
+  '<strong>Do not continue making lease payments</strong> after submitting termination paperwork unless the lessor specifically instructs you to continue in writing while they process the request.',
+  'When returning the vehicle, request a written confirmation documenting the return date, mileage at surrender, and vehicle condition. Keep this record — it protects the estate against any later excess mileage or damage claims filed after the fact.',
+  'Check whether the lease included <strong>GAP insurance</strong>. If the vehicle was totaled in an accident near the time of death, GAP coverage pays the difference between the insurance payout and the remaining lease obligation. This could mean a significant claim you should file.',
+  'If payments were being auto-drafted from the deceased\'s bank account, notify the bank to stop the draft — but only after the lessor confirms termination is accepted. Stopping payments before confirmation puts the account into delinquency.',
+  'Once the account is closed and zero balance confirmed, get a written closing letter. Keep this document for 7 years.',
+],
+tip:'Unsure whether the vehicle was leased or owned? Check the glove compartment for a title (owned) or a lease agreement (leased). A title in the deceased\'s name means owned. A lease agreement means leased. If neither is present, contact the auto insurer — they will know which it is.',
+warn:'Do not surrender the vehicle without getting written confirmation of the return and a zero-balance letter. Without documentation, the lessor could later claim damage or unpaid amounts and the estate would have no written defense.',
+states:[
+  {state:'All states',detail:'Lease agreements are governed by state contract law, but the death clause process is set by the individual lessor. The process above applies nationwide. Some states (notably California) have consumer protection laws that limit what a lessor can charge after a lessee\'s death. If the lessor is uncooperative, a consumer protection attorney can often resolve it quickly.',notable:false},
+]},
+
+]},// end property
+
+{id:'digital',icon:'💻',bg:'#F5F0FB',title:'Digital Estate',sub:'Online accounts, social media, subscriptions, and digital assets',
+tasks:[
+
+{phase:S,exec:false,title:'Handle Facebook / Instagram (Meta) Accounts',
+brief:'Meta allows memorialization (preserved tribute) or full removal of accounts.',
+tags:['online','form'],
+steps:[
+  'Go to <strong>facebook.com/special/remember</strong> to submit a memorialization or removal request.',
+  'For <strong>memorialization:</strong> The profile is preserved, marked "Remembering," and cannot be logged into. Friends can still post on the timeline. A legacy contact (if the deceased designated one) can manage limited aspects.',
+  'For <strong>removal:</strong> Submit a removal request with proof of death (death certificate) and your relationship to the deceased.',
+  'Instagram: submit via <strong>help.instagram.com</strong> — search for "deceased." Instagram allows memorialization or removal.',
+  'Meta requires: name of deceased, URL of the profile, and either the deceased\'s email or proof of death.',
+  'Processing time: typically 1–4 weeks.',
+  'After memorialization, the account does not appear in ads or "people you may know" — this prevents distressing reminders for friends.',
+],},
+
+{phase:S,exec:false,title:'Handle Email Accounts (Gmail, Outlook, Yahoo)',
+brief:'Save important content first, then close or memorialize according to platform policy.',
+tags:['online'],
+steps:[
+  '<strong>Gmail (Google):</strong> Google\'s Inactive Account Manager may have designated a trusted contact. If not, a family member can submit a request via google.com/accounts/answer/6357590. Google may provide account content or close the account — they evaluate on a case-by-case basis.',
+  '<strong>Outlook (Microsoft):</strong> A "next of kin" process is available. Microsoft will provide a DVD of the deceased\'s account content (emails) after a formal request and proof of death. Account can also be closed.',
+  '<strong>Yahoo:</strong> Yahoo does not transfer accounts but will close the account with proof of death.',
+  '<strong>Before closing:</strong> If you can access the account (have the password), download or forward any important emails — especially financial statements, insurance documents, and correspondence with attorneys or advisors.',
+  'Set up an auto-reply on any accessible email to inform incoming senders of the death and provide the executor\'s contact information.',
+],
+tip:'If you cannot access the email account and there are important documents within it, contact the email provider before attempting to guess passwords — unauthorized access to email accounts is a federal crime (Computer Fraud and Abuse Act) even for family members.',},
+
+{phase:S,exec:false,title:'Cancel Recurring Digital Subscriptions',
+brief:'Streaming, software, and membership services will continue billing until explicitly cancelled.',
+tags:['online','call'],
+steps:[
+  'Build a list from bank and credit card statements: look for recurring charges from Netflix, Spotify, Hulu, Amazon Prime, Disney+, Apple One, Adobe Creative Cloud, Microsoft 365, Audible, Kindle Unlimited, LinkedIn Premium, news outlets, etc.',
+  '<strong>Netflix:</strong> Log into account (if you have the password) and cancel under Account > Cancel Membership. Or contact Netflix support with a death certificate.',
+  '<strong>Spotify:</strong> Cancel online or contact spotify.com/account/subscription. Request a refund of prepaid amounts.',
+  '<strong>Amazon Prime:</strong> Log in and cancel at amazon.com/prime. Or contact Amazon support. Amazon may refund unused portion.',
+  '<strong>Apple subscriptions (App Store):</strong> Requires access to the Apple ID — see Apple ID task. Cancel via Settings > [Name] > Subscriptions.',
+  'For any subscription you cannot cancel online due to lack of password: call the service with a death certificate. Most services will cancel and refund immediately.',
+  'After cancelling all subscriptions, contact the credit card company to flag any new charges from the same merchants — some subscriptions silently restart.',
+],},
+
+{phase:M,exec:false,title:'Handle Apple ID and iCloud Account',
+brief:'Apple does not transfer accounts — content must be saved before the account is closed.',
+tags:['online','form'],
+steps:[
+  'Apple Digital Legacy (introduced iOS 15.2): if the deceased set up a Legacy Contact, that person can access most iCloud data including photos, messages, notes, and files using their Apple ID and a special access key.',
+  'If no Legacy Contact was set up: Apple requires a court order granting access to the account. This is a complex legal process — consult an attorney.',
+  'Submit a request to Apple\'s Digital Legacy team at <strong>apple.com/legal/privacy/data/en/digital-legacy</strong>.',
+  'If you have the device password and the deceased\'s Apple ID credentials: you can access content directly on the device. Back up photos and important files to an external drive before the account is closed.',
+  'Apple ID accounts cannot be transferred or inherited — once closed, access is permanently lost.',
+  'iCloud Family Sharing: if the deceased was the Family Organizer, shared subscriptions and purchased content may be affected. Update the Family Sharing account.',
+],
+warn:'Do not factory reset or wipe any of the deceased\'s devices until you are certain you have retrieved all important data (photos, contacts, notes, messages, documents).',},
+
+{phase:M,exec:false,title:'Locate and Document Cryptocurrency Holdings',
+brief:'Crypto without access to the seed phrase or private key is permanently inaccessible.',
+tags:['atty'],
+steps:[
+  'Search for hardware wallets (Ledger, Trezor) — physical devices, often resembling a USB drive.',
+  'Search for written seed phrases (12 or 24 words) — often stored in physical form, sometimes in a safe or with estate documents.',
+  'Search for accounts at crypto exchanges: Coinbase, Kraken, Binance, Gemini, Robinhood, etc.',
+  'Check for software wallets: MetaMask, Exodus, Trust Wallet — these are apps on the deceased\'s phone or computer.',
+  'For exchange accounts: contact the exchange with a death certificate and Letters Testamentary. Coinbase, Kraken, and most major exchanges have estate claim processes.',
+  'For hardware wallets with a seed phrase: consult a cryptocurrency specialist before attempting recovery — improper attempts can permanently lock the wallet.',
+  'If no seed phrase can be found for a hardware wallet: the funds may be permanently inaccessible. Cryptocurrency recovery services exist but results are not guaranteed.',
+  'Document all crypto holdings and their fair market value as of the date of death — required for estate tax filings.',
+],
+warn:'NEVER share seed phrases with recovery services or online tools you do not fully trust. Crypto theft using seed phrases is common.',},
+
+{phase:L,exec:false,title:'Claim Loyalty Points and Airline Miles',
+brief:'Significant value may exist in loyalty programs — many allow transfer upon death.',
+tags:['call','form'],
+steps:[
+  '<strong>American Airlines AAdvantage:</strong> Miles can be transferred to a family member or donated to charity. Call 1-800-882-8880 with death certificate.',
+  '<strong>Delta SkyMiles:</strong> Miles can be transferred to surviving family members. Call 1-800-323-2323.',
+  '<strong>United MileagePlus:</strong> Miles transfer to beneficiary. Call 1-800-421-4655.',
+  '<strong>Southwest Rapid Rewards:</strong> Points cannot be transferred but may be used by the estate. Contact Southwest.',
+  '<strong>Hotel programs</strong> (Marriott Bonvoy, Hilton Honors, IHG One): most allow transfer to a surviving spouse; policies vary for other family members.',
+  '<strong>Credit card points</strong> (Chase Ultimate Rewards, Amex Membership Rewards, Citi ThankYou): typically transferable to the estate or a named beneficiary — contact the card issuer.',
+  'Before closing any account, ask specifically about the points/miles balance and transfer process.',
+],
+tip:'For frequent travelers, loyalty program balances can represent thousands of dollars in value. A single long-haul business class award can be worth $5,000–$10,000 in retail ticket value.',},
+
+]},// end digital
+
+{id:'personal',icon:'🌿',bg:'#F5F0E8',title:'Personal & Memberships',sub:'Healthcare, professional memberships, and personal services',
+tasks:[
+
+{phase:S,exec:false,title:'Cancel Health Insurance Coverage',
+brief:'Loss of a dependent\'s coverage is a qualifying life event for surviving dependents.',
+tags:['call'],
+steps:[
+  '<strong>Employer-sponsored insurance:</strong> Notify HR within 30 days. The deceased\'s coverage ends. A surviving spouse or dependents can continue coverage via COBRA for up to 36 months.',
+  '<strong>COBRA election:</strong> Notify the plan administrator within 60 days of receiving the COBRA election notice. COBRA is expensive (full premium + 2% admin fee) but preserves access to the same plan.',
+  '<strong>Healthcare.gov (ACA Marketplace):</strong> The death of a covered individual is a Special Enrollment Period — surviving family members have 60 days to enroll in a new plan.',
+  '<strong>Medicare:</strong> Handled via SSA notification (see Government section).',
+  'A surviving spouse who was on the deceased\'s plan must obtain their own coverage immediately to avoid a gap.',
+  'If the deceased had their own individual plan: cancel directly with the insurer with a death certificate.',
+],
+states:[
+  {state:'California',detail:'CA Covered (state marketplace) has similar SEP rules to Healthcare.gov. CA also has Medi-Cal (Medicaid) which may be available for surviving low-income family members.',notable:false},
+  {state:'Massachusetts',detail:'MA Health Connector provides state-specific enrollment options.',notable:false},
+]},
+
+{phase:S,exec:false,title:'Handle Prescriptions and Medical Devices',
+brief:'Controlled substances must be safely disposed of; equipment must be returned.',
+tags:['call'],
+steps:[
+  '<strong>Controlled substances</strong> (opioids, benzodiazepines, etc.): Do not flush down the toilet (environmental harm) unless instructions specifically say to. Return to a DEA-authorized collection site (most pharmacies have a drop-box). Or use a drug take-back program at police stations.',
+  '<strong>Other medications:</strong> Mix with coffee grounds, dirt, or cat litter in a sealed bag and discard in household trash. Or use a take-back site.',
+  '<strong>Rented medical equipment</strong> (hospital beds, oxygen concentrators, wheelchairs): Contact the rental company to schedule pickup. Equipment still on rental generates ongoing fees until returned.',
+  '<strong>Purchased durable medical equipment:</strong> May be donated to medical supply organizations, listed for sale, or disposed of.',
+  'Contact all pharmacies where the deceased had accounts to stop refill reminders.',
+  'Notify the prescribing physicians that the patient has passed — helps close open prescriptions and prevent fraudulent refill attempts.',
+],},
+
+{phase:S,exec:false,title:'Cancel Gym and Fitness Memberships',
+brief:'Most gyms require written notice and proof of death; do not assume auto-cancel.',
+tags:['call','dc'],
+steps:[
+  'Contact the gym or fitness studio directly — in person, by phone, or by mail.',
+  'Most gyms will cancel immediately with a death certificate. Request this in writing.',
+  'Request a refund of any prepaid membership period that extends beyond the date of cancellation.',
+  'Check whether the membership was part of a corporate wellness benefit — contact the employer\'s HR to cancel separately.',
+  'For national chains (Planet Fitness, Equinox, etc.): call member services and ask for the bereavement cancellation process.',
+  'Check bank and credit card statements to confirm cancellation is reflected — some gyms have difficult auto-renewal practices.',
+],},
+
+{phase:M,exec:false,title:'Cancel or Transfer Cell Phone and Data Plan',
+brief:'Carriers waive early termination fees with proof of death in most cases.',
+tags:['call','dc'],
+steps:[
+  'Contact the carrier\'s customer service or go to a store with a death certificate.',
+  '<strong>AT&T:</strong> Call 1-800-331-0500 or visit a store. ETF waived with death certificate.',
+  '<strong>Verizon:</strong> Call 1-800-922-0204. Request bereavement cancellation.',
+  '<strong>T-Mobile:</strong> Call 1-800-937-8997. ETF waived with death certificate.',
+  '<strong>If the phone number should be transferred</strong> (e.g., the surviving spouse used it as a business number): request a number port to a new account.',
+  'Cancel any device payment plans — return or keep the device but clarify any remaining balance.',
+  'The phone itself: wipe and donate, or retain for the family to use.',
+  'Cancel Apple Watch cellular plans and any connected device plans (tablets, smartwatches) separately.',
+],},
+
+{phase:M,exec:false,title:'Cancel Professional Memberships and Licenses',
+brief:'Professional associations and licenses may have formal resignation requirements and refunds.',
+tags:['call','form'],
+steps:[
+  'Identify all professional memberships from the deceased\'s records, email, and bank statements.',
+  'Common examples: State Bar (attorneys), AMA/state medical associations (physicians), professional engineering licenses, CPA certifications, real estate licenses, etc.',
+  'Contact each association with a death certificate. Request cancellation and a prorated refund of annual dues.',
+  'For licensed professionals: file a notice of death with the state licensing board if required — this formally closes the license and prevents fraudulent use.',
+  'For board memberships or officer positions: provide written notice to the organization so they can formally appoint a successor.',
+  'Professional certifications (CPA, PMP, CFA, etc.): notify the credentialing body to retire the certification.',
+],},
+
+]},// end personal
+
+{id:'records',icon:'📁',bg:'#EEF2FA',title:'Record Retention',sub:'What to keep, how long to keep it, and what to pass to heirs',
+tasks:[
+
+{phase:L,exec:true,title:'Retain Final Form 1040 (Year of Death) — 7 Years',
+brief:'The IRS standard audit window is 3 years from filing. If income was understated by more than 25%, the window extends to 6 years. Seven years covers both with a buffer.',
+tags:[],
+steps:[
+  'Keep the signed return, all supporting schedules, and proof of filing (IRS acceptance confirmation or certified mail receipt).',
+  'If a refund was received, keep the Form 1310 (refund claim for deceased taxpayer) and any correspondence with the IRS.',
+  'The 7-year clock starts from the <strong>filing date</strong>, not the date of death.',
+  'Store in a clearly labeled folder: "Tax Records — [Deceased Name] — Final 1040 — [Tax Year]."',
+  'After 7 years: these can be securely shredded.',
+],
+tip:'Your CPA will have a copy of the filed return. Ask them to confirm they will retain it for at least 3 years on their end as a backup, but keep your own copy for the full 7 years regardless.',},
+
+{phase:L,exec:true,title:'Retain Form 1041 (Estate Income Tax Return) — 7 Years',
+brief:'Same IRS audit window applies. Keep 7 years from the date of filing, not the date of death.',
+tags:[],
+steps:[
+  'Keep the signed Form 1041 for each year it was filed, along with all supporting schedules and K-1s issued to beneficiaries.',
+  'If the estate earned income for multiple years, you may have multiple Form 1041 filings. Keep all of them for 7 years from each respective filing date.',
+  'Keep copies of all K-1s issued — beneficiaries may need these for their own tax filings and could contact you for copies years later.',
+],},
+
+{phase:L,exec:true,title:'Retain Form 706 (Federal Estate Tax Return) — 7 Years from Filing',
+brief:'The IRS has 3 years from filing to audit an estate tax return. If estate tax was actually paid, keep proof of payment permanently.',
+tags:[],
+steps:[
+  'The 3-year audit window applies, but 7 years is the conservative standard.',
+  'If estate tax was paid: keep the proof of payment permanently, not just 7 years. A future state tax claim or audit can surface unexpectedly years later.',
+  'Keep all appraisals and supporting documentation that were filed with Form 706 — these establish the values used for estate tax purposes.',
+],},
+
+{phase:L,exec:true,title:'Retain All State Tax Returns — 7 Years from Filing',
+brief:'Most states mirror the federal 3-year audit window but some extend to 4–6 years. Seven years covers all states.',
+tags:[],
+steps:[
+  'Keep the signed final state income tax return for the year of death.',
+  'If the estate was required to file a state fiduciary income tax return, keep that for 7 years as well.',
+  'If the estate owed state estate or inheritance tax, keep those returns and proof of payment for 7 years.',
+  'States with estate taxes (Oregon threshold $1M, Massachusetts $2M, Washington State $2.193M, Illinois $4M, New York $6.94M, Maryland $5M) — keep all estate tax filings and payment records for the full 7 years.',
+],},
+
+{phase:L,exec:true,title:'Retain Original Will and Any Codicils — PERMANENTLY',
+brief:'Never discard the original will. A beneficiary can challenge a distribution years or decades later, particularly in contested estates.',
+tags:[],
+steps:[
+  'Keep the original signed will — not just a copy. The original is the legally operative document.',
+  'If there were any codicils (amendments to the will), keep all of them alongside the original.',
+  'Store in a fireproof location (fireproof safe, bank safe deposit box, or with your estate attorney).',
+  'Tell a trusted person where the original is kept. If it cannot be found when needed, a copy may not be accepted by a court.',
+],
+warn:'Destroying or concealing a will is a crime in all 50 states. Even if you believe the will is no longer relevant because the estate is closed, keep the original indefinitely.',},
+
+{phase:L,exec:true,title:'Retain Letters Testamentary / Letters of Administration — PERMANENTLY',
+brief:'The court-issued document confirming your authority as executor. Keep permanently — you may need to produce it if your authority is ever questioned after the estate closes.',
+tags:[],
+steps:[
+  'Keep all certified copies of your Letters Testamentary or Letters of Administration.',
+  'These documents prove your legal authority to have acted on behalf of the estate. If a financial institution, creditor, or beneficiary later questions whether you had authority to take a particular action, this is your primary evidence.',
+  'Note the expiration dates, if any — some states issue Letters with an expiration. If yours expired during administration, keep a record of any renewal Letters as well.',
+],},
+
+{phase:L,exec:true,title:'Retain All Probate Court Filings and Orders — PERMANENTLY',
+brief:'Every document filed with or issued by the probate court. Court filings from decades ago have been used in litigation.',
+tags:[],
+steps:[
+  'Keep: the initial petition to open probate, the court order appointing you as executor, proof of publication of the creditor notice, all accountings filed with the court, and the final order of distribution.',
+  'If any contested matters arose (a will challenge, a creditor dispute, a beneficiary objection), keep all related filings permanently.',
+  'These documents establish the legal history of the estate administration. If a beneficiary later claims they were not properly notified, or that a distribution was unauthorized, these records are your defense.',
+],},
+
+{phase:L,exec:true,title:'Retain the Estate Asset Inventory — PERMANENTLY',
+brief:'The complete inventory of all assets as of the date of death. Required if any question arises about what was in the estate and how it was distributed.',
+tags:[],
+steps:[
+  'Keep the formal inventory with all asset values as of the date of death.',
+  'Keep all appraisal reports (real property, personal property, business interests) that supported the inventory values.',
+  'Keep documentation of how each asset was classified: probate vs. non-probate, community property vs. separate property, etc.',
+  'This inventory is the foundation for everything that followed — distributions, tax filings, and creditor payments all trace back to it.',
+],},
+
+{phase:L,exec:true,title:'Retain Signed Heir Receipts and Releases — PERMANENTLY',
+brief:'The Receipt and Release from every heir at distribution is your most important legal protection. Keep permanently.',
+tags:[],
+steps:[
+  'Every heir who received a distribution should have signed a Receipt and Release acknowledging they received their share and releasing the executor from further claims.',
+  'Keep the original signed document for every heir — not just copies.',
+  'If an heir later claims they were not paid, or received less than they were entitled to, this document is your primary — and often only — defense.',
+  'If a notarized Receipt and Release was obtained, keep the notarized original.',
+  'If any heir refused to sign at the time of distribution: document that refusal in writing immediately, note the date, and keep that documentation permanently alongside your other records.',
+],
+warn:'This is the single most important document in the entire estate record. Do not distribute assets to any heir without obtaining a signed Receipt and Release first, and do not discard these documents ever.',},
+
+{phase:L,exec:true,title:'Retain Real Estate Deeds and Date-of-Death Appraisals — PERMANENTLY (Pass to Heir)',
+brief:'When a heir eventually sells inherited property, they need the date-of-death appraisal to establish their stepped-up cost basis. A missing appraisal can cost them tens of thousands of dollars in unnecessary capital gains tax.',
+tags:[],
+steps:[
+  'Keep the deed of transfer and the appraisal showing the property\'s fair market value as of the date of death.',
+  '<strong>Pass these documents to the heir who received the property</strong> at estate closure — do not just keep them yourself. The heir will need them when they eventually sell, which could be decades from now.',
+  'When you pass them, include a written note explaining: "This appraisal establishes your stepped-up cost basis for capital gains purposes. Keep this document permanently and give it to your accountant when you sell the property."',
+  'If the heir does not understand what stepped-up basis means, explain it plainly: "The IRS treats your cost basis as the value on the date you inherited it, not the price it was originally purchased for. This can eliminate a very large tax bill when you eventually sell."',
+],
+tip:'This is one of the most commonly overlooked record-keeping obligations in estate administration. Many heirs sell inherited property years later and discover they owe large capital gains taxes because they cannot produce the date-of-death appraisal. Putting this in their hands at closure is one of the most concretely valuable things you can do as executor.',},
+
+{phase:L,exec:true,title:'Retain Personal Property Appraisals — Until Heir Sells, Plus 7 Years (Pass to Heir)',
+brief:'Same stepped-up basis logic as real estate. Jewelry, art, and collectibles — the heir needs the date-of-death value when they eventually sell.',
+tags:[],
+steps:[
+  'For all appraised personal property (jewelry, fine art, antiques, collectibles, vehicles of value): pass the appraisal documents to the heir who received those items.',
+  'Include a written explanation: "This appraisal establishes your cost basis for tax purposes. Keep it for as long as you own this item, plus 7 years after you sell it."',
+  'If items were distributed without a formal appraisal, document the estimated value used for estate purposes and the basis for that estimate. This is better than nothing if a tax question arises later.',
+],},
+
+{phase:L,exec:true,title:'Retain Estate Bank Account Statements — 7 Years After Estate Closes',
+brief:'Every deposit and withdrawal from the estate account must be documentable to protect against any claim that estate funds were misappropriated.',
+tags:[],
+steps:[
+  'Keep all monthly statements for the estate bank account from opening through final closure.',
+  'Keep records of every wire transfer and check drawn on the account, including the payee and purpose.',
+  'If the estate received any income (interest, rental income, dividends), keep documentation of those receipts.',
+  'The 7-year clock starts from the date the estate account is formally closed, not the date of death.',
+],},
+
+{phase:L,exec:true,title:'Retain Investment Statements Showing Date-of-Death Values — 7 Years (Pass Copies to Heirs)',
+brief:'These statements establish the stepped-up cost basis for every inherited security. Heirs need them when they eventually sell inherited investments.',
+tags:[],
+steps:[
+  'Keep the brokerage or investment account statements showing the value of each holding as of the date of death.',
+  '<strong>Pass copies to the heirs who received those investments</strong>, along with a written explanation of why the date-of-death value matters for their taxes when they sell.',
+  'If securities were sold during estate administration, keep the sale confirmation and proceeds documentation.',
+],},
+
+{phase:L,exec:true,title:'Retain All Insurance Claim Documentation — 7 Years',
+brief:'Keep all claim forms, insurer correspondence, and payment confirmations for every insurance claim filed during administration.',
+tags:[],
+steps:[
+  'Retain: the completed claim forms, the insurer\'s acknowledgment of each claim, the settlement or payment documentation, and any correspondence regarding disputed or delayed claims.',
+  'This applies to: life insurance, annuities, accidental death policies, any vehicle insurance claims, and homeowner\'s insurance claims related to the estate.',
+  'If any claim was denied, keep the denial letter and any appeal documentation.',
+],},
+
+{phase:L,exec:true,title:'Retain All Creditor Claim and Settlement Documentation — 7 Years',
+brief:'Keep proof of every debt paid and every claim denied. A creditor who accepted a settlement and later claims non-payment is a real litigation risk.',
+tags:[],
+steps:[
+  'For every creditor paid during estate administration: keep the creditor\'s statement of amount owed, the check or wire transfer record showing payment, and any written release or payoff confirmation from the creditor.',
+  'For every creditor claim denied: keep the written denial letter and the basis for denial.',
+  'For any debts that were negotiated or settled for less than the full amount: keep the settlement agreement signed by both parties.',
+  'Do not assume a creditor will maintain their own records accurately. Your documentation is your only protection if a paid debt is later disputed.',
+],},
+
+{phase:L,exec:true,title:'Retain Attorney, CPA, and Loss Ally Engagement Records — 7 Years',
+brief:'All invoices, correspondence, and scope agreements with every professional engaged during administration.',
+tags:[],
+steps:[
+  'Keep all engagement letters, invoices, and payment records for every professional retained during the estate: estate attorney, CPA, appraiser, real estate agent, Loss Ally.',
+  'Keep any formal opinions or advice letters received from your estate attorney — particularly the probate strategy, any UPL boundary guidance, and any opinions on disputed matters.',
+  'If a beneficiary later challenges the reasonableness of professional fees charged to the estate, these records demonstrate that appropriate guidance was obtained and followed.',
+],},
+
+{phase:L,exec:true,title:'Pass a Record Retention Guide to Every Heir at Closure',
+brief:'Each heir should leave the estate closure with written instructions on what they received, what to keep, how long to keep it, and why it matters.',
+tags:[],
+steps:[
+  'At estate closure, prepare a simple one-page document for each heir listing: (1) what documents they are being given, (2) what each document is for, (3) how long they should keep it.',
+  'Specifically flag the appraisals and investment statements that establish their stepped-up cost basis. Use plain language: "When you sell this property / these investments, give this appraisal to your accountant. It tells the IRS what you paid for it, which reduces your tax bill."',
+  'A heir who sells inherited property in 2045 will not remember to call you before closing — these instructions and documents need to be in their hands today.',
+  'If any heir is a minor, give the record retention package to their guardian with instructions to preserve it until the heir is an adult.',
+  'Keep a copy of what you gave each heir, signed and dated by them as acknowledgment of receipt.',
+],
+tip:'The record retention guide is one of the most lasting gifts you can give your beneficiaries as executor. It costs you one hour of preparation at closure and can save each heir thousands of dollars in taxes decades from now.',},
+
+]},// end records
+];// end CATS
+
+// ─────────────────────────────────────
+// RENDER
+// ─────────────────────────────────────
+let currentFilter='all';
+
+function phaseLabel(p){
+  return {urgent:'URGENT',soon:'MONTH 1',mid:'MONTHS 2–6',long:'LONG-TERM'}[p]||p.toUpperCase();
+}
+
+function renderBadges(task){
+  let h=`<span class="badge b-${task.phase}">${phaseLabel(task.phase)}</span>`;
+  if(task.exec) h+=`<span class="badge b-exec">YOUR SIGNATURE REQUIRED</span>`;
+  if(task.tags){
+    if(task.tags.includes('dc')) h+=`<span class="badge b-dc">DEATH CERTIFICATE NEEDED</span>`;
+    if(task.tags.includes('form')) h+=`<span class="badge b-form">FORM REQUIRED</span>`;
+    if(task.tags.includes('call')) h+=`<span class="badge b-call">PHONE CALL</span>`;
+    if(task.tags.includes('atty')) h+=`<span class="badge b-atty">ATTORNEY RECOMMENDED</span>`;
+    if(task.tags.includes('online')) h+=`<span class="badge b-dc">ONLINE PROCESS</span>`;
+  }
+  return h;
+}
+
+function renderStateTable(states){
+  if(!states||!states.length) return '';
+  let rows=states.map((s,i)=>`<tr><td class="state-name">${s.state}${s.notable?'<span class="note-chip nc-notable">Notable</span>':''}</td><td>${s.detail}</td></tr>`).join('');
+  return `<div class="body-section">
+    <div class="body-label amber">State-by-State Differences</div>
+    <div class="state-table-wrap">
+      <table class="state-table">
+        <thead><tr><th>State / Region</th><th>What Is Different in Your State</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+const checked = new Set(JSON.parse(localStorage.getItem('lossally_done')||'[]'));
+
+function saveChecked(){
+  localStorage.setItem('lossally_done', JSON.stringify([...checked]));
+  updateProgress();
+}
+
+function updateProgress(){
+  const all = document.querySelectorAll('.task-card').length;
+  const done = checked.size;
+  document.getElementById('doneCount').textContent = done;
+  document.getElementById('totalCount').textContent = all;
+  document.getElementById('heroCount').textContent = done + ' of ' + all;
+  const pct = all ? Math.round(done/all*100) : 0;
+  document.getElementById('heroPct').textContent = pct + '%';
+  document.getElementById('heroBar').style.width = pct + '%';
+  // Update sidebar counts
+  document.querySelectorAll('.sb-item[id^="sbi_"]').forEach(item => {
+    const catId = item.id.replace('sbi_','');
+    const catCards = document.querySelectorAll(`#cat_${catId} .task-card`);
+    const catDone = [...catCards].filter(c => checked.has(c.id.replace('tc_',''))).length;
+    const ct = item.querySelector('.sb-ct');
+    if(ct) ct.textContent = catDone + '/' + catCards.length;
+  });
+}
+
+function toggleCheck(id, e){
+  e.stopPropagation();
+  const card = document.getElementById('tc_'+id);
+  if(checked.has(id)){ checked.delete(id); card.classList.remove('task-done'); }
+  else { checked.add(id); card.classList.add('task-done'); }
+  const cb = document.getElementById('cb_'+id);
+  if(cb) cb.classList.toggle('checked', checked.has(id));
+  saveChecked();
+  applyFilters();
+}
+
+function renderTask(task, catId, idx){
+  const id=`${catId}_${idx}`;
+  const isDone = checked.has(id);
+  const stepHtml=task.steps.map((s,i)=>`<div class="step-item"><div class="step-num">${i+1}</div><div class="step-text">${s}</div></div>`).join('');
+  return `<div class="task-card${isDone?' task-done':''}" id="tc_${id}" data-phase="${task.phase}" data-exec="${task.exec?'1':'0'}" data-done="${isDone?'1':'0'}" data-text="${(task.title+' '+task.brief+(task.steps||[]).join(' ')).toLowerCase()}">
+    <div class="task-head" onclick="toggleCard('${id}')">
+      <div class="task-cb-wrap" onclick="toggleCheck('${id}',event)">
+        <div class="task-checkbox${isDone?' checked':''}" id="cb_${id}">${isDone?'✓':''}</div>
+      </div>
+      <div class="task-left">
+        <div class="phase-bar" style="background:${PHASE_COLOR[task.phase]}"></div>
+        <div class="task-text-wrap">
+          <div class="task-title${isDone?' done-title':''}">${task.title}</div>
+          <div class="task-brief">${task.brief}</div>
+          <div class="task-badges">${renderBadges(task)}</div>
+        </div>
+      </div>
+      <div class="expand-icon">▼</div>
+    </div>
+    <div class="task-body" id="tb_${id}">
+      <div class="divider-sm"></div>
+      ${task.exec_note?`<div class="exec-box" style="margin-bottom:14px"><strong>⚠️ This requires your signature as executor:</strong> ${task.exec_note}</div>`:''}
+      <div class="body-section">
+        <div class="body-label">What to do — step by step</div>
+        <div class="steps-list">${stepHtml}</div>
+      </div>
+      ${task.tip?`<div class="body-section"><div class="tip-box"><strong>💡 Helpful to know:</strong> ${task.tip}</div></div>`:''}
+      ${task.warn?`<div class="body-section"><div class="warn-box"><strong>⚠️ Important:</strong> ${task.warn}</div></div>`:''}
+      ${renderStateTable(task.states)}
+      <div class="mark-done-row">
+        <button class="mark-done-btn${isDone?' done-btn':''}" onclick="toggleCheck('${id}',event)">${isDone?'✓ Marked complete — click to undo':'Mark this task complete'}</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderSidebar(){
+  const sb=document.getElementById('sidebar');
+  sb.innerHTML=`<div class="sb-label">Categories</div>`+CATS.map(cat=>{
+    const total=cat.tasks.length;
+    return `<div class="sb-item" id="sbi_${cat.id}" onclick="scrollCat('${cat.id}')">
+      <span class="sb-icon">${cat.icon}</span>
+      <span>${cat.title}</span>
+      <span class="sb-ct">${total}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderMain(){
+  const main=document.getElementById('main');
+  main.innerHTML=CATS.map(cat=>`
+    <div class="cat-block" id="cat_${cat.id}">
+      <div class="cat-header">
+        <div class="cat-icon-wrap" style="background:${cat.bg}">${cat.icon}</div>
+        <div class="cat-info">
+          <div class="cat-title">${cat.title}</div>
+          <div class="cat-sub">${cat.sub}</div>
+        </div>
+      </div>
+      ${cat.tasks.map((t,i)=>renderTask(t,cat.id,i)).join('')}
+    </div>
+  `).join('')+`<div class="no-results" id="noResults">No tasks match your search.</div>`;
+  updateCount();
+}
+
+function toggleCard(id){
+  const card=document.getElementById('tc_'+id);
+  card.classList.toggle('open');
+}
+
+function scrollCat(catId){
+  const el=document.getElementById('cat_'+catId);
+  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelectorAll('.sb-item').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sbi_'+catId).classList.add('active');
+}
+
+function setFilter(f, el){
+  currentFilter=f;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  if(f!=='all') el.classList.add('on');
+  else document.getElementById('chip-all').classList.add('');
+  applyFilters();
+}
+
+function doSearch(){applyFilters();}
+
+function applyFilters(){
+  const q=document.getElementById('searchInput').value.toLowerCase().trim();
+  let visible=0;
+  document.querySelectorAll('.task-card').forEach(card=>{
+    const phase=card.dataset.phase;
+    const isExec=card.dataset.exec==='1';
+    const isDone=checked.has(card.id.replace('tc_',''));
+    const text=card.dataset.text;
+    let show=true;
+    if(currentFilter==='urgent'&&phase!=='urgent') show=false;
+    if(currentFilter==='soon'&&phase!=='soon') show=false;
+    if(currentFilter==='mid'&&phase!=='mid') show=false;
+    if(currentFilter==='long'&&phase!=='long') show=false;
+    if(currentFilter==='exec'&&!isExec) show=false;
+    if(currentFilter==='done'&&!isDone) show=false;
+    if(currentFilter==='todo'&&isDone) show=false;
+    if(q&&!text.includes(q)) show=false;
+    card.classList.toggle('hidden',!show);
+    if(show) visible++;
+  });
+  document.querySelectorAll('.cat-block').forEach(cb=>{
+    const vis=cb.querySelectorAll('.task-card:not(.hidden)').length>0;
+    cb.style.display=vis?'':'none';
+  });
+}
+
+function updateCount(){}  // no longer needed — progress tracked by updateProgress
+
+// Intersection observer for sidebar highlight
+function setupObserver(){
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const id=entry.target.id.replace('cat_','');
+        document.querySelectorAll('.sb-item').forEach(s=>s.classList.remove('active'));
+        const sbi=document.getElementById('sbi_'+id);
+        if(sbi) sbi.classList.add('active');
+      }
+    });
+  },{threshold:0.15});
+  document.querySelectorAll('.cat-block').forEach(el=>observer.observe(el));
+}
+
+renderSidebar();
+renderMain();
+updateProgress();
+setupObserver();
+</script>
+</body>
+</html>
