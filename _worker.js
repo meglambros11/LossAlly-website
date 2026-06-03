@@ -89,6 +89,8 @@ async function handleIntake(request, env) {
       relationship:        str(data.relationship),
       executor_status:     str(data.executor_status),
       will_or_trust:       str(data.will_or_trust),
+      attorney_status:     str(data.attorney_status),
+      capacity:            str(data.capacity),
       assets,
       stage:               str(data.stage),
       family_involvement:  str(data.family_involvement),
@@ -96,7 +98,7 @@ async function handleIntake(request, env) {
       how_doing:           str(data.how_doing),
       consultation_goal:   str(data.consultation_goal),
       anything_else:       str(data.anything_else),
-      availability:        str(data.availability),
+      availability:        Array.isArray(data.availability) ? data.availability : (data.availability ? [data.availability] : []),
       timezone:            str(data.timezone),
       referral_source:     str(data.referral_source),
     }),
@@ -107,21 +109,27 @@ async function handleIntake(request, env) {
   }
 
   // Send notification email via Resend
-  const deceasedName = [str(data.deceased_first_name), str(data.deceased_last_name)].filter(Boolean).join(' ') || 'Unknown'
-  const executorName = [str(data.first_name), str(data.last_name)].filter(Boolean).join(' ') || 'Unknown'
-  const location     = [str(data.city_of_death), str(data.state)].filter(Boolean).join(', ') || '—'
-  const assetList    = assets.length ? assets.join(', ') : '—'
+  const deceasedName  = [str(data.deceased_first_name), str(data.deceased_last_name)].filter(Boolean).join(' ') || '—'
+  const executorName  = [str(data.first_name), str(data.last_name)].filter(Boolean).join(' ') || '—'
+  const location      = [str(data.city_of_death), str(data.state)].filter(Boolean).join(', ') || '—'
+  const assetList     = assets.length ? assets.join(', ') : '—'
+  const availList     = Array.isArray(data.availability) ? data.availability.join(', ') : str(data.availability) || '—'
+
+  const row = (label, value) => value
+    ? `<tr><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;color:#8D9D6A;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;width:38%;vertical-align:top;">${label}</td><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;font-size:13px;">${value}</td></tr>`
+    : ''
+
+  const block = (label, value) => value
+    ? `<div style="margin-bottom:16px;"><p style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#8D9D6A;margin:0 0 6px;">${label}</p><p style="font-size:13px;line-height:1.7;background:#faf8f4;border-left:3px solid #C9A870;padding:10px 14px;margin:0;">${value}</p></div>`
+    : ''
 
   await fetch('https://api.resend.com/emails', {
     method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${env.RESEND_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       from: 'Loss Ally <support@lossally.com>',
       to:   ['support@lossally.com'],
-      subject: `New intake form — ${executorName} (${deceasedName})`,
+      subject: `New intake — ${executorName} (${deceasedName})`,
       html: `
 <div style="font-family:Georgia,serif;max-width:600px;margin:0 auto;color:#2C2C28;">
   <div style="background:#f6f1e6;padding:24px 28px 16px;border-bottom:2px solid #E2DDD4;">
@@ -129,26 +137,30 @@ async function handleIntake(request, env) {
     <h1 style="font-size:22px;font-weight:400;margin:0;">${executorName}</h1>
     <p style="font-size:13px;color:#666;margin:4px 0 0;">Submitted ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</p>
   </div>
-
   <div style="padding:24px 28px;">
 
-    <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px;">
-      <tr><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;color:#8D9D6A;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;width:40%;">Contact</td><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;"><a href="mailto:${str(data.email)||''}" style="color:#5b6e5b;">${str(data.email)||'—'}</a> · ${str(data.phone)||'—'}</td></tr>
-      <tr><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;color:#8D9D6A;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Relationship</td><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;">${str(data.relationship)||'—'}</td></tr>
-      <tr><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;color:#8D9D6A;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Deceased</td><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;">${deceasedName}</td></tr>
-      <tr><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;color:#8D9D6A;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Date of Passing</td><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;">${str(data.date_of_passing)||'—'}</td></tr>
-      <tr><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;color:#8D9D6A;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Location</td><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;">${location}</td></tr>
-      <tr><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;color:#8D9D6A;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Stage</td><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;">${str(data.stage)||'—'}</td></tr>
-      <tr><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;color:#8D9D6A;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Executor Status</td><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;">${str(data.executor_status)||'—'}</td></tr>
-      <tr><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;color:#8D9D6A;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Will / Trust</td><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;">${str(data.will_or_trust)||'—'}</td></tr>
-      <tr><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;color:#8D9D6A;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Assets</td><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;">${assetList}</td></tr>
-      <tr><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;color:#8D9D6A;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Availability</td><td style="padding:7px 0;border-bottom:1px solid #E2DDD4;">${str(data.availability)||'—'} · ${str(data.timezone)||'—'}</td></tr>
-      <tr><td style="padding:7px 0;color:#8D9D6A;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Referral</td><td style="padding:7px 0;">${str(data.referral_source)||'—'}</td></tr>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
+      ${row('Contact', `<a href="mailto:${str(data.email)||''}" style="color:#5b6e5b;">${str(data.email)||'—'}</a> · ${str(data.phone)||'—'}`)}
+      ${row('Relationship', str(data.relationship))}
+      ${row('Deceased', deceasedName)}
+      ${row('Date of Passing', str(data.date_of_passing))}
+      ${row('Location', location)}
+      ${row('Stage', str(data.stage))}
+      ${row('Executor Status', str(data.executor_status))}
+      ${row('Will / Trust', str(data.will_or_trust))}
+      ${row('Attorney', str(data.attorney_status))}
+      ${row('Capacity to Handle', str(data.capacity))}
+      ${row('Assets', assetList)}
+      ${row('Family Involvement', str(data.family_involvement))}
+      ${row('Location (Executor)', str(data.distance))}
+      ${row('Availability', availList)}
+      ${row('Timezone', str(data.timezone))}
+      ${row('Referral', str(data.referral_source))}
     </table>
 
-    ${str(data.consultation_goal) ? `<div style="margin-bottom:16px;"><p style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#8D9D6A;margin:0 0 6px;">What they're hoping for</p><p style="font-size:13px;line-height:1.7;background:#faf8f4;border-left:3px solid #C9A870;padding:10px 14px;margin:0;">${str(data.consultation_goal)}</p></div>` : ''}
-    ${str(data.how_doing) ? `<div style="margin-bottom:16px;"><p style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#8D9D6A;margin:0 0 6px;">How they're doing</p><p style="font-size:13px;line-height:1.7;background:#faf8f4;border-left:3px solid #C9A870;padding:10px 14px;margin:0;">${str(data.how_doing)}</p></div>` : ''}
-    ${str(data.anything_else) ? `<div style="margin-bottom:16px;"><p style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#8D9D6A;margin:0 0 6px;">Anything else</p><p style="font-size:13px;line-height:1.7;background:#faf8f4;border-left:3px solid #C9A870;padding:10px 14px;margin:0;">${str(data.anything_else)}</p></div>` : ''}
+    ${block("What they're hoping for", str(data.consultation_goal))}
+    ${block("How they're doing", str(data.how_doing))}
+    ${block("Anything else", str(data.anything_else))}
 
     <div style="margin-top:24px;padding-top:20px;border-top:1px solid #E2DDD4;text-align:center;">
       <a href="https://lossally.com/portal-advisor.html" style="display:inline-block;background:#5b6e5b;color:#fff;text-decoration:none;font-size:13px;padding:10px 22px;border-radius:6px;">View in Advisor Portal</a>
@@ -158,8 +170,8 @@ async function handleIntake(request, env) {
     }),
   }).catch(err => console.error('[intake] Resend failed:', err))
 
-  // Redirect to intake page with ?submitted=1 so the form can show a thank-you
-  return Response.redirect(new URL('/intake.html?submitted=1', request.url).href, 302)
+  // Redirect to the thank-you landing page
+  return Response.redirect(new URL('/intake-thank-you.html', request.url).href, 302)
 }
 
 

@@ -25,6 +25,8 @@ CREATE TABLE IF NOT EXISTS public.intake_submissions (
   -- Estate situation
   executor_status     text,
   will_or_trust       text,
+  attorney_status     text,
+  capacity            text,
   assets              text[],
   stage               text,
   family_involvement  text,
@@ -36,7 +38,7 @@ CREATE TABLE IF NOT EXISTS public.intake_submissions (
   anything_else       text,
 
   -- Scheduling preferences
-  availability        text,
+  availability        text[],  -- multiple selections allowed
   timezone            text,
   referral_source     text,
 

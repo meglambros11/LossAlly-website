@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="brand_assets/logo.png" />
+  <title>Thank You — Loss Ally</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #f6f1e6;
+      --warm-white: #FAF8F4;
+      --sage: #8D9D6A;
+      --forest: #5b6e5b;
+      --evergreen: #2D4D0C;
+      --charcoal: #2C2C28;
+      --mist: #E2DDD4;
+      --gold: #C9A870;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      background: var(--warm-white);
+      color: var(--charcoal);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0.5;
+    }
+    nav {
+      padding: 1.25rem 1.75rem;
+      border-bottom: 1px solid var(--mist);
+      display: flex;
+      align-items: center;
+    }
+    .main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.75rem;
+    }
+    .card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 3rem 3.5rem;
+      max-width: 560px;
+      width: 100%;
+      border: 1px solid rgba(226,221,212,0.7);
+      box-shadow: 0 8px 48px rgba(44,44,42,0.08), 0 2px 12px rgba(44,44,42,0.04);
+      text-align: center;
+    }
+    @media (max-width: 540px) {
+      .card { padding: 2.25rem 1.75rem; }
+    }
+    .icon-wrap {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.75rem;
+      border: 1px solid var(--mist);
+    }
+    h1 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      color: var(--charcoal);
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+    }
+    h1 em {
+      font-style: italic;
+      color: var(--forest);
+    }
+    .body-text {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 1rem;
+      line-height: 1.85;
+      color: var(--charcoal);
+      opacity: 0.72;
+      margin-bottom: 1.25rem;
+    }
+    .body-text + .body-text {
+      margin-top: -0.25rem;
+    }
+    .divider {
+      height: 1px;
+      background: var(--mist);
+      margin: 1.75rem 0;
+    }
+    .what-next {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 0.875rem;
+    }
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      text-align: left;
+    }
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.875rem;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--charcoal);
+      opacity: 0.7;
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--forest);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 500;
+      margin-top: 1px;
+    }
+    .home-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: var(--charcoal);
+      opacity: 0.4;
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+    .home-link:hover { opacity: 0.75; }
+
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .card { animation: fade-up 0.55s ease forwards; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" style="display:flex;align-items:center;gap:0.625rem;text-decoration:none;">
+    <img src="brand_assets/logo.png" alt="Loss Ally" style="height:32px;width:auto;mix-blend-mode:multiply;" />
+    <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.15rem;font-weight:500;color:var(--charcoal);letter-spacing:0.01em;">Loss Ally</span>
+  </a>
+</nav>
+
+<main class="main">
+  <div class="card">
+
+    <div class="icon-wrap">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--forest)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+    </div>
+
+    <h1>We received your<br><em>submission.</em></h1>
+
+    <p class="body-text">
+      Thank you for taking the time to share what you're going through. We know that filling out a form like this takes effort — and that behind every answer is something real and heavy.
+    </p>
+    <p class="body-text">
+      Your advisor has been notified and will reach out to you personally via email to schedule your free consultation call. You don't need to do anything else right now.
+    </p>
+
+    <div class="divider"></div>
+
+    <div class="what-next">What happens next</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <span>Your advisor reviews your submission and reaches out via email — typically within one business day.</span>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <span>You'll schedule a free 45-minute consultation call at a time that works for you.</span>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <span>On the call, we'll talk through your situation and figure out together whether Loss Ally is the right fit.</span>
+      </div>
+    </div>
+
+    <a href="/" class="home-link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Return to lossally.com
+    </a>
+
+  </div>
+</main>
+
+</body>
+</html>

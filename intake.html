@@ -880,21 +880,21 @@
 
         <!-- Availability -->
         <div class="field-group">
-          <label class="field-label" style="margin-bottom:0.75rem;">When are you generally available for the consultation call?</label>
-          <label class="option-card" onclick="selectOption(this,'availability')">
-            <input type="radio" name="availability" value="weekday-morning" /><div class="opt-radio"></div>
+          <label class="field-label" style="margin-bottom:0.75rem;">When are you generally available for the consultation call? <span style="opacity:0.45;font-size:0.62rem;font-weight:300;text-transform:none;letter-spacing:0;">select all that apply</span></label>
+          <label class="option-card" onclick="toggleCheck(this)">
+            <input type="checkbox" name="availability" value="weekday-morning" /><div class="opt-check"></div>
             <span class="opt-text">Weekday mornings — 8am to 12pm</span>
           </label>
-          <label class="option-card" onclick="selectOption(this,'availability')">
-            <input type="radio" name="availability" value="weekday-afternoon" /><div class="opt-radio"></div>
+          <label class="option-card" onclick="toggleCheck(this)">
+            <input type="checkbox" name="availability" value="weekday-afternoon" /><div class="opt-check"></div>
             <span class="opt-text">Weekday afternoons — 12pm to 5pm</span>
           </label>
-          <label class="option-card" onclick="selectOption(this,'availability')">
-            <input type="radio" name="availability" value="weekday-evening" /><div class="opt-radio"></div>
+          <label class="option-card" onclick="toggleCheck(this)">
+            <input type="checkbox" name="availability" value="weekday-evening" /><div class="opt-check"></div>
             <span class="opt-text">Weekday evenings — 5pm to 8pm</span>
           </label>
-          <label class="option-card" onclick="selectOption(this,'availability')">
-            <input type="radio" name="availability" value="weekend" /><div class="opt-radio"></div>
+          <label class="option-card" onclick="toggleCheck(this)">
+            <input type="checkbox" name="availability" value="weekend" /><div class="opt-check"></div>
             <span class="opt-text">Weekend mornings or afternoons</span>
           </label>
         </div>
