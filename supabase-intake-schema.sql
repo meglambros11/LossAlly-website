@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS public.intake_submissions (
 
   -- Advisor workflow tracking
   status              text NOT NULL DEFAULT 'new'
-                      CHECK (status IN ('new','contacted','consultation_scheduled','client','not_proceeding')),
+                      CHECK (status IN ('new','contacted','consultation_scheduled','agreement_invoice_sent','client','not_proceeding')),
   advisor_notes       text,
 
   -- Linked to a profile once the client is onboarded

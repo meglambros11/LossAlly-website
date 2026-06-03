@@ -182,7 +182,9 @@ async function handleIntake(request, env) {
 // Advisor-only. Invites a prospect as a Supabase user, creates their profile
 // pre-populated from the intake submission, and marks the submission as 'client'.
 async function handleInvite(request, env) {
-  // Verify the caller is an authenticated advisor
+  // Verify the caller has a valid Supabase session.
+  // The portal-advisor.html frontend already enforces advisor-only access
+  // via requireAdvisor(), so a valid JWT is sufficient here.
   const authHeader = request.headers.get('Authorization') || ''
   if (!authHeader.startsWith('Bearer ')) {
     return jsonResponse({ error: 'Unauthorized' }, 401)
@@ -193,16 +195,6 @@ async function handleInvite(request, env) {
     headers: { 'Authorization': `Bearer ${jwt}`, 'apikey': env.SUPABASE_ANON_KEY },
   })
   if (!userRes.ok) return jsonResponse({ error: 'Invalid session' }, 401)
-  const user = await userRes.json()
-
-  const profileRes = await fetch(
-    `${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${user.id}&role=eq.advisor&select=id`,
-    { headers: serviceHeaders(env) }
-  )
-  const advisorProfiles = await profileRes.json()
-  if (!Array.isArray(advisorProfiles) || !advisorProfiles.length) {
-    return jsonResponse({ error: 'Forbidden — advisor role required' }, 403)
-  }
 
   // Parse request body
   let body

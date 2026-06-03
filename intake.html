@@ -474,11 +474,11 @@
           <div id="name-grid-1" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
             <div>
               <label class="field-label" for="dec-first">Their first name</label>
-              <input type="text" id="dec-first" name="deceased_first_name" class="form-input" placeholder="First name" autocomplete="off" />
+              <input type="text" id="dec-first" name="deceased_first_name" class="form-input" placeholder="First name" autocomplete="off" required />
             </div>
             <div>
               <label class="field-label" for="dec-last">Their last name</label>
-              <input type="text" id="dec-last" name="deceased_last_name" class="form-input" placeholder="Last name" autocomplete="off" />
+              <input type="text" id="dec-last" name="deceased_last_name" class="form-input" placeholder="Last name" autocomplete="off" required />
             </div>
           </div>
         </div>
@@ -486,14 +486,14 @@
         <!-- Date of passing -->
         <div class="field-group">
           <label class="field-label" for="date-passing">Date of passing</label>
-          <input type="date" id="date-passing" name="date_of_passing" class="form-input" />
+          <input type="date" id="date-passing" name="date_of_passing" class="form-input" required />
           <p class="field-hint">Approximate is completely fine — please don't worry about getting the exact date.</p>
         </div>
 
         <!-- City of death -->
         <div class="field-group">
           <label class="field-label" for="city-of-death">City where they passed away</label>
-          <input type="text" id="city-of-death" name="city_of_death" class="form-input" placeholder="e.g. Charlotte" autocomplete="off" />
+          <input type="text" id="city-of-death" name="city_of_death" class="form-input" placeholder="e.g. Charlotte" autocomplete="off" required />
           <p class="field-hint">The city they were living in or where the death occurred.</p>
         </div>
 
@@ -857,11 +857,11 @@
           <div id="name-grid-4" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
             <div>
               <label class="field-label" for="contact-first">Your first name <span style="color:var(--terracotta);">*</span></label>
-              <input type="text" id="contact-first" name="first_name" class="form-input" placeholder="First name" autocomplete="given-name" />
+              <input type="text" id="contact-first" name="first_name" class="form-input" placeholder="First name" autocomplete="given-name" required />
             </div>
             <div>
               <label class="field-label" for="contact-last">Your last name <span style="color:var(--terracotta);">*</span></label>
-              <input type="text" id="contact-last" name="last_name" class="form-input" placeholder="Last name" autocomplete="family-name" />
+              <input type="text" id="contact-last" name="last_name" class="form-input" placeholder="Last name" autocomplete="family-name" required />
             </div>
           </div>
         </div>
@@ -869,7 +869,7 @@
         <!-- Email -->
         <div class="field-group">
           <label class="field-label" for="contact-email">Email address <span style="color:var(--terracotta);">*</span></label>
-          <input type="email" id="contact-email" name="email" class="form-input" placeholder="your@email.com" autocomplete="email" />
+          <input type="email" id="contact-email" name="email" class="form-input" placeholder="your@email.com" autocomplete="email" required />
         </div>
 
         <!-- Phone -->
@@ -902,7 +902,7 @@
         <!-- Time zone -->
         <div class="field-group">
           <label class="field-label" for="timezone">Your time zone</label>
-          <select id="timezone" name="timezone" class="form-input">
+          <select id="timezone" name="timezone" class="form-input" required>
             <option value="">Select a time zone…</option>
             <option value="eastern">Eastern (ET)</option>
             <option value="central">Central (CT)</option>
@@ -1120,7 +1120,78 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  // ── Per-step required field validation ──────────────────────
+  const STEP_REQUIRED = {
+    1: {
+      text:   ['deceased_first_name','deceased_last_name','city_of_death'],
+      date:   ['date_of_passing'],
+      select: ['state'],
+      radio:  ['relationship','stage'],
+    },
+    2: {
+      radio:  ['executor_status','will_or_trust','attorney_status'],
+      check1: ['assets'],   // at least 1 checkbox
+    },
+    3: {
+      radio:  ['capacity','family_involvement','distance'],
+      textarea: ['consultation_goal'],
+    },
+    4: {
+      text:   ['first_name','last_name'],
+      email:  ['email'],
+      select: ['timezone'],
+      check1: ['availability'],  // at least 1 checkbox
+    },
+  }
+
+  function validateStep(n) {
+    const rules = STEP_REQUIRED[n]
+    if (!rules) return true
+    const errEl = document.getElementById('form-error')
+    const errTxt = document.getElementById('error-text')
+
+    const fail = (msg) => {
+      errTxt.textContent = msg
+      errEl.style.display = ''
+      errEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+      return false
+    }
+
+    for (const name of (rules.text || [])) {
+      const el = document.querySelector(`input[name="${name}"]`)
+      if (!el || !el.value.trim()) return fail('Please fill in all required fields before continuing.')
+    }
+    for (const name of (rules.date || [])) {
+      const el = document.querySelector(`input[name="${name}"]`)
+      if (!el || !el.value) return fail('Please fill in all required fields before continuing.')
+    }
+    for (const name of (rules.email || [])) {
+      const el = document.querySelector(`input[name="${name}"]`)
+      if (!el || !el.value.trim()) return fail('Please enter your email address.')
+    }
+    for (const name of (rules.textarea || [])) {
+      const el = document.querySelector(`textarea[name="${name}"]`)
+      if (!el || !el.value.trim()) return fail('Please fill in all required fields before continuing.')
+    }
+    for (const name of (rules.select || [])) {
+      const el = document.querySelector(`select[name="${name}"]`)
+      if (!el || !el.value) return fail('Please fill in all required fields before continuing.')
+    }
+    for (const name of (rules.radio || [])) {
+      if (!document.querySelector(`input[name="${name}"]:checked`))
+        return fail('Please answer all questions before continuing.')
+    }
+    for (const name of (rules.check1 || [])) {
+      if (!document.querySelector(`input[name="${name}"]:checked`))
+        return fail('Please select at least one option before continuing.')
+    }
+
+    errEl.style.display = 'none'
+    return true
+  }
+
   function nextStep() {
+    if (!validateStep(currentStep)) return
     if (currentStep < 4) {
       currentStep++;
       showStep(currentStep);
