@@ -205,26 +205,33 @@ async function handleInvite(request, env) {
 
   const plan = body.plan || 'guided'
 
-  // Generate the invite link via Supabase Admin API — this creates the auth user
-  // and returns the invite URL without relying on Supabase's unreliable shared SMTP.
-  const linkRes = await fetch(`${env.SUPABASE_URL}/auth/v1/admin/generate_link`, {
+  // Generate the invite link. For new users use type=invite; if the email already
+  // exists in Supabase auth (resend case), fall back to type=recovery which works
+  // identically from the client's perspective — they land on portal.html and set a password.
+  const generateLink = async (type) => fetch(`${env.SUPABASE_URL}/auth/v1/admin/generate_link`, {
     method: 'POST',
     headers: { ...serviceHeaders(env), 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      type:        'invite',
+      type,
       email:       intake.email,
       data:        { full_name: fullName(intake.first_name, intake.last_name) },
       redirect_to: 'https://lossally.com/portal.html',
     }),
   })
 
-  if (!linkRes.ok) {
-    const detail = await linkRes.text()
-    console.error('[invite] generate_link failed:', detail)
-    return jsonResponse({ error: 'Failed to generate invite link', detail }, 500)
+  let linkRes = await generateLink('invite')
+  let linkData = await linkRes.json()
+
+  if (!linkRes.ok && linkData.error_code === 'email_exists') {
+    linkRes  = await generateLink('recovery')
+    linkData = await linkRes.json()
   }
 
-  const linkData = await linkRes.json()
+  if (!linkRes.ok) {
+    console.error('[invite] generate_link failed:', JSON.stringify(linkData))
+    return jsonResponse({ error: 'Failed to generate invite link', detail: JSON.stringify(linkData) }, 500)
+  }
+
   const inviteLink = linkData.properties?.action_link || linkData.action_link
   const userId     = linkData.user?.id
 
