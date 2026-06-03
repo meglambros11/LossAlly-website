@@ -23,6 +23,9 @@ CREATE POLICY "authenticated_read_templates"
   TO authenticated
   USING (true);
 
+-- Grant SELECT to authenticated role (required in addition to the RLS policy)
+GRANT SELECT ON public.templates TO authenticated;
+
 -- No INSERT/UPDATE/DELETE policies are granted to any application role.
 -- Only the postgres superuser role may modify template data.
 -- This is enforced by the absence of insert/update/delete policies.
