@@ -366,6 +366,9 @@ async function loadIntake() {
       btn.disabled = true
       btn.textContent = 'Sending…'
 
+      const planSelect = btn.closest('.invite-action')?.querySelector('.plan-select')
+      const plan = planSelect ? planSelect.value : 'guided'
+
       const { data: { session } } = await supabase.auth.getSession()
       const res = await fetch('/api/invite', {
         method: 'POST',
@@ -376,6 +379,7 @@ async function loadIntake() {
         body: JSON.stringify({
           intake_id: btn.dataset.id,
           intake: window._intakeMap?.get(btn.dataset.id) || {},
+          plan,
         }),
       })
       const json = await res.json()
@@ -410,10 +414,17 @@ function buildIntakeCard(r, i) {
 
   const inviteAction = isClient
     ? `<span class="invited-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Invite sent</span>`
-    : `<button class="invite-btn" data-id="${esc(r.id)}" data-email="${esc(r.email || '')}">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
-        Send Portal Invite
-       </button>`
+    : `<div style="display:flex;align-items:center;gap:0.5rem;">
+        <select class="plan-select" style="font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:300;padding:0.3rem 0.5rem;border:1px solid var(--mist);border-radius:6px;background:var(--warm-white);color:var(--charcoal);cursor:pointer;outline:none;">
+          <option value="guided">Guided</option>
+          <option value="supported">Supported</option>
+          <option value="full_service">Full Service</option>
+        </select>
+        <button class="invite-btn" data-id="${esc(r.id)}" data-email="${esc(r.email || '')}">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+          Send Portal Invite
+        </button>
+       </div>`
 
   return `
   <div class="intake-card" style="animation:fade-up 0.4s ease ${i * 0.04}s forwards;opacity:0;">

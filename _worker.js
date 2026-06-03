@@ -203,6 +203,8 @@ async function handleInvite(request, env) {
   if (!intake_id) return jsonResponse({ error: 'intake_id required' }, 400)
   if (!intake || !intake.email) return jsonResponse({ error: 'intake data with email is required' }, 400)
 
+  const plan = body.plan || 'guided'
+
   // Generate the invite link via Supabase Admin API — this creates the auth user
   // and returns the invite URL without relying on Supabase's unreliable shared SMTP.
   const linkRes = await fetch(`${env.SUPABASE_URL}/auth/v1/admin/generate_link`, {
@@ -212,7 +214,7 @@ async function handleInvite(request, env) {
       type:        'invite',
       email:       intake.email,
       data:        { full_name: fullName(intake.first_name, intake.last_name) },
-      redirect_to: 'https://lossally.com/portal-dashboard.html',
+      redirect_to: 'https://lossally.com/portal.html',
     }),
   })
 
@@ -251,7 +253,7 @@ async function handleInvite(request, env) {
       full_name:      fullName(intake.first_name, intake.last_name),
       email:          intake.email,
       role:           'client',
-      plan:           'guided',
+      plan,
       client_details,
     }),
   })
@@ -268,6 +270,12 @@ async function handleInvite(request, env) {
 
   // Send the invite email via Resend with Loss Ally branding
   const clientName = fullName(intake.first_name, intake.last_name)
+  const firstName  = clientName.split(' ')[0]
+
+  const portalDescription = plan === 'guided'
+    ? `We've set up your personal portal where you'll find your estate administration checklist, letter templates, and resources — everything you need, in one place.`
+    : `We've set up your personal portal where you can follow your case progress and stay up to date as we work through the estate administration process together.`
+
   await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
@@ -279,11 +287,11 @@ async function handleInvite(request, env) {
 <div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;color:#2C2C28;">
   <div style="background:#f6f1e6;padding:28px 32px 20px;border-bottom:2px solid #E2DDD4;">
     <p style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#8D9D6A;margin:0 0 8px;">Loss Ally</p>
-    <h1 style="font-family:Georgia,serif;font-size:26px;font-weight:400;margin:0;letter-spacing:-0.01em;">Your portal is ready, ${clientName.split(' ')[0]}.</h1>
+    <h1 style="font-family:Georgia,serif;font-size:26px;font-weight:400;margin:0;letter-spacing:-0.01em;">Your portal is ready, ${firstName}.</h1>
   </div>
   <div style="padding:28px 32px;">
     <p style="font-size:15px;line-height:1.8;color:#2C2C28;opacity:0.8;margin:0 0 20px;">
-      Thank you for choosing Loss Ally. We've set up your personal portal where you'll find your estate administration checklist, letter templates, and resources — everything you need, in one place.
+      Thank you for choosing Loss Ally. ${portalDescription}
     </p>
     <p style="font-size:15px;line-height:1.8;color:#2C2C28;opacity:0.8;margin:0 0 28px;">
       Click the button below to create your password and access your portal. This link expires in 24 hours.
