@@ -40,6 +40,8 @@
       z-index: 1000;
       opacity: 0.5;
     }
+
+    /* ── Nav ─────────────────────────────── */
     .nav-link {
       font-size: 0.875rem; font-weight: 300; color: var(--charcoal);
       text-decoration: none; opacity: 0.6; transition: opacity 0.18s; letter-spacing: 0.005em;
@@ -47,7 +49,18 @@
     .nav-link:hover { opacity: 1; }
     .nav-link.active { opacity: 1; font-weight: 400; }
     .nav-link:focus-visible { outline: 2px solid var(--gold); border-radius: 2px; }
+    .btn-logout {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      background: transparent; color: var(--charcoal);
+      font-family: 'DM Sans', sans-serif; font-weight: 300; font-size: 0.82rem;
+      padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid var(--mist);
+      cursor: pointer; text-decoration: none;
+      transition: border-color 0.18s ease, background 0.18s ease; opacity: 0.7;
+    }
+    .btn-logout:hover { border-color: var(--sage); background: rgba(141,157,106,0.06); opacity: 1; }
+    .btn-logout:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 
+    /* ── Cards ───────────────────────────── */
     .portal-card {
       background: #fff; border-radius: 14px; padding: 1.75rem;
       box-shadow: 0 4px 24px rgba(44,44,42,0.07), 0 1px 6px rgba(44,44,42,0.04);
@@ -62,41 +75,58 @@
       font-size: 1.25rem; font-weight: 500; color: var(--charcoal);
       margin-bottom: 1.25rem; padding-bottom: 0.875rem; border-bottom: 1px solid var(--mist);
     }
-    .btn-logout {
-      display: inline-flex; align-items: center; gap: 0.35rem;
-      background: transparent; color: var(--charcoal);
-      font-family: 'DM Sans', sans-serif; font-weight: 300; font-size: 0.82rem;
-      padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid var(--mist);
-      cursor: pointer; text-decoration: none;
-      transition: border-color 0.18s ease, background 0.18s ease; opacity: 0.7;
-    }
-    .btn-logout:hover { border-color: var(--sage); background: rgba(141,157,106,0.06); opacity: 1; }
-    .btn-logout:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 
-    /* ── Filter pills ───────────────────── */
-    .filter-group { margin-bottom: 0.75rem; }
-    .filter-group:last-child { margin-bottom: 0; }
-    .filter-group-label {
-      font-size: 0.6rem; font-weight: 500; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--charcoal); opacity: 0.38;
-      margin-bottom: 0.4rem;
+    /* ── Category sidebar ────────────────── */
+    #cat-sidebar {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 4px 24px rgba(44,44,42,0.07), 0 1px 6px rgba(44,44,42,0.04);
+      border: 1px solid rgba(226,221,212,0.6);
+      padding: 1.25rem 0 1rem;
+      position: sticky;
+      top: 80px;
+      align-self: start;
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
     }
-    .filter-pills { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+    .sb-label {
+      font-size: 0.6rem; font-weight: 500; letter-spacing: 0.13em;
+      text-transform: uppercase; color: var(--charcoal); opacity: 0.35;
+      padding: 0 1.25rem 0.625rem;
+    }
+    .sb-item {
+      display: flex; align-items: center; gap: 0.6rem;
+      padding: 0.6rem 1.25rem; cursor: pointer;
+      font-size: 0.78rem; color: var(--charcoal);
+      border: none; border-left: 3px solid transparent;
+      background: none; width: 100%; text-align: left;
+      transition: background 0.15s, opacity 0.15s;
+      font-family: 'DM Sans', sans-serif; font-weight: 300;
+      opacity: 0.6; line-height: 1.3;
+    }
+    .sb-item:hover { opacity: 1; background: var(--cream); }
+    .sb-item.active { border-left-color: var(--forest); opacity: 1; background: var(--cream); font-weight: 400; }
+    .sb-item:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+    .sb-icon { font-size: 1rem; flex-shrink: 0; }
+    .sb-name { flex: 1; }
+    .sb-count { font-size: 0.68rem; color: var(--charcoal); opacity: 0.4; white-space: nowrap; flex-shrink: 0; }
+    .sb-item.active .sb-count { opacity: 0.6; }
+
+    /* ── Timing filter pills ─────────────── */
+    .filter-pills { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 1rem; }
     .filter-pill {
       padding: 0.22rem 0.7rem; border-radius: 20px; font-size: 0.7rem;
       font-weight: 400; cursor: pointer; border: 1.5px solid var(--mist);
       background: var(--warm-white); color: var(--charcoal);
       font-family: 'DM Sans', sans-serif;
-      transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+      transition: border-color 0.15s, background 0.15s, color 0.15s;
       user-select: none;
     }
-    .filter-pill:hover { border-color: var(--sage); background: rgba(141,157,106,0.06); }
-    .filter-pill.active {
-      background: var(--forest); color: #fff; border-color: var(--forest);
-    }
+    .filter-pill:hover { border-color: var(--sage); }
+    .filter-pill.active { background: var(--forest); color: #fff; border-color: var(--forest); }
     .filter-pill:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 20px; }
 
-    /* ── Priority section ───────────────── */
+    /* ── Priority section ────────────────── */
     details.priority-section { margin-bottom: 1.25rem; }
     details.priority-section:last-child { margin-bottom: 0; }
     details.priority-section > summary {
@@ -105,26 +135,23 @@
       padding: 0.5rem 0; border-bottom: 1px solid var(--mist); user-select: none;
     }
     details.priority-section > summary::-webkit-details-marker { display: none; }
-    details.priority-section > summary:focus-visible {
-      outline: 2px solid var(--gold); border-radius: 4px; outline-offset: 2px;
-    }
+    details.priority-section > summary:focus-visible { outline: 2px solid var(--gold); border-radius: 4px; outline-offset: 2px; }
     .priority-tag {
       font-size: 0.66rem; font-weight: 600; letter-spacing: 0.09em;
-      text-transform: uppercase; padding: 0.22rem 0.75rem;
-      border-radius: 20px; flex-shrink: 0;
+      text-transform: uppercase; padding: 0.22rem 0.75rem; border-radius: 20px; flex-shrink: 0;
     }
-    /* Vivid priority tag colours */
+    /* Vivid, clearly distinct tag colours */
     .ptag-urgent   { background: #FAEBE0; color: #8B3A18; }
     .ptag-month1   { background: #F7EDD8; color: #6E4A10; }
     .ptag-months26 { background: #E3ECD9; color: #3A5C3A; }
-    .ptag-longterm { background: #D8E8CE; color: #2D4D0C; }
+    .ptag-longterm { background: #E8EEF8; color: #2A4A7A; }  /* blue — distinct from green */
 
     .priority-count { font-size: 0.72rem; color: var(--charcoal); opacity: 0.42; margin-left: auto; flex-shrink: 0; }
     .chevron { flex-shrink: 0; opacity: 0.3; transition: transform 0.22s ease; }
     details[open] > summary .chevron { transform: rotate(180deg); }
     .priority-tasks { padding: 0.25rem 0 0.5rem; }
 
-    /* ── Task rows ──────────────────────── */
+    /* ── Task rows ───────────────────────── */
     .task-row {
       display: flex; align-items: center; gap: 0.75rem;
       padding: 0.55rem 0; border-bottom: 1px solid rgba(226,221,212,0.4);
@@ -135,21 +162,12 @@
     .task-title { font-size: 0.84rem; color: var(--charcoal); line-height: 1.45; flex: 1; }
     .task-row.is-done .task-title { text-decoration: line-through; }
 
-    /* Vivid category badge */
-    .cat-badge {
-      font-size: 0.62rem; font-weight: 500; letter-spacing: 0.01em;
-      padding: 0.18rem 0.6rem; border-radius: 20px;
-      background: #E8E3D8; color: var(--charcoal);
-      white-space: nowrap; flex-shrink: 0;
-      max-width: 130px; overflow: hidden; text-overflow: ellipsis;
-    }
-
-    /* ── Checkbox button ────────────────── */
+    /* ── Checkbox ────────────────────────── */
     .check-btn {
       width: 20px; height: 20px; border-radius: 5px; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
       border: 1.5px solid var(--mist); background: transparent; cursor: pointer;
-      transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+      transition: border-color 0.15s, background 0.15s, transform 0.1s;
       padding: 0;
     }
     .check-btn:hover:not([disabled]) { border-color: var(--sage); background: rgba(141,157,106,0.07); }
@@ -158,7 +176,7 @@
     .check-btn.is-done { background: var(--forest); border-color: var(--forest); }
     .check-btn[disabled] { cursor: default; pointer-events: none; opacity: 0.6; }
 
-    /* ── Skeleton loader ────────────────── */
+    /* ── Skeleton ────────────────────────── */
     @keyframes shimmer {
       0%   { background-position: -500px 0; }
       100% { background-position:  500px 0; }
@@ -169,7 +187,7 @@
       background-size: 500px 100%; animation: shimmer 1.5s infinite linear;
     }
 
-    /* ── Fade animations ────────────────── */
+    /* ── Animations ──────────────────────── */
     @keyframes fade-up {
       from { opacity: 0; transform: translateY(16px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -178,13 +196,22 @@
     .fade-up-2 { animation: fade-up 0.5s ease 0.08s forwards; opacity: 0; }
     .fade-up-3 { animation: fade-up 0.5s ease 0.16s forwards; opacity: 0; }
 
-    /* ── Responsive ─────────────────────── */
-    @media (min-width: 1024px) {
-      #dash-grid { grid-template-columns: 1.8fr 1fr; }
-      #desk-nav  { display: flex !important; }
-      #mob-ham   { display: none  !important; }
+    /* ── Layout ──────────────────────────── */
+    /* Mobile: single column */
+    #outer-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+    #inner-grid  { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+    #cat-sidebar { display: none; } /* hidden on mobile */
+
+    @media (min-width: 900px) {
+      #outer-grid { grid-template-columns: 210px 1fr; }
+      #cat-sidebar { display: block; }
+      #desk-nav    { display: flex !important; }
+      #mob-ham     { display: none  !important; }
     }
-    @media (max-width: 1023px) {
+    @media (min-width: 1100px) {
+      #inner-grid { grid-template-columns: 1.8fr 1fr; }
+    }
+    @media (max-width: 899px) {
       #desk-nav { display: none  !important; }
       #mob-ham  { display: flex  !important; }
     }
@@ -194,7 +221,7 @@
 
 <!-- ══ NAV ══════════════════════════════════════════════ -->
 <header id="site-nav" style="position:sticky;top:0;z-index:50;background:var(--warm-white);border-bottom:1px solid var(--mist);transition:box-shadow 0.2s;">
-  <div style="max-width:1200px;margin:0 auto;padding:0 1.75rem;height:64px;display:flex;align-items:center;justify-content:space-between;">
+  <div style="max-width:1260px;margin:0 auto;padding:0 1.75rem;height:64px;display:flex;align-items:center;justify-content:space-between;">
     <a href="/" style="display:flex;align-items:center;gap:0.625rem;text-decoration:none;flex-shrink:0;">
       <img src="brand_assets/logo.png" alt="Loss Ally" style="height:34px;width:auto;mix-blend-mode:multiply;" />
       <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.2rem;font-weight:500;color:var(--charcoal);letter-spacing:0.01em;">Loss Ally</span>
@@ -214,7 +241,7 @@
     </button>
   </div>
   <div id="mob-menu" style="display:none;border-top:1px solid var(--mist);background:var(--warm-white);">
-    <div style="max-width:1200px;margin:0 auto;padding:1.25rem 1.75rem;display:flex;flex-direction:column;gap:0.75rem;">
+    <div style="max-width:1260px;margin:0 auto;padding:1.25rem 1.75rem;display:flex;flex-direction:column;gap:0.75rem;">
       <a href="portal-dashboard.html" class="nav-link active" style="padding:0.4rem 0;">Dashboard</a>
       <a href="#" id="mob-advisor-link" class="nav-link" style="padding:0.4rem 0;display:none;">Advisor Portal</a>
       <button id="mob-logout" class="btn-logout" style="align-self:flex-start;margin-top:0.5rem;">Sign Out</button>
@@ -223,18 +250,18 @@
 </header>
 
 
-<!-- ══ DASHBOARD HEADER ══════════════════════════════════ -->
+<!-- ══ HERO ══════════════════════════════════════════════ -->
 <div style="background:var(--cream);border-bottom:1px solid var(--mist);padding:2.5rem 1.75rem 2rem;">
-  <div style="max-width:1200px;margin:0 auto;">
+  <div style="max-width:1260px;margin:0 auto;">
     <span style="font-size:0.68rem;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--sage);">Your Portal</span>
     <h1 id="welcome-heading" style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2rem,4vw,3rem);font-weight:400;letter-spacing:-0.02em;color:var(--charcoal);margin-top:0.4rem;line-height:1.1;"></h1>
-    <p style="font-size:0.9rem;line-height:1.7;color:var(--charcoal);opacity:0.55;margin-top:0.625rem;font-family:'Lora',Georgia,serif;font-style:italic;margin-bottom:1.5rem;">Here's an overview of your estate administration progress.</p>
+    <p style="font-size:0.9rem;line-height:1.7;color:var(--charcoal);opacity:0.55;margin-top:0.5rem;font-family:'Lora',Georgia,serif;font-style:italic;margin-bottom:1.5rem;">Here's an overview of your estate administration progress.</p>
 
-    <!-- Progress widget -->
+    <!-- Overall progress widget -->
     <div style="background:#fff;border:1px solid var(--mist);border-radius:10px;padding:1rem 1.25rem;max-width:480px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem;">
         <span style="font-size:0.63rem;font-weight:500;letter-spacing:0.13em;text-transform:uppercase;color:var(--charcoal);opacity:0.4;">Your overall progress</span>
-        <span id="hero-pct" style="font-size:0.78rem;font-weight:500;font-family:'DM Sans',sans-serif;color:var(--forest);">—</span>
+        <span id="hero-pct" style="font-size:0.78rem;font-weight:500;color:var(--forest);">—</span>
       </div>
       <div style="background:var(--mist);border-radius:100px;height:6px;overflow:hidden;margin-bottom:0.55rem;">
         <div id="hero-bar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--sage),var(--forest));border-radius:100px;transition:width 0.55s ease;"></div>
@@ -247,104 +274,82 @@
 </div>
 
 
-<!-- ══ MAIN CONTENT ══════════════════════════════════════ -->
-<main style="max-width:1200px;margin:0 auto;padding:2.5rem 1.75rem 4rem;">
-  <div id="dash-grid" style="display:grid;grid-template-columns:1fr;gap:1.5rem;align-items:start;">
+<!-- ══ MAIN ══════════════════════════════════════════════ -->
+<main style="max-width:1260px;margin:0 auto;padding:2rem 1.75rem 4rem;">
+  <div id="outer-grid">
 
-    <!-- ── LEFT: Estate Checklist ── -->
-    <div class="portal-card fade-up">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem;">
-        <div>
-          <div class="card-label">Estate Administration</div>
-          <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.25rem;font-weight:500;color:var(--charcoal);">Your Checklist</h2>
-        </div>
-        <div id="readonly-badge" style="display:none;margin-top:0.2rem;">
-          <span style="display:inline-flex;align-items:center;gap:0.3rem;padding:0.2rem 0.7rem;border-radius:20px;background:rgba(45,77,12,0.07);color:var(--evergreen);font-size:0.68rem;font-weight:400;">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            Advisor-managed
-          </span>
-        </div>
+    <!-- ── CATEGORY SIDEBAR ── -->
+    <aside id="cat-sidebar">
+      <div class="sb-label">Categories</div>
+      <!-- Items populated by JS after data loads -->
+      <div style="padding:0.5rem 1.25rem;">
+        <div class="skeleton" style="height:12px;width:80%;border-radius:4px;margin-bottom:0.75rem;"></div>
+        <div class="skeleton" style="height:12px;width:65%;border-radius:4px;margin-bottom:0.75rem;"></div>
+        <div class="skeleton" style="height:12px;width:75%;border-radius:4px;margin-bottom:0.75rem;"></div>
+        <div class="skeleton" style="height:12px;width:70%;border-radius:4px;margin-bottom:0.75rem;"></div>
+        <div class="skeleton" style="height:12px;width:60%;border-radius:4px;"></div>
       </div>
+    </aside>
 
-      <!-- Filter bar -->
-      <div id="filter-bar" style="margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--mist);">
-        <div class="filter-group">
-          <div class="filter-group-label">Category</div>
-          <div class="filter-pills" id="cat-pills">
-            <button class="filter-pill active" data-type="cat" data-val="all">All</button>
-            <button class="filter-pill" data-type="cat" data-val="Government &amp; Benefits">Gov &amp; Benefits</button>
-            <button class="filter-pill" data-type="cat" data-val="Legal &amp; Probate">Legal &amp; Probate</button>
-            <button class="filter-pill" data-type="cat" data-val="Financial Accounts">Financial</button>
-            <button class="filter-pill" data-type="cat" data-val="Property &amp; Home">Property</button>
-            <button class="filter-pill" data-type="cat" data-val="Digital Estate">Digital</button>
-            <button class="filter-pill" data-type="cat" data-val="Personal &amp; Memberships">Personal</button>
-            <button class="filter-pill" data-type="cat" data-val="Record Retention">Records</button>
+    <!-- ── RIGHT SIDE: Checklist + Advisor ── -->
+    <div id="inner-grid">
+
+      <!-- Checklist card -->
+      <div class="portal-card fade-up">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem;">
+          <div>
+            <div class="card-label">Estate Administration</div>
+            <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.25rem;font-weight:500;color:var(--charcoal);">Your Checklist</h2>
           </div>
-        </div>
-        <div class="filter-group" style="margin-top:0.6rem;">
-          <div class="filter-group-label">Timing</div>
-          <div class="filter-pills" id="timing-pills">
-            <button class="filter-pill active" data-type="timing" data-val="all">All</button>
-            <button class="filter-pill" style="background:#FAEBE0;color:#8B3A18;border-color:#e9c8b4;" data-type="timing" data-val="Urgent">Urgent</button>
-            <button class="filter-pill" style="background:#F7EDD8;color:#6E4A10;border-color:#e6d4a8;" data-type="timing" data-val="Month 1">Month 1</button>
-            <button class="filter-pill" style="background:#E3ECD9;color:#3A5C3A;border-color:#c0d4b0;" data-type="timing" data-val="Months 2-6">Months 2–6</button>
-            <button class="filter-pill" style="background:#D8E8CE;color:#2D4D0C;border-color:#b0cca0;" data-type="timing" data-val="Long-Term">Long-Term</button>
+          <div id="readonly-badge" style="display:none;margin-top:0.2rem;">
+            <span style="display:inline-flex;align-items:center;gap:0.3rem;padding:0.2rem 0.7rem;border-radius:20px;background:rgba(45,77,12,0.07);color:var(--evergreen);font-size:0.68rem;font-weight:400;">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Advisor-managed
+            </span>
           </div>
         </div>
-      </div>
 
-      <!-- Loading skeleton -->
-      <div id="checklist-loading">
-        <div style="display:flex;flex-direction:column;gap:0.75rem;">
-          <div style="display:flex;align-items:center;gap:0.75rem;">
-            <div class="skeleton" style="width:20px;height:20px;border-radius:5px;flex-shrink:0;"></div>
-            <div class="skeleton" style="height:13px;flex:1;border-radius:4px;"></div>
-            <div class="skeleton" style="height:13px;width:80px;border-radius:20px;flex-shrink:0;"></div>
-          </div>
-          <div style="display:flex;align-items:center;gap:0.75rem;">
-            <div class="skeleton" style="width:20px;height:20px;border-radius:5px;flex-shrink:0;"></div>
-            <div class="skeleton" style="height:13px;width:70%;border-radius:4px;"></div>
-            <div class="skeleton" style="height:13px;width:65px;border-radius:20px;flex-shrink:0;"></div>
-          </div>
-          <div style="display:flex;align-items:center;gap:0.75rem;">
-            <div class="skeleton" style="width:20px;height:20px;border-radius:5px;flex-shrink:0;"></div>
-            <div class="skeleton" style="height:13px;width:85%;border-radius:4px;"></div>
-            <div class="skeleton" style="height:13px;width:72px;border-radius:20px;flex-shrink:0;"></div>
-          </div>
-          <div style="display:flex;align-items:center;gap:0.75rem;">
-            <div class="skeleton" style="width:20px;height:20px;border-radius:5px;flex-shrink:0;"></div>
-            <div class="skeleton" style="height:13px;width:60%;border-radius:4px;"></div>
-            <div class="skeleton" style="height:13px;width:90px;border-radius:20px;flex-shrink:0;"></div>
-          </div>
-          <div style="display:flex;align-items:center;gap:0.75rem;">
-            <div class="skeleton" style="width:20px;height:20px;border-radius:5px;flex-shrink:0;"></div>
-            <div class="skeleton" style="height:13px;width:78%;border-radius:4px;"></div>
-            <div class="skeleton" style="height:13px;width:75px;border-radius:20px;flex-shrink:0;"></div>
+        <!-- Timing filter pills only -->
+        <div style="margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--mist);">
+          <div style="font-size:0.6rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--charcoal);opacity:0.38;margin-bottom:0.4rem;">Filter by timing</div>
+          <div class="filter-pills">
+            <button class="filter-pill active" data-timing="all">All</button>
+            <button class="filter-pill" style="background:#FAEBE0;color:#8B3A18;border-color:#e9c8b4;" data-timing="Urgent">Urgent</button>
+            <button class="filter-pill" style="background:#F7EDD8;color:#6E4A10;border-color:#e6d4a8;" data-timing="Month 1">Month 1</button>
+            <button class="filter-pill" style="background:#E3ECD9;color:#3A5C3A;border-color:#c0d4b0;" data-timing="Months 2-6">Months 2–6</button>
+            <button class="filter-pill" style="background:#E8EEF8;color:#2A4A7A;border-color:#b8c8e4;" data-timing="Long-Term">Long-Term</button>
           </div>
         </div>
+
+        <!-- Loading skeleton -->
+        <div id="checklist-loading">
+          <div style="display:flex;flex-direction:column;gap:0.75rem;">
+            <div style="display:flex;align-items:center;gap:0.75rem;"><div class="skeleton" style="width:20px;height:20px;border-radius:5px;flex-shrink:0;"></div><div class="skeleton" style="height:13px;flex:1;border-radius:4px;"></div></div>
+            <div style="display:flex;align-items:center;gap:0.75rem;"><div class="skeleton" style="width:20px;height:20px;border-radius:5px;flex-shrink:0;"></div><div class="skeleton" style="height:13px;width:70%;border-radius:4px;"></div></div>
+            <div style="display:flex;align-items:center;gap:0.75rem;"><div class="skeleton" style="width:20px;height:20px;border-radius:5px;flex-shrink:0;"></div><div class="skeleton" style="height:13px;width:85%;border-radius:4px;"></div></div>
+            <div style="display:flex;align-items:center;gap:0.75rem;"><div class="skeleton" style="width:20px;height:20px;border-radius:5px;flex-shrink:0;"></div><div class="skeleton" style="height:13px;width:60%;border-radius:4px;"></div></div>
+            <div style="display:flex;align-items:center;gap:0.75rem;"><div class="skeleton" style="width:20px;height:20px;border-radius:5px;flex-shrink:0;"></div><div class="skeleton" style="height:13px;width:78%;border-radius:4px;"></div></div>
+          </div>
+        </div>
+
+        <!-- Live content -->
+        <div id="checklist-content" style="display:none;"></div>
+
+        <!-- No results -->
+        <div id="checklist-empty" style="display:none;padding:2rem 0;text-align:center;">
+          <p style="font-family:'Lora',Georgia,serif;font-style:italic;font-size:0.9rem;color:var(--charcoal);opacity:0.4;">No tasks match the selected filters.</p>
+        </div>
+
+        <!-- Error -->
+        <div id="checklist-error" style="display:none;padding:1.5rem 0;text-align:center;">
+          <p style="font-size:0.84rem;color:var(--terracotta);line-height:1.6;">Unable to load your checklist. Please refresh the page.</p>
+        </div>
+
+        <!-- Read-only note -->
+        <p id="readonly-note" style="display:none;font-size:0.72rem;color:var(--charcoal);opacity:0.42;margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--mist);font-family:'Lora',Georgia,serif;font-style:italic;">
+          Your advisor tracks and completes tasks on your behalf. Reach out with any questions.
+        </p>
       </div>
-
-      <!-- Live content -->
-      <div id="checklist-content" style="display:none;"></div>
-
-      <!-- No results message -->
-      <div id="checklist-empty" style="display:none;padding:2rem 0;text-align:center;">
-        <p style="font-family:'Lora',Georgia,serif;font-style:italic;font-size:0.9rem;color:var(--charcoal);opacity:0.4;">No tasks match the selected filters.</p>
-      </div>
-
-      <!-- Error state -->
-      <div id="checklist-error" style="display:none;padding:1.5rem 0;text-align:center;">
-        <p style="font-size:0.84rem;color:var(--terracotta);line-height:1.6;">Unable to load your checklist. Please refresh the page.</p>
-      </div>
-
-      <!-- Read-only note -->
-      <p id="readonly-note" style="display:none;font-size:0.72rem;color:var(--charcoal);opacity:0.42;margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--mist);font-family:'Lora',Georgia,serif;font-style:italic;">
-        Your advisor tracks and completes tasks on your behalf. Reach out with any questions.
-      </p>
-    </div>
-
-    <!-- ── RIGHT SIDEBAR ── -->
-    <div style="display:flex;flex-direction:column;gap:1.5rem;">
 
       <!-- Advisor Notes card -->
       <div class="portal-card fade-up-2">
@@ -366,23 +371,21 @@
         </div>
       </div>
 
-    </div><!-- /sidebar -->
-  </div><!-- /grid -->
+    </div><!-- /inner-grid -->
+  </div><!-- /outer-grid -->
 </main>
 
 
 <script type="module">
 console.log('[portal] module script started')
-
 import { requireAuth, signOut, supabase } from './auth.js'
-
-console.log('[portal] auth.js imported successfully, supabase client:', !!supabase)
+console.log('[portal] auth.js imported, supabase:', !!supabase)
 
 console.log('[portal] calling requireAuth()…')
 const auth = await requireAuth()
 console.log('[portal] requireAuth() returned:', auth
   ? `session=${auth.session?.user?.id}, profile=${JSON.stringify(auth.profile)}`
-  : 'null — redirecting to portal.html')
+  : 'null — redirecting')
 if (!auth) throw new Error('redirect')
 
 document.body.style.visibility = 'visible'
@@ -396,8 +399,8 @@ document.getElementById('welcome-heading').textContent = `${greeting}, ${firstNa
 if (auth.profile?.role === 'advisor') {
   document.getElementById('advisor-nav-link').style.display = ''
   document.getElementById('advisor-nav-link').href = 'portal-advisor.html'
-  const mobLink = document.getElementById('mob-advisor-link')
-  if (mobLink) { mobLink.style.display = ''; mobLink.href = 'portal-advisor.html' }
+  const ml = document.getElementById('mob-advisor-link')
+  if (ml) { ml.style.display = ''; ml.href = 'portal-advisor.html' }
 }
 
 document.getElementById('btn-logout').addEventListener('click', signOut)
@@ -411,7 +414,6 @@ ham.addEventListener('click', () => {
   mobMenu.style.display = open ? 'none' : ''
   ham.setAttribute('aria-expanded', String(!open))
 })
-
 window.addEventListener('scroll', () => {
   document.getElementById('site-nav').style.boxShadow =
     window.scrollY > 4 ? '0 2px 20px rgba(44,44,42,0.08)' : ''
@@ -422,72 +424,108 @@ window.addEventListener('scroll', () => {
 // CHECKLIST
 // ══════════════════════════════════════════════════════════════════════════════
 
-const PRIORITY_ORDER  = ['Urgent', 'Month 1', 'Months 2-6', 'Long-Term']
-const PRIORITY_CLASS  = {
+const PRIORITY_ORDER = ['Urgent', 'Month 1', 'Months 2-6', 'Long-Term']
+const PRIORITY_CLASS = {
   'Urgent':     'ptag-urgent',
   'Month 1':    'ptag-month1',
   'Months 2-6': 'ptag-months26',
   'Long-Term':  'ptag-longterm',
 }
 
+const CATEGORY_LIST = [
+  { key: 'Government & Benefits',  icon: '🏛️', label: 'Gov & Benefits' },
+  { key: 'Legal & Probate',        icon: '⚖️', label: 'Legal & Probate' },
+  { key: 'Financial Accounts',     icon: '🏦', label: 'Financial Accounts' },
+  { key: 'Property & Home',        icon: '🏠', label: 'Property & Home' },
+  { key: 'Digital Estate',         icon: '💻', label: 'Digital Estate' },
+  { key: 'Personal & Memberships', icon: '🌿', label: 'Personal' },
+  { key: 'Record Retention',       icon: '📋', label: 'Record Retention' },
+]
+
 const CHECK_SVG = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`
 
-let allTasks   = []
-let ctMap      = {}
-let isReadOnly = false
+let allTasks     = []
+let ctMap        = {}
+let isReadOnly   = false
 let catFilter    = 'all'
 let timingFilter = 'all'
 
-// ─── Filter pill interaction ──────────────────────────────────────────────────
-document.querySelectorAll('.filter-pill').forEach(pill => {
+// ─── Timing filter pills ──────────────────────────────────────────────────────
+document.querySelectorAll('.filter-pill[data-timing]').forEach(pill => {
   pill.addEventListener('click', () => {
-    const type = pill.dataset.type
-    const val  = pill.dataset.val
-
-    // Update active pill in this group
-    document.querySelectorAll(`.filter-pill[data-type="${type}"]`).forEach(p => {
-      p.classList.remove('active')
-      // Restore original background for timing pills (they have inline colours)
-      if (type === 'timing' && p.dataset.val !== 'all') {
-        p.style.fontWeight = '400'
-        p.style.opacity    = '1'
-      }
-    })
+    document.querySelectorAll('.filter-pill[data-timing]').forEach(p => p.classList.remove('active'))
     pill.classList.add('active')
-
-    if (type === 'cat')    catFilter    = val
-    if (type === 'timing') timingFilter = val
-
+    timingFilter = pill.dataset.timing
     applyFilters()
   })
 })
 
-// ─── Apply current filters to the rendered task list ─────────────────────────
+// ─── Category sidebar rendering ───────────────────────────────────────────────
+function renderSidebar() {
+  const sidebar = document.getElementById('cat-sidebar')
+  sidebar.innerHTML = `<div class="sb-label">Categories</div>`
+
+  // "All" item
+  const allDone  = allTasks.filter(t => ctMap[t.id]?.done).length
+  const allTotal = allTasks.length
+  sidebar.appendChild(buildSidebarItem('all', '☰', 'All Tasks', allDone, allTotal))
+
+  for (const cat of CATEGORY_LIST) {
+    const tasks   = allTasks.filter(t => t.category === cat.key)
+    const done    = tasks.filter(t => ctMap[t.id]?.done).length
+    sidebar.appendChild(buildSidebarItem(cat.key, cat.icon, cat.label, done, tasks.length))
+  }
+}
+
+function buildSidebarItem(key, icon, label, done, total) {
+  const btn = document.createElement('button')
+  btn.className      = `sb-item${catFilter === key ? ' active' : ''}`
+  btn.dataset.catKey = key
+  btn.innerHTML = `
+    <span class="sb-icon">${icon}</span>
+    <span class="sb-name">${label}</span>
+    <span class="sb-count">${done}/${total}</span>
+  `
+  btn.addEventListener('click', () => {
+    catFilter = key
+    renderSidebar()   // re-render to update active state + counts
+    applyFilters()
+  })
+  return btn
+}
+
+function updateSidebarCounts() {
+  // Update just the count spans without a full re-render (preserves active state)
+  const items = document.querySelectorAll('.sb-item')
+  items.forEach(item => {
+    const key   = item.dataset.catKey
+    const tasks = key === 'all' ? allTasks : allTasks.filter(t => t.category === key)
+    const done  = tasks.filter(t => ctMap[t.id]?.done).length
+    const span  = item.querySelector('.sb-count')
+    if (span) span.textContent = `${done}/${tasks.length}`
+  })
+}
+
+// ─── Apply filters ────────────────────────────────────────────────────────────
 function applyFilters() {
   if (!allTasks.length) return
-
   let anyVisible = false
-  const sections = document.querySelectorAll('details.priority-section')
 
-  sections.forEach(section => {
-    const priority     = section.dataset.priority
-    const matchTiming  = timingFilter === 'all' || priority === timingFilter
+  document.querySelectorAll('details.priority-section').forEach(section => {
+    const priority    = section.dataset.priority
+    const matchTiming = timingFilter === 'all' || priority === timingFilter
+    let sectionCount  = 0
 
-    const rows = section.querySelectorAll('.task-row')
-    let sectionVisible = 0
-
-    rows.forEach(row => {
-      const taskId = row.dataset.taskId
-      const task   = allTasks.find(t => t.id === taskId)
+    section.querySelectorAll('.task-row').forEach(row => {
+      const task    = allTasks.find(t => t.id === row.dataset.taskId)
       if (!task) return
-
       const matchCat = catFilter === 'all' || task.category === catFilter
       const show     = matchTiming && matchCat
       row.style.display = show ? '' : 'none'
-      if (show) sectionVisible++
+      if (show) sectionCount++
     })
 
-    const show = matchTiming && sectionVisible > 0
+    const show = matchTiming && sectionCount > 0
     section.style.display = show ? '' : 'none'
     if (show) anyVisible = true
   })
@@ -500,86 +538,65 @@ async function initChecklist() {
   console.log('[checklist] initChecklist() started')
   try {
     // Step 0: verify session
-    console.log('[checklist] Step 0: verifying active session…')
     const { data: { session }, error: sessionErr } = await supabase.auth.getSession()
-    if (sessionErr) { console.error('[checklist] getSession() error:', sessionErr); throw sessionErr }
-    console.log('[checklist] session:', session
-      ? `active  user_id=${session.user.id}  expires=${new Date(session.expires_at * 1000).toISOString()}`
-      : '⚠️  null — user is not authenticated')
-    if (!session) throw new Error('getSession() returned null — not authenticated')
+    if (sessionErr) throw sessionErr
+    console.log('[checklist] session:', session ? `active user_id=${session.user.id}` : '⚠️ null')
+    if (!session) throw new Error('No active session')
 
-    // Step 0b: confirm profile
     const clientId = auth.profile?.id
     console.log('[checklist] auth.profile:', JSON.stringify(auth.profile))
-    if (!clientId) throw new Error(
-      'auth.profile is missing or has no id. ' +
-      'This usually means the profiles table query failed in requireAuth(). ' +
-      'Check that RLS allows the user to read their own profiles row.'
-    )
+    if (!clientId) throw new Error('auth.profile.id missing — profiles RLS issue')
 
-    // Step 1: load template tasks
-    console.log('[checklist] Step 1: querying tasks table…')
+    // Step 1: template tasks
+    console.log('[checklist] Step 1: querying tasks…')
     const { data: tasks, error: tasksErr } = await supabase
       .from('tasks').select('*').order('sort_order')
-    console.log('[checklist] tasks — count:', tasks?.length ?? 'null',
-      '  error:', tasksErr ? `${tasksErr.code} ${tasksErr.message}` : 'none')
+    console.log('[checklist] tasks count:', tasks?.length, 'error:', tasksErr?.message)
     if (tasksErr) throw tasksErr
-    if (!tasks?.length) throw new Error('tasks table returned 0 rows — run supabase-phase2-tasks.sql')
+    if (!tasks?.length) throw new Error('tasks table is empty — run supabase-phase2-tasks.sql')
     allTasks = tasks
 
-    // Step 2: load client tasks
-    console.log('[checklist] Step 2: querying client_tasks for client_id:', clientId)
+    // Step 2: client tasks
+    console.log('[checklist] Step 2: querying client_tasks…')
     let { data: ctRows, error: ctErr } = await supabase
       .from('client_tasks').select('*').eq('client_id', clientId)
-    console.log('[checklist] client_tasks — count:', ctRows?.length ?? 'null',
-      '  error:', ctErr ? `${ctErr.code} ${ctErr.message}` : 'none')
+    console.log('[checklist] client_tasks count:', ctRows?.length, 'error:', ctErr?.message)
     if (ctErr) throw ctErr
 
     // Step 3: first-login seed
     if (!ctRows || ctRows.length === 0) {
-      console.log('[checklist] Step 3: no rows found — seeding', allTasks.length, 'rows…')
+      console.log('[checklist] Seeding', allTasks.length, 'rows…')
       const seed = allTasks.map(t => ({ client_id: clientId, task_id: t.id, done: false, notes: '' }))
       const { error: seedErr } = await supabase
         .from('client_tasks').upsert(seed, { onConflict: 'client_id,task_id' })
-      console.log('[checklist] upsert seed — error:', seedErr ? `${seedErr.code} ${seedErr.message}` : 'none')
       if (seedErr) throw seedErr
-      const { data: refetched, error: refetchErr } = await supabase
+      const { data: r, error: rErr } = await supabase
         .from('client_tasks').select('*').eq('client_id', clientId)
-      console.log('[checklist] refetch after seed — count:', refetched?.length ?? 'null',
-        '  error:', refetchErr ? `${refetchErr.code} ${refetchErr.message}` : 'none')
-      if (refetchErr) throw refetchErr
-      ctRows = refetched || []
-    } else {
-      console.log('[checklist] Step 3: skipped — client_tasks already exist')
+      if (rErr) throw rErr
+      ctRows = r || []
+      console.log('[checklist] Seeded, count:', ctRows.length)
     }
 
     // Step 4: build map
     ctMap = {}
     for (const ct of ctRows) ctMap[ct.task_id] = ct
-    console.log('[checklist] Step 4: ctMap built —', Object.keys(ctMap).length, 'entries')
 
-    // Step 5: plan check
+    // Step 5: plan
     const plan = auth.profile?.plan || 'guided'
     isReadOnly  = plan === 'supported' || plan === 'full_service'
-    console.log('[checklist] Step 5: plan =', plan, '  isReadOnly =', isReadOnly)
     if (isReadOnly) {
       document.getElementById('readonly-badge').style.display = ''
       document.getElementById('readonly-note').style.display  = ''
     }
 
     // Step 6: render
-    console.log('[checklist] Step 6: rendering…')
     renderChecklist()
+    renderSidebar()
     updateHeroProgress()
     console.log('[checklist] ✓ done')
 
   } catch (err) {
-    console.error('[checklist] ✗ FAILED')
-    console.error('[checklist] message:', err?.message)
-    console.error('[checklist] code:', err?.code)
-    console.error('[checklist] hint:', err?.hint)
-    console.error('[checklist] details:', err?.details)
-    console.error('[checklist] full error object:', err)
+    console.error('[checklist] ✗ FAILED:', err?.message, err?.code, err)
     document.getElementById('checklist-loading').style.display = 'none'
     document.getElementById('checklist-error').style.display   = ''
   }
@@ -595,20 +612,18 @@ function renderChecklist() {
   container.innerHTML = ''
 
   for (const priority of PRIORITY_ORDER) {
-    const group = grouped[priority]
+    const group     = grouped[priority]
     if (!group.length) continue
-
     const doneCount = group.filter(t => ctMap[t.id]?.done).length
-    const tagClass  = PRIORITY_CLASS[priority] || ''
 
     const details = document.createElement('details')
-    details.className = 'priority-section'
-    details.open = true
+    details.className        = 'priority-section'
+    details.open             = true
     details.dataset.priority = priority
 
     const summary = document.createElement('summary')
     summary.innerHTML = `
-      <span class="priority-tag ${tagClass}">${priority}</span>
+      <span class="priority-tag ${PRIORITY_CLASS[priority] || ''}">${priority}</span>
       <span class="priority-count" data-priority="${priority}">${doneCount} of ${group.length} complete</span>
       <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
     `
@@ -618,9 +633,7 @@ function renderChecklist() {
     taskList.className = 'priority-tasks'
     for (const task of group) {
       const ct   = ctMap[task.id]
-      const done = ct?.done || false
-      const ctId = ct?.id   || ''
-      taskList.appendChild(buildTaskRow(task, done, ctId))
+      taskList.appendChild(buildTaskRow(task, ct?.done || false, ct?.id || ''))
     }
     details.appendChild(taskList)
     container.appendChild(details)
@@ -630,13 +643,11 @@ function renderChecklist() {
   container.style.display = ''
 
   if (!isReadOnly) {
-    container.querySelectorAll('.check-btn').forEach(btn => {
-      btn.addEventListener('click', handleCheck)
-    })
+    container.querySelectorAll('.check-btn').forEach(btn => btn.addEventListener('click', handleCheck))
   }
 }
 
-// ─── Build task row ───────────────────────────────────────────────────────────
+// ─── Build task row (no category badge) ──────────────────────────────────────
 function buildTaskRow(task, done, ctId) {
   const row = document.createElement('div')
   row.className      = `task-row${done ? ' is-done' : ''}`
@@ -650,20 +661,14 @@ function buildTaskRow(task, done, ctId) {
   btn.setAttribute('aria-pressed', done)
   btn.setAttribute('aria-label', `${done ? 'Mark incomplete' : 'Mark complete'}: ${task.title}`)
   if (done) btn.innerHTML = CHECK_SVG
-  if (isReadOnly) { btn.disabled = true; btn.title = 'Your advisor manages task completion for your plan' }
+  if (isReadOnly) { btn.disabled = true; btn.title = 'Your advisor manages task completion' }
 
   const titleSpan = document.createElement('span')
   titleSpan.className   = 'task-title'
   titleSpan.textContent = task.title
 
-  const catSpan = document.createElement('span')
-  catSpan.className   = 'cat-badge'
-  catSpan.textContent = task.category
-  catSpan.title       = task.category
-
   row.appendChild(btn)
   row.appendChild(titleSpan)
-  row.appendChild(catSpan)
   return row
 }
 
@@ -679,14 +684,16 @@ async function handleCheck(e) {
 
   applyDoneState(btn, row, taskId, newDone)
   updatePriorityCount(priority)
+  updateSidebarCounts()
   updateHeroProgress()
 
   const { error } = await supabase.from('client_tasks').update({ done: newDone }).eq('id', ctId)
   if (error) {
     applyDoneState(btn, row, taskId, currentDone)
     updatePriorityCount(priority)
+    updateSidebarCounts()
     updateHeroProgress()
-    console.error('[checklist] Failed to update task:', error)
+    console.error('[checklist] update failed:', error)
   }
 }
 
@@ -707,12 +714,10 @@ function updatePriorityCount(priority) {
   if (el) el.textContent = `${done} of ${group.length} complete`
 }
 
-// ─── Hero progress bar ────────────────────────────────────────────────────────
 function updateHeroProgress() {
   const total = allTasks.length
   const done  = allTasks.filter(t => ctMap[t.id]?.done).length
   const pct   = total > 0 ? Math.round((done / total) * 100) : 0
-
   document.getElementById('hero-count').textContent = done
   document.getElementById('hero-pct').textContent   = `${pct}%`
   document.getElementById('hero-bar').style.width   = `${pct}%`
