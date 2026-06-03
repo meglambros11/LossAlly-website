@@ -625,7 +625,7 @@ async function loadClients() {
         </div>
       </div>
       <div class="client-row-body">
-        <div style="display:flex;align-items:center;gap:0.75rem;padding:0.875rem 1.25rem;border-bottom:1px solid var(--mist);background:var(--warm-white);" onclick="event.stopPropagation()">
+        <div style="display:flex;align-items:center;gap:0.75rem;padding:0.875rem 1.25rem;border-bottom:1px solid var(--mist);background:var(--warm-white);flex-wrap:wrap;" onclick="event.stopPropagation()">
           <span style="font-size:0.65rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);flex-shrink:0;">Plan</span>
           <select class="client-plan-select status-select" data-client-id="${esc(c.id)}" style="font-size:0.8rem;">
             <option value="guided"${currentPlan==='guided'?' selected':''}>Guided</option>
@@ -633,6 +633,12 @@ async function loadClients() {
             <option value="full_service"${currentPlan==='full_service'?' selected':''}>Full Service</option>
           </select>
           <span class="plan-save-msg" style="font-size:0.75rem;color:var(--forest);opacity:0;transition:opacity 0.3s;">Saved</span>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:0.625rem;">
+            <button class="request-details-btn invite-btn" data-client-id="${esc(c.id)}" data-client-name="${esc(c.full_name||'')}" data-client-email="${esc(c.email||'')}" style="background:transparent;color:var(--forest);border:1px solid var(--forest);font-size:0.75rem;padding:0.35rem 0.875rem;">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+              Request Details Form
+            </button>
+          </div>
         </div>
         <div class="task-panel" data-client-id="${esc(c.id)}">
           <p class="tasks-loading-msg">Loading checklist…</p>
@@ -671,6 +677,45 @@ async function loadClients() {
             body: JSON.stringify({ client_id: c.id }),
           })
         })
+      }
+    })
+
+    // Request Details Form handler
+    const reqDetailsBtn = row.querySelector('.request-details-btn')
+    reqDetailsBtn.addEventListener('click', async e => {
+      e.stopPropagation()
+      const firstName = (c.full_name || 'there').split(' ')[0]
+      const formUrl = `${window.location.origin}/intake-details.html`
+      if (!confirm(`Send ${esc(c.full_name || 'this client')} a message requesting they complete the Estate Details Form?`)) return
+      reqDetailsBtn.disabled = true
+      reqDetailsBtn.textContent = 'Sending…'
+
+      const msgBody = `Hi ${firstName},\n\nNow that your service agreement is in place, I need a bit more information from you in order to manage your estate tasks on your behalf.\n\nPlease take 15–20 minutes to complete the Estate Details Form. You'll need account numbers, legal document locations, and a few other specifics handy.\n\nComplete the form here: ${formUrl}\n\nAll information is encrypted and only accessible to me. Once you've submitted it, I can begin working through your checklist right away.\n\nThank you,\nYour Loss Ally Advisor`
+
+      const { data: { session } } = await supabase.auth.getSession()
+      const res = await fetch('/api/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+        body: JSON.stringify({ client_id: c.id, message_body: msgBody }),
+      })
+      const json = await res.json()
+
+      if (res.ok) {
+        reqDetailsBtn.style.background = 'rgba(91,110,91,0.09)'
+        reqDetailsBtn.style.borderColor = 'var(--sage)'
+        reqDetailsBtn.style.color = 'var(--forest)'
+        reqDetailsBtn.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Details Requested'
+        reqDetailsBtn.disabled = false
+        // If the messages panel is open, append the sent message
+        const thread = row.querySelector('.adv-msg-thread')
+        if (thread && !thread.querySelector('[data-empty]')?.textContent?.includes('Loading')) {
+          thread.appendChild(buildAdvMsgBubble(json))
+          thread.scrollTop = thread.scrollHeight
+        }
+      } else {
+        reqDetailsBtn.disabled = false
+        reqDetailsBtn.textContent = 'Request Details Form'
+        alert('Could not send message: ' + (json.error || 'Unknown error'))
       }
     })
 

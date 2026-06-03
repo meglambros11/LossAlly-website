@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="brand_assets/logo.png" />
+  <title>Estate Details — Loss Ally</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --cream: #f6f1e6;
+      --warm-white: #FAF8F4;
+      --sage: #8D9D6A;
+      --forest: #5b6e5b;
+      --evergreen: #2D4D0C;
+      --charcoal: #2C2C28;
+      --mist: #E2DDD4;
+      --gold: #C9A870;
+      --terracotta: #C4724A;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--cream);
+      color: var(--charcoal);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.5;
+    }
+    .label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--sage);
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      background: var(--forest); color: #fff;
+      font-family: 'DM Sans', sans-serif; font-weight: 400; font-size: 0.875rem;
+      padding: 0.75rem 1.6rem; border-radius: 6px; border: none; cursor: pointer;
+      text-decoration: none;
+      transition: background 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
+      box-shadow: 0 2px 14px rgba(71,102,39,0.25);
+    }
+    .btn-primary:hover { background: var(--evergreen); transform: translateY(-1px); box-shadow: 0 6px 22px rgba(71,102,39,0.32); }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      background: transparent; color: var(--charcoal);
+      font-family: 'DM Sans', sans-serif; font-weight: 400; font-size: 0.875rem;
+      padding: 0.75rem 1.6rem; border-radius: 6px; border: 1px solid var(--mist); cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.18s ease, background 0.18s ease, transform 0.15s ease;
+    }
+    .btn-outline:hover { border-color: var(--sage); background: rgba(138,158,140,0.06); transform: translateY(-1px); }
+    .btn-outline:active { transform: translateY(0); }
+    .btn-gold {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      background: var(--gold); color: #fff;
+      font-family: 'DM Sans', sans-serif; font-weight: 400; font-size: 0.875rem;
+      padding: 0.75rem 1.6rem; border-radius: 6px; border: none; cursor: pointer;
+      transition: background 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
+      box-shadow: 0 2px 12px rgba(191,160,106,0.28);
+    }
+    .btn-gold:hover { background: #a8894e; transform: translateY(-1px); box-shadow: 0 6px 22px rgba(191,160,106,0.38); }
+    .btn-gold:active { transform: translateY(0); }
+    .nav-link {
+      font-size: 0.875rem; font-weight: 300; color: var(--charcoal); text-decoration: none;
+      opacity: 0.65; transition: opacity 0.18s; letter-spacing: 0.005em;
+    }
+    .nav-link:hover { opacity: 1; }
+
+    /* ── Form styles ── */
+    .form-step { display: none; }
+    .form-step.active { display: block; }
+    .field-group { margin-bottom: 1.5rem; }
+    .field-label {
+      display: block; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.07em;
+      color: var(--charcoal); opacity: 0.5; margin-bottom: 0.4rem; text-transform: uppercase;
+    }
+    .field-hint {
+      font-size: 0.78rem; color: var(--charcoal); opacity: 0.45; line-height: 1.55;
+      margin-top: 0.35rem; font-style: italic; font-weight: 300;
+    }
+    .field-note {
+      font-size: 0.78rem; color: var(--sage); line-height: 1.55; margin-top: 0.5rem; font-weight: 300;
+    }
+    .optional-tag {
+      font-size: 0.6rem; font-weight: 300; text-transform: none; letter-spacing: 0;
+      opacity: 0.45; margin-left: 0.3rem;
+    }
+    .form-input {
+      width: 100%; background: var(--warm-white); border: 1px solid var(--mist);
+      border-radius: 8px; padding: 0.7rem 0.875rem; font-size: 0.875rem; color: var(--charcoal);
+      font-family: 'DM Sans', sans-serif; font-weight: 300; outline: none;
+      transition: border-color 0.18s ease;
+    }
+    .form-input:focus { border-color: var(--sage); box-shadow: 0 0 0 3px rgba(141,157,106,0.12); }
+    select.form-input {
+      cursor: pointer; appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232C2C28' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 0.875rem center; background-size: 16px; padding-right: 2.5rem;
+    }
+    textarea.form-input { resize: vertical; min-height: 100px; line-height: 1.65; }
+    .form-input-password-wrap { position: relative; }
+    .form-input-password-wrap .form-input { padding-right: 2.75rem; }
+    .password-toggle {
+      position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; padding: 0.2rem; color: var(--charcoal); opacity: 0.38;
+      transition: opacity 0.15s;
+    }
+    .password-toggle:hover { opacity: 0.7; }
+
+    /* ── Step progress ── */
+    .step-circle {
+      width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--mist);
+      background: var(--warm-white); display: flex; align-items: center; justify-content: center;
+      font-size: 0.78rem; font-weight: 400; color: var(--charcoal); opacity: 0.4; flex-shrink: 0;
+      transition: all 0.3s ease; font-family: 'DM Sans', sans-serif;
+    }
+    .step-circle.active { border-color: var(--forest); background: var(--forest); color: #fff; opacity: 1; }
+    .step-circle.done { border-color: var(--sage); background: var(--sage); color: #fff; opacity: 1; }
+    .step-label {
+      font-size: 0.58rem; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase;
+      color: var(--charcoal); opacity: 0.35; margin-top: 6px; text-align: center;
+      transition: opacity 0.3s; white-space: nowrap;
+    }
+    .step-label.active, .step-label.done { opacity: 0.72; }
+    .step-connector {
+      flex: 1; height: 1.5px; background: var(--mist); margin-bottom: 22px;
+      transition: background 0.3s; min-width: 16px;
+    }
+    .step-connector.done { background: var(--sage); }
+
+    /* ── Multi-row sections ── */
+    .multi-section-card {
+      background: var(--cream); border: 1px solid var(--mist); border-radius: 10px;
+      padding: 1.125rem 1.25rem; margin-bottom: 0.625rem;
+      position: relative;
+    }
+    .multi-section-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.875rem;
+    }
+    .multi-section-label {
+      font-size: 0.68rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--charcoal); opacity: 0.45;
+    }
+    .remove-row-btn {
+      font-size: 0.72rem; color: var(--terracotta); background: none; border: none; cursor: pointer;
+      padding: 0.15rem 0.4rem; border-radius: 4px; font-family: 'DM Sans', sans-serif; font-weight: 300;
+      opacity: 0.7; transition: opacity 0.15s;
+    }
+    .remove-row-btn:hover { opacity: 1; }
+    .add-row-btn {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      background: none; border: 1px dashed var(--mist); color: var(--sage);
+      font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 300;
+      padding: 0.55rem 1rem; border-radius: 7px; cursor: pointer; width: 100%;
+      justify-content: center; transition: border-color 0.15s, background 0.15s;
+      margin-top: 0.375rem;
+    }
+    .add-row-btn:hover { border-color: var(--sage); background: rgba(141,157,106,0.06); }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; }
+
+    /* ── None toggle ── */
+    .none-toggle-row {
+      display: flex; align-items: center; gap: 0.625rem; cursor: pointer; margin-bottom: 0.75rem;
+    }
+    .none-toggle-box {
+      width: 18px; height: 18px; border-radius: 4px; border: 1.5px solid var(--mist);
+      background: var(--warm-white); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.18s, background 0.18s;
+    }
+    .none-toggle-box.checked { border-color: var(--forest); background: var(--forest); }
+    .none-toggle-text { font-size: 0.82rem; color: var(--charcoal); font-weight: 300; }
+
+    /* ── Radio option cards ── */
+    .option-card {
+      display: flex; align-items: center; gap: 0.875rem; padding: 0.875rem 1rem;
+      border: 1.5px solid var(--mist); border-radius: 8px; cursor: pointer;
+      transition: border-color 0.18s ease, background 0.18s ease;
+      background: var(--warm-white); user-select: none; margin-bottom: 0.5rem;
+    }
+    .option-card:last-child { margin-bottom: 0; }
+    .option-card:hover { border-color: var(--sage); background: rgba(141,157,106,0.05); }
+    .option-card.selected { border-color: var(--forest); background: rgba(91,110,91,0.06); }
+    .option-card input { display: none; }
+    .opt-radio {
+      width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--mist); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.18s, background 0.18s; background: #fff;
+    }
+    .option-card.selected .opt-radio { border-color: var(--forest); background: var(--forest); }
+    .option-card.selected .opt-radio::after {
+      content: ''; display: block; width: 7px; height: 7px; border-radius: 50%; background: #fff;
+    }
+    .opt-text { font-size: 0.875rem; color: var(--charcoal); font-weight: 300; line-height: 1.4; }
+
+    /* ── Section divider ── */
+    .section-divider {
+      border: none; border-top: 1px solid var(--mist); margin: 1.75rem 0;
+    }
+
+    /* ── Error ── */
+    #form-error {
+      display: none; background: rgba(196,114,74,0.08); border: 1px solid rgba(196,114,74,0.25);
+      border-radius: 8px; padding: 0.875rem 1rem; margin-bottom: 1rem;
+    }
+
+    /* ── Confirmation ── */
+    .confirmation-icon {
+      width: 72px; height: 72px; border-radius: 50%; background: rgba(91,110,91,0.1);
+      display: flex; align-items: center; justify-content: center; margin: 0 auto 1.75rem;
+    }
+
+    @media (max-width: 600px) {
+      .two-col { grid-template-columns: 1fr; }
+      .three-col { grid-template-columns: 1fr; }
+      .step-label { display: none; }
+      .step-connector { margin-bottom: 0; }
+    }
+    @media (min-width: 768px) { #desk-nav { display: flex !important; } #mob-ham { display: none !important; } }
+    @media (max-width: 767px) { #desk-nav { display: none !important; } #mob-ham { display: flex !important; } }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAV ══════════════════════════════════════════════════════════════════ -->
+<header id="site-nav" style="position:sticky;top:0;z-index:50;background:var(--warm-white);border-bottom:1px solid var(--mist);transition:box-shadow 0.2s;">
+  <div style="max-width:1200px;margin:0 auto;padding:0 1.75rem;height:64px;display:flex;align-items:center;justify-content:space-between;">
+    <a href="portal-dashboard.html" style="display:flex;align-items:center;gap:0.625rem;text-decoration:none;flex-shrink:0;">
+      <img src="brand_assets/logo.png" alt="Loss Ally" style="height:34px;width:auto;mix-blend-mode:multiply;" />
+      <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.2rem;font-weight:500;color:var(--charcoal);letter-spacing:0.01em;">Loss Ally</span>
+    </a>
+    <nav id="desk-nav" style="display:flex;align-items:center;gap:2.25rem;">
+      <a href="portal-dashboard.html" class="nav-link">← Back to Dashboard</a>
+    </nav>
+    <button id="mob-ham" aria-label="Open menu" style="display:none;flex-direction:column;gap:5px;padding:8px;background:none;border:none;cursor:pointer;">
+      <span style="display:block;width:20px;height:1.5px;background:var(--charcoal);border-radius:2px;"></span>
+      <span style="display:block;width:20px;height:1.5px;background:var(--charcoal);border-radius:2px;"></span>
+      <span style="display:block;width:20px;height:1.5px;background:var(--charcoal);border-radius:2px;"></span>
+    </button>
+  </div>
+</header>
+
+
+<!-- ══ PAGE INTRO ════════════════════════════════════════════════════════════ -->
+<section style="padding:3.5rem 1.75rem 0;background:var(--cream);">
+  <div style="max-width:720px;margin:0 auto;text-align:center;">
+    <span class="label" style="display:block;margin-bottom:0.875rem;">— Estate Details</span>
+    <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.875rem,4vw,2.75rem);font-weight:400;letter-spacing:-0.02em;color:var(--charcoal);line-height:1.1;margin-bottom:1rem;">
+      A few things your advisor will need.
+    </h1>
+    <p style="font-size:0.95rem;line-height:1.8;color:var(--charcoal);opacity:0.58;max-width:520px;margin:0 auto 1.25rem;">
+      This information allows your advisor to complete estate administration tasks on your behalf. Please have your important documents nearby — this typically takes 15–20 minutes.
+    </p>
+    <div style="display:inline-flex;align-items:center;gap:0.5rem;background:rgba(45,77,12,0.07);border:1px solid rgba(45,77,12,0.14);border-radius:8px;padding:0.6rem 1rem;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--evergreen)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <span style="font-size:0.78rem;color:var(--evergreen);font-weight:300;line-height:1.4;">All information is encrypted in transit and at rest. Only your advisor has access to these details.</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ FORM AREA ════════════════════════════════════════════════════════════ -->
+<section style="padding:2.5rem 1.75rem 6rem;background:var(--cream);">
+  <div style="max-width:720px;margin:0 auto;">
+
+    <!-- Progress indicator -->
+    <div id="progress-container" style="margin-bottom:2rem;">
+      <div style="display:flex;align-items:center;">
+        <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:60px;">
+          <div id="sc-1" class="step-circle active">1</div>
+          <div id="sl-1" class="step-label active">Identity</div>
+        </div>
+        <div id="line-1" class="step-connector"></div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:60px;">
+          <div id="sc-2" class="step-circle">2</div>
+          <div id="sl-2" class="step-label">Legal</div>
+        </div>
+        <div id="line-2" class="step-connector"></div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:60px;">
+          <div id="sc-3" class="step-circle">3</div>
+          <div id="sl-3" class="step-label">Financial</div>
+        </div>
+        <div id="line-3" class="step-connector"></div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:60px;">
+          <div id="sc-4" class="step-circle">4</div>
+          <div id="sl-4" class="step-label">Property</div>
+        </div>
+        <div id="line-4" class="step-connector"></div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:60px;">
+          <div id="sc-5" class="step-circle">5</div>
+          <div id="sl-5" class="step-label">Digital</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form card -->
+    <div id="form-card" style="background:#fff;border:1px solid var(--mist);border-radius:16px;padding:2.5rem 2.25rem;box-shadow:0 4px 28px rgba(44,44,42,0.07);">
+
+      <!-- ══ STEP 1 — Personal Identification ══════════════════════════════ -->
+      <div id="step-1" class="form-step active">
+        <div style="margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--mist);">
+          <span class="label" style="display:block;margin-bottom:0.5rem;">Step 1 of 5</span>
+          <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.75rem;font-weight:400;color:var(--charcoal);letter-spacing:-0.01em;margin-bottom:0.5rem;line-height:1.2;">Personal identification.</h2>
+          <p style="font-size:0.875rem;color:var(--charcoal);opacity:0.5;line-height:1.65;font-weight:300;">Used for government notifications, probate filings, and tax returns.</p>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="deceased-dob">Date of birth <span style="color:var(--terracotta);">*</span></label>
+          <input type="date" id="deceased-dob" class="form-input" autocomplete="off" />
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="deceased-ssn">Social Security Number <span style="color:var(--terracotta);">*</span></label>
+          <div class="form-input-password-wrap">
+            <input type="password" id="deceased-ssn" class="form-input" placeholder="XXX-XX-XXXX" autocomplete="off" />
+            <button type="button" class="password-toggle" onclick="toggleSSN(this)" aria-label="Show/hide SSN">
+              <svg id="ssn-eye" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <p class="field-hint">This is stored encrypted and used only for IRS filings and government notifications.</p>
+        </div>
+
+        <div class="field-group">
+          <div class="two-col">
+            <div>
+              <label class="field-label" for="deceased-dl-state">Driver's license state <span style="color:var(--terracotta);">*</span></label>
+              <select id="deceased-dl-state" class="form-input">
+                <option value="">Select state…</option>
+                <option>Alabama</option><option>Alaska</option><option>Arizona</option><option>Arkansas</option><option>California</option><option>Colorado</option><option>Connecticut</option><option>Delaware</option><option>District of Columbia</option><option>Florida</option><option>Georgia</option><option>Hawaii</option><option>Idaho</option><option>Illinois</option><option>Indiana</option><option>Iowa</option><option>Kansas</option><option>Kentucky</option><option>Louisiana</option><option>Maine</option><option>Maryland</option><option>Massachusetts</option><option>Michigan</option><option>Minnesota</option><option>Mississippi</option><option>Missouri</option><option>Montana</option><option>Nebraska</option><option>Nevada</option><option>New Hampshire</option><option>New Jersey</option><option>New Mexico</option><option>New York</option><option>North Carolina</option><option>North Dakota</option><option>Ohio</option><option>Oklahoma</option><option>Oregon</option><option>Pennsylvania</option><option>Rhode Island</option><option>South Carolina</option><option>South Dakota</option><option>Tennessee</option><option>Texas</option><option>Utah</option><option>Vermont</option><option>Virginia</option><option>Washington</option><option>West Virginia</option><option>Wisconsin</option><option>Wyoming</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label" for="deceased-dl-number">Driver's license number <span style="color:var(--terracotta);">*</span></label>
+              <input type="text" id="deceased-dl-number" class="form-input" placeholder="License number" autocomplete="off" />
+            </div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="deceased-medicare-id">Medicare or Medicaid ID number <span class="optional-tag">optional</span></label>
+          <input type="text" id="deceased-medicare-id" class="form-input" placeholder="e.g. 1EG4-TE5-MK72" autocomplete="off" />
+          <p class="field-hint">Found on their Medicare card. Needed if they were enrolled in Medicare or Medicaid.</p>
+        </div>
+
+        <div id="step1-error" style="display:none;background:rgba(196,114,74,0.08);border:1px solid rgba(196,114,74,0.25);border-radius:8px;padding:0.875rem 1rem;margin-bottom:1rem;">
+          <p id="step1-error-text" style="font-size:0.82rem;color:var(--terracotta);font-weight:300;line-height:1.5;"></p>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--mist);">
+          <button type="button" class="btn-primary" onclick="nextStep()">
+            Continue
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+
+      <!-- ══ STEP 2 — Legal & Beneficiaries ════════════════════════════════ -->
+      <div id="step-2" class="form-step">
+        <div style="margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--mist);">
+          <span class="label" style="display:block;margin-bottom:0.5rem;">Step 2 of 5</span>
+          <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.75rem;font-weight:400;color:var(--charcoal);letter-spacing:-0.01em;margin-bottom:0.5rem;line-height:1.2;">Legal documents & beneficiaries.</h2>
+          <p style="font-size:0.875rem;color:var(--charcoal);opacity:0.5;line-height:1.65;font-weight:300;">Needed to open probate, notify heirs, and distribute assets.</p>
+        </div>
+
+        <!-- Will location -->
+        <div class="field-group">
+          <label class="field-label" for="will-location" style="margin-bottom:0.5rem;">Where is the original will located? <span style="color:var(--terracotta);">*</span></label>
+          <label class="none-toggle-row" onclick="toggleNone('no-will', 'will-location-wrap')">
+            <div id="no-will-box" class="none-toggle-box"></div>
+            <span class="none-toggle-text">There is no will</span>
+            <input type="checkbox" id="no-will" style="display:none;" />
+          </label>
+          <div id="will-location-wrap">
+            <input type="text" id="will-location" class="form-input" placeholder="e.g. Safe deposit box at First National Bank, attorney's office, home safe at 123 Oak St" autocomplete="off" />
+          </div>
+        </div>
+
+        <hr class="section-divider" />
+
+        <!-- Attorney -->
+        <div class="field-group">
+          <label class="field-label" style="margin-bottom:0.75rem;">Is there an estate attorney? <span style="color:var(--terracotta);">*</span></label>
+          <label class="option-card" onclick="selectOption(this,'has-attorney')">
+            <input type="radio" name="has-attorney" value="yes" /><div class="opt-radio"></div>
+            <span class="opt-text">Yes — we have an attorney</span>
+          </label>
+          <label class="option-card" onclick="selectOption(this,'has-attorney')">
+            <input type="radio" name="has-attorney" value="no" /><div class="opt-radio"></div>
+            <span class="opt-text">No attorney</span>
+          </label>
+        </div>
+        <div id="attorney-fields" style="display:none;">
+          <div class="field-group">
+            <div class="two-col">
+              <div>
+                <label class="field-label" for="attorney-name">Attorney name <span style="color:var(--terracotta);">*</span></label>
+                <input type="text" id="attorney-name" class="form-input" placeholder="Full name" autocomplete="off" />
+              </div>
+              <div>
+                <label class="field-label" for="attorney-contact">Phone or email <span style="color:var(--terracotta);">*</span></label>
+                <input type="text" id="attorney-contact" class="form-input" placeholder="Phone or email" autocomplete="off" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="section-divider" />
+
+        <!-- Beneficiaries -->
+        <div class="field-group">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
+            <label class="field-label" style="margin-bottom:0;">Beneficiaries &amp; heirs <span style="color:var(--terracotta);">*</span></label>
+            <span style="font-size:0.7rem;color:var(--charcoal);opacity:0.38;">at least one required</span>
+          </div>
+          <p class="field-hint" style="margin-top:0;margin-bottom:0.875rem;">List everyone named in the will or entitled to a share of the estate.</p>
+          <div id="beneficiaries-container"></div>
+          <button type="button" class="add-row-btn" onclick="addBeneficiary()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add another beneficiary
+          </button>
+        </div>
+
+        <div id="step2-error" style="display:none;background:rgba(196,114,74,0.08);border:1px solid rgba(196,114,74,0.25);border-radius:8px;padding:0.875rem 1rem;margin-bottom:1rem;">
+          <p id="step2-error-text" style="font-size:0.82rem;color:var(--terracotta);font-weight:300;line-height:1.5;"></p>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--mist);">
+          <button type="button" class="btn-outline" onclick="prevStep()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back
+          </button>
+          <button type="button" class="btn-primary" onclick="nextStep()">
+            Continue
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+
+      <!-- ══ STEP 3 — Financial Accounts ═══════════════════════════════════ -->
+      <div id="step-3" class="form-step">
+        <div style="margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--mist);">
+          <span class="label" style="display:block;margin-bottom:0.5rem;">Step 3 of 5</span>
+          <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.75rem;font-weight:400;color:var(--charcoal);letter-spacing:-0.01em;margin-bottom:0.5rem;line-height:1.2;">Financial accounts.</h2>
+          <p style="font-size:0.875rem;color:var(--charcoal);opacity:0.5;line-height:1.65;font-weight:300;">Needed to notify institutions, cancel auto-drafts, and file claims.</p>
+        </div>
+
+        <!-- Bank accounts -->
+        <div class="field-group">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
+            <label class="field-label" style="margin-bottom:0;">Bank &amp; savings accounts <span style="color:var(--terracotta);">*</span></label>
+            <span style="font-size:0.7rem;color:var(--charcoal);opacity:0.38;">at least one required</span>
+          </div>
+          <div id="bank-accounts-container"></div>
+          <button type="button" class="add-row-btn" onclick="addBankAccount()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add another account
+          </button>
+        </div>
+
+        <hr class="section-divider" />
+
+        <!-- Life insurance -->
+        <div class="field-group">
+          <label class="field-label" style="margin-bottom:0.5rem;">Life insurance policies</label>
+          <label class="none-toggle-row" onclick="toggleNone('no-life-ins', 'life-ins-wrap')">
+            <div id="no-life-ins-box" class="none-toggle-box"></div>
+            <span class="none-toggle-text">No life insurance policies</span>
+            <input type="checkbox" id="no-life-ins" style="display:none;" />
+          </label>
+          <div id="life-ins-wrap">
+            <div id="life-ins-container"></div>
+            <button type="button" class="add-row-btn" onclick="addLifeIns()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add another policy
+            </button>
+          </div>
+        </div>
+
+        <hr class="section-divider" />
+
+        <!-- Retirement accounts -->
+        <div class="field-group">
+          <label class="field-label" style="margin-bottom:0.5rem;">Retirement accounts</label>
+          <label class="none-toggle-row" onclick="toggleNone('no-retirement', 'retirement-wrap')">
+            <div id="no-retirement-box" class="none-toggle-box"></div>
+            <span class="none-toggle-text">No retirement accounts (401k, IRA, pension)</span>
+            <input type="checkbox" id="no-retirement" style="display:none;" />
+          </label>
+          <div id="retirement-wrap">
+            <div id="retirement-container"></div>
+            <button type="button" class="add-row-btn" onclick="addRetirement()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add another account
+            </button>
+          </div>
+        </div>
+
+        <hr class="section-divider" />
+
+        <!-- Investment accounts -->
+        <div class="field-group">
+          <label class="field-label" style="margin-bottom:0.5rem;">Investment &amp; brokerage accounts <span class="optional-tag">optional</span></label>
+          <div id="investment-container"></div>
+          <button type="button" class="add-row-btn" onclick="addInvestment()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add investment account
+          </button>
+        </div>
+
+        <div id="step3-error" style="display:none;background:rgba(196,114,74,0.08);border:1px solid rgba(196,114,74,0.25);border-radius:8px;padding:0.875rem 1rem;margin-bottom:1rem;">
+          <p id="step3-error-text" style="font-size:0.82rem;color:var(--terracotta);font-weight:300;line-height:1.5;"></p>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--mist);">
+          <button type="button" class="btn-outline" onclick="prevStep()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back
+          </button>
+          <button type="button" class="btn-primary" onclick="nextStep()">
+            Continue
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+
+      <!-- ══ STEP 4 — Property, Vehicles & Utilities ════════════════════════ -->
+      <div id="step-4" class="form-step">
+        <div style="margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--mist);">
+          <span class="label" style="display:block;margin-bottom:0.5rem;">Step 4 of 5</span>
+          <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.75rem;font-weight:400;color:var(--charcoal);letter-spacing:-0.01em;margin-bottom:0.5rem;line-height:1.2;">Property, vehicles &amp; utilities.</h2>
+          <p style="font-size:0.875rem;color:var(--charcoal);opacity:0.5;line-height:1.65;font-weight:300;">Needed to secure assets, transfer titles, and cancel or transfer accounts.</p>
+        </div>
+
+        <!-- Properties -->
+        <div class="field-group">
+          <label class="field-label" style="margin-bottom:0.5rem;">Real property</label>
+          <label class="none-toggle-row" onclick="toggleNone('no-properties', 'properties-wrap')">
+            <div id="no-properties-box" class="none-toggle-box"></div>
+            <span class="none-toggle-text">No owned property (renting or no real estate)</span>
+            <input type="checkbox" id="no-properties" style="display:none;" />
+          </label>
+          <div id="properties-wrap">
+            <div id="properties-container"></div>
+            <button type="button" class="add-row-btn" onclick="addProperty()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add another property
+            </button>
+          </div>
+        </div>
+
+        <!-- Mortgage -->
+        <div id="mortgage-section" class="field-group">
+          <label class="field-label" style="margin-bottom:0.5rem;">Mortgage</label>
+          <label class="none-toggle-row" onclick="toggleNone('no-mortgage', 'mortgage-wrap')">
+            <div id="no-mortgage-box" class="none-toggle-box"></div>
+            <span class="none-toggle-text">Property is owned outright (no mortgage)</span>
+            <input type="checkbox" id="no-mortgage" style="display:none;" />
+          </label>
+          <div id="mortgage-wrap">
+            <div class="two-col">
+              <div>
+                <label class="field-label" for="mortgage-servicer">Mortgage servicer name <span style="color:var(--terracotta);">*</span></label>
+                <input type="text" id="mortgage-servicer" class="form-input" placeholder="e.g. Wells Fargo Home Mortgage" autocomplete="off" />
+              </div>
+              <div>
+                <label class="field-label" for="mortgage-loan">Loan number <span style="color:var(--terracotta);">*</span></label>
+                <input type="text" id="mortgage-loan" class="form-input" placeholder="Loan account number" autocomplete="off" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Landlord -->
+        <div class="field-group">
+          <label class="field-label" for="landlord-contact">Landlord or property manager <span class="optional-tag">optional — if renting</span></label>
+          <input type="text" id="landlord-contact" class="form-input" placeholder="Name and contact information" autocomplete="off" />
+        </div>
+
+        <hr class="section-divider" />
+
+        <!-- Vehicles -->
+        <div class="field-group">
+          <label class="field-label" style="margin-bottom:0.5rem;">Vehicles</label>
+          <label class="none-toggle-row" onclick="toggleNone('no-vehicles', 'vehicles-wrap')">
+            <div id="no-vehicles-box" class="none-toggle-box"></div>
+            <span class="none-toggle-text">No vehicles</span>
+            <input type="checkbox" id="no-vehicles" style="display:none;" />
+          </label>
+          <div id="vehicles-wrap">
+            <div id="vehicles-container"></div>
+            <button type="button" class="add-row-btn" onclick="addVehicle()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add another vehicle
+            </button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="vehicle-lease">Vehicle lease company &amp; contract number <span class="optional-tag">optional — if any vehicle is leased</span></label>
+          <input type="text" id="vehicle-lease" class="form-input" placeholder="e.g. Toyota Financial, contract #12345678" autocomplete="off" />
+        </div>
+
+        <hr class="section-divider" />
+
+        <!-- Utilities -->
+        <div class="field-group">
+          <label class="field-label" style="margin-bottom:0.875rem;">Utility accounts</label>
+
+          <div style="margin-bottom:0.875rem;">
+            <p style="font-size:0.7rem;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--charcoal);opacity:0.4;margin-bottom:0.5rem;">Electric <span style="color:var(--terracotta);">*</span></p>
+            <div class="two-col">
+              <input type="text" id="electric-provider" class="form-input" placeholder="Provider name" autocomplete="off" />
+              <input type="text" id="electric-account" class="form-input" placeholder="Account number" autocomplete="off" />
+            </div>
+          </div>
+
+          <div style="margin-bottom:0.875rem;">
+            <p style="font-size:0.7rem;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--charcoal);opacity:0.4;margin-bottom:0.5rem;">Gas <span class="optional-tag" style="font-size:0.68rem;">optional</span></p>
+            <div class="two-col">
+              <input type="text" id="gas-provider" class="form-input" placeholder="Provider name" autocomplete="off" />
+              <input type="text" id="gas-account" class="form-input" placeholder="Account number" autocomplete="off" />
+            </div>
+          </div>
+
+          <div style="margin-bottom:0.875rem;">
+            <p style="font-size:0.7rem;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--charcoal);opacity:0.4;margin-bottom:0.5rem;">Water <span class="optional-tag" style="font-size:0.68rem;">optional</span></p>
+            <div class="two-col">
+              <input type="text" id="water-provider" class="form-input" placeholder="Provider name" autocomplete="off" />
+              <input type="text" id="water-account" class="form-input" placeholder="Account number" autocomplete="off" />
+            </div>
+          </div>
+
+          <div>
+            <p style="font-size:0.7rem;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--charcoal);opacity:0.4;margin-bottom:0.5rem;">Internet / Cable <span class="optional-tag" style="font-size:0.68rem;">optional</span></p>
+            <div class="two-col">
+              <input type="text" id="internet-provider" class="form-input" placeholder="Provider name" autocomplete="off" />
+              <input type="text" id="internet-account" class="form-input" placeholder="Account number" autocomplete="off" />
+            </div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" style="margin-bottom:0.5rem;">Cell phone <span style="color:var(--terracotta);">*</span></label>
+          <div class="two-col">
+            <div>
+              <label class="field-label" for="cell-carrier" style="opacity:0.35;margin-bottom:0.3rem;">Carrier</label>
+              <input type="text" id="cell-carrier" class="form-input" placeholder="e.g. Verizon, AT&T, T-Mobile" autocomplete="off" />
+            </div>
+            <div>
+              <label class="field-label" for="cell-account" style="opacity:0.35;margin-bottom:0.3rem;">Account number</label>
+              <input type="text" id="cell-account" class="form-input" placeholder="Account or phone number" autocomplete="off" />
+            </div>
+          </div>
+        </div>
+
+        <div id="step4-error" style="display:none;background:rgba(196,114,74,0.08);border:1px solid rgba(196,114,74,0.25);border-radius:8px;padding:0.875rem 1rem;margin-bottom:1rem;">
+          <p id="step4-error-text" style="font-size:0.82rem;color:var(--terracotta);font-weight:300;line-height:1.5;"></p>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--mist);">
+          <button type="button" class="btn-outline" onclick="prevStep()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back
+          </button>
+          <button type="button" class="btn-primary" onclick="nextStep()">
+            Continue
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+
+      <!-- ══ STEP 5 — Digital, Insurance & Tax ══════════════════════════════ -->
+      <div id="step-5" class="form-step">
+        <div style="margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--mist);">
+          <span class="label" style="display:block;margin-bottom:0.5rem;">Step 5 of 5</span>
+          <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.75rem;font-weight:400;color:var(--charcoal);letter-spacing:-0.01em;margin-bottom:0.5rem;line-height:1.2;">Digital accounts, insurance &amp; tax.</h2>
+          <p style="font-size:0.875rem;color:var(--charcoal);opacity:0.5;line-height:1.65;font-weight:300;">Needed to close accounts, file final returns, and maintain records.</p>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="email-addresses">Email addresses used <span style="color:var(--terracotta);">*</span></label>
+          <textarea id="email-addresses" class="form-input" placeholder="List all email addresses — one per line" autocomplete="off" style="min-height:80px;"></textarea>
+          <p class="field-hint">Include personal, work, and any secondary email accounts.</p>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="social-media">Facebook &amp; Instagram accounts <span style="color:var(--terracotta);">*</span></label>
+          <textarea id="social-media" class="form-input" placeholder="e.g. Facebook: John Smith (john.smith.1952), Instagram: @johnsmith52. Include any other social media." autocomplete="off" style="min-height:80px;"></textarea>
+          <p class="field-note">We request memorialization or account removal per your family's wishes.</p>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="apple-id" style="margin-bottom:0.5rem;">Apple ID email <span style="color:var(--terracotta);">*</span></label>
+          <label class="none-toggle-row" onclick="toggleNone('no-apple-id', 'apple-id-wrap')">
+            <div id="no-apple-id-box" class="none-toggle-box"></div>
+            <span class="none-toggle-text">No Apple ID or iCloud account</span>
+            <input type="checkbox" id="no-apple-id" style="display:none;" />
+          </label>
+          <div id="apple-id-wrap">
+            <input type="email" id="apple-id" class="form-input" placeholder="The email address used for their Apple account" autocomplete="off" />
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="subscriptions">Recurring subscriptions &amp; online accounts <span style="color:var(--terracotta);">*</span></label>
+          <textarea id="subscriptions" class="form-input" placeholder="List any recurring services — e.g. Netflix, Spotify, Amazon Prime, Hulu, newspapers, software subscriptions, meal kits, etc." autocomplete="off"></textarea>
+          <p class="field-hint">A recent bank or credit card statement is the best source for this — note any you know of.</p>
+        </div>
+
+        <hr class="section-divider" />
+
+        <div class="field-group">
+          <label class="field-label" style="margin-bottom:0.5rem;">Health insurance <span style="color:var(--terracotta);">*</span></label>
+          <div class="two-col">
+            <div>
+              <label class="field-label" for="health-carrier" style="opacity:0.35;margin-bottom:0.3rem;">Insurance carrier</label>
+              <input type="text" id="health-carrier" class="form-input" placeholder="e.g. Blue Cross Blue Shield" autocomplete="off" />
+            </div>
+            <div>
+              <label class="field-label" for="health-member-id" style="opacity:0.35;margin-bottom:0.3rem;">Member ID number</label>
+              <input type="text" id="health-member-id" class="form-input" placeholder="From insurance card" autocomplete="off" />
+            </div>
+          </div>
+        </div>
+
+        <hr class="section-divider" />
+
+        <!-- CPA / Tax Preparer -->
+        <div class="field-group">
+          <label class="field-label" style="margin-bottom:0.5rem;">CPA or tax preparer <span style="color:var(--terracotta);">*</span></label>
+          <label class="none-toggle-row" onclick="toggleNone('no-cpa', 'cpa-wrap')">
+            <div id="no-cpa-box" class="none-toggle-box"></div>
+            <span class="none-toggle-text">No CPA or tax preparer — taxes were self-prepared</span>
+            <input type="checkbox" id="no-cpa" style="display:none;" />
+          </label>
+          <div id="cpa-wrap">
+            <div class="two-col">
+              <div>
+                <label class="field-label" for="cpa-name" style="opacity:0.35;margin-bottom:0.3rem;">Name / firm</label>
+                <input type="text" id="cpa-name" class="form-input" placeholder="Name or firm name" autocomplete="off" />
+              </div>
+              <div>
+                <label class="field-label" for="cpa-contact" style="opacity:0.35;margin-bottom:0.3rem;">Phone or email</label>
+                <input type="text" id="cpa-contact" class="form-input" placeholder="Contact information" autocomplete="off" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="prior-tax-location">Where are prior tax returns located? <span style="color:var(--terracotta);">*</span></label>
+          <input type="text" id="prior-tax-location" class="form-input" placeholder="e.g. File cabinet in home office, TurboTax account under john@email.com, with CPA's office" autocomplete="off" />
+          <p class="field-hint">We need the last 2–3 years for the final 1040 and estate tax filings.</p>
+        </div>
+
+        <hr class="section-divider" />
+
+        <div style="background:rgba(141,157,106,0.06);border:1px solid rgba(141,157,106,0.15);border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;">
+          <p style="font-size:0.7rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.875rem;">Optional — only if applicable</p>
+
+          <div class="field-group" style="margin-bottom:1.25rem;">
+            <label class="field-label" for="crypto-info">Cryptocurrency or digital asset holdings <span class="optional-tag">optional</span></label>
+            <textarea id="crypto-info" class="form-input" placeholder="List any exchanges (Coinbase, Binance), wallet types, or hardware wallets you know of." autocomplete="off" style="min-height:70px;"></textarea>
+          </div>
+
+          <div class="field-group" style="margin-bottom:1.25rem;">
+            <label class="field-label" for="loyalty-programs">Airline miles &amp; loyalty program accounts <span class="optional-tag">optional</span></label>
+            <textarea id="loyalty-programs" class="form-input" placeholder="e.g. American Airlines AAdvantage #12345678, Marriott Bonvoy, Delta SkyMiles #..." autocomplete="off" style="min-height:70px;"></textarea>
+          </div>
+
+          <div class="field-group" style="margin-bottom:0;">
+            <label class="field-label" for="prof-memberships">Professional memberships &amp; licenses <span class="optional-tag">optional</span></label>
+            <textarea id="prof-memberships" class="form-input" placeholder="e.g. ABA member #123, CPA license #456, medical license — include the organization and any ID numbers." autocomplete="off" style="min-height:70px;"></textarea>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="additional-notes">Anything else your advisor should know <span class="optional-tag">optional</span></label>
+          <textarea id="additional-notes" class="form-input" placeholder="Any other accounts, assets, debts, or details that don't fit neatly above — better to include than to leave out." autocomplete="off"></textarea>
+        </div>
+
+        <div id="step5-error" style="display:none;background:rgba(196,114,74,0.08);border:1px solid rgba(196,114,74,0.25);border-radius:8px;padding:0.875rem 1rem;margin-bottom:1rem;">
+          <p id="step5-error-text" style="font-size:0.82rem;color:var(--terracotta);font-weight:300;line-height:1.5;"></p>
+        </div>
+
+        <div id="submit-error" style="display:none;background:rgba(196,114,74,0.08);border:1px solid rgba(196,114,74,0.25);border-radius:8px;padding:0.875rem 1rem;margin-bottom:1rem;">
+          <p id="submit-error-text" style="font-size:0.82rem;color:var(--terracotta);font-weight:300;line-height:1.5;"></p>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--mist);">
+          <button type="button" class="btn-outline" onclick="prevStep()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back
+          </button>
+          <button type="button" id="submit-btn" class="btn-gold" style="font-size:0.875rem;padding:0.8rem 1.8rem;" onclick="submitForm()">
+            Submit Details
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </div><!-- /form-card -->
+
+
+    <!-- ══ CONFIRMATION ══════════════════════════════════════════════════════ -->
+    <div id="confirmation" style="display:none;background:#fff;border:1px solid var(--mist);border-radius:16px;padding:3.5rem 2.25rem;box-shadow:0 4px 28px rgba(44,44,42,0.07);text-align:center;">
+      <div class="confirmation-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--forest)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <span class="label" style="display:block;margin-bottom:1rem;">— Details Received</span>
+      <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.875rem,4vw,2.75rem);font-weight:400;color:var(--charcoal);letter-spacing:-0.02em;line-height:1.1;margin-bottom:1rem;">
+        Your advisor has everything they need.
+      </h2>
+      <p style="font-size:1rem;color:var(--charcoal);opacity:0.6;line-height:1.8;max-width:480px;margin:0 auto 2.5rem;font-weight:300;">
+        Your estate details have been securely submitted. Your advisor will review them and begin coordinating tasks on your behalf. You don't need to do anything else right now.
+      </p>
+      <a href="portal-dashboard.html" class="btn-primary">
+        Back to Dashboard
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══ FOOTER ════════════════════════════════════════════════════════════════ -->
+<footer style="background:#1a2218;padding:3.5rem 1.75rem 2rem;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:2rem;padding-bottom:2rem;border-bottom:1px solid rgba(255,255,255,0.06);">
+      <div style="flex-shrink:0;">
+        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.875rem;">
+          <img src="brand_assets/logo.png" alt="Loss Ally" style="height:30px;width:auto;" />
+          <span style="font-size:0.95rem;font-weight:400;color:rgba(250,248,244,0.8);">Loss Ally</span>
+        </div>
+        <p style="font-size:0.78rem;color:rgba(250,248,244,0.3);line-height:1.75;max-width:200px;font-weight:300;">
+          Estate and life administration support. Compassionate. Practical. Always here.
+        </p>
+      </div>
+      <nav style="display:flex;flex-wrap:wrap;gap:0.625rem 2.25rem;align-items:center;">
+        <a href="privacy-policy.html" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Privacy Policy</a>
+        <a href="terms-of-service.html" style="font-size:0.8rem;color:rgba(250,248,244,0.4);text-decoration:none;font-weight:300;transition:color 0.18s;" onmouseover="this.style.color='rgba(250,248,244,0.78)'" onmouseout="this.style.color='rgba(250,248,244,0.4)'">Terms of Service</a>
+      </nav>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding-top:1.5rem;flex-wrap:wrap;gap:0.75rem;">
+      <p style="font-size:0.72rem;color:rgba(250,248,244,0.22);font-weight:300;">© 2026 Loss Ally. All rights reserved.</p>
+      <p style="font-size:0.72rem;color:rgba(250,248,244,0.22);font-weight:300;">Not a legal services firm.</p>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ══ SCRIPTS ════════════════════════════════════════════════════════════════ -->
+<script>
+  // ── Nav shadow ──────────────────────────────────────────────────────────────
+  window.addEventListener('scroll', () => {
+    document.getElementById('site-nav').style.boxShadow =
+      window.scrollY > 10 ? '0 1px 20px rgba(44,44,42,0.06)' : 'none'
+  }, { passive: true })
+
+  // ── Step management ─────────────────────────────────────────────────────────
+  let currentStep = 1
+  const TOTAL_STEPS = 5
+
+  function updateProgress(n) {
+    for (let i = 1; i <= TOTAL_STEPS; i++) {
+      const sc   = document.getElementById('sc-' + i)
+      const sl   = document.getElementById('sl-' + i)
+      const line = i < TOTAL_STEPS ? document.getElementById('line-' + i) : null
+      sc.className = 'step-circle'
+      sl.className = 'step-label'
+      if (line) line.className = 'step-connector'
+      if (i < n) {
+        sc.classList.add('done')
+        sc.innerHTML = '<svg width="11" height="8" viewBox="0 0 12 8" fill="none"><polyline points="1 4 4.5 7 11 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+        sl.classList.add('done')
+        if (line) line.classList.add('done')
+      } else if (i === n) {
+        sc.classList.add('active')
+        sc.textContent = i
+        sl.classList.add('active')
+      } else {
+        sc.textContent = i
+      }
+    }
+  }
+
+  function showStep(n) {
+    document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'))
+    document.getElementById('step-' + n).classList.add('active')
+    updateProgress(n)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  function nextStep() {
+    if (!validateStep(currentStep)) return
+    if (currentStep < TOTAL_STEPS) {
+      currentStep++
+      showStep(currentStep)
+    }
+  }
+
+  function prevStep() {
+    if (currentStep > 1) {
+      currentStep--
+      showStep(currentStep)
+    }
+  }
+
+  // ── Validation ──────────────────────────────────────────────────────────────
+  function showError(stepN, msg) {
+    const el = document.getElementById('step' + stepN + '-error')
+    const txt = document.getElementById('step' + stepN + '-error-text')
+    txt.textContent = msg
+    el.style.display = ''
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+  }
+  function hideError(stepN) {
+    document.getElementById('step' + stepN + '-error').style.display = 'none'
+  }
+
+  function validateStep(n) {
+    hideError(n)
+    if (n === 1) {
+      if (!document.getElementById('deceased-dob').value)
+        return showError(1, 'Please enter the date of birth.') || false
+      if (!document.getElementById('deceased-ssn').value.trim())
+        return showError(1, 'Please enter the Social Security Number.') || false
+      if (!document.getElementById('deceased-dl-state').value)
+        return showError(1, 'Please select the driver\'s license state.') || false
+      if (!document.getElementById('deceased-dl-number').value.trim())
+        return showError(1, 'Please enter the driver\'s license number.') || false
+    }
+    if (n === 2) {
+      const noWill = document.getElementById('no-will').checked
+      if (!noWill && !document.getElementById('will-location').value.trim())
+        return showError(2, 'Please describe where the original will is located, or check "There is no will."') || false
+      if (!document.querySelector('input[name="has-attorney"]:checked'))
+        return showError(2, 'Please indicate whether there is an estate attorney.') || false
+      if (document.querySelector('input[name="has-attorney"]:checked')?.value === 'yes') {
+        if (!document.getElementById('attorney-name').value.trim())
+          return showError(2, 'Please enter the attorney\'s name.') || false
+        if (!document.getElementById('attorney-contact').value.trim())
+          return showError(2, 'Please enter the attorney\'s contact information.') || false
+      }
+      const benefRows = document.querySelectorAll('#beneficiaries-container .multi-section-card')
+      if (!benefRows.length)
+        return showError(2, 'Please add at least one beneficiary or heir.') || false
+      for (const row of benefRows) {
+        if (!row.querySelector('[data-field="name"]').value.trim())
+          return showError(2, 'Please enter a name for every beneficiary.') || false
+      }
+    }
+    if (n === 3) {
+      const bankRows = document.querySelectorAll('#bank-accounts-container .multi-section-card')
+      if (!bankRows.length)
+        return showError(3, 'Please add at least one bank or savings account.') || false
+      for (const row of bankRows) {
+        if (!row.querySelector('[data-field="institution"]').value.trim() || !row.querySelector('[data-field="account_number"]').value.trim())
+          return showError(3, 'Please fill in the institution name and account number for every bank account.') || false
+      }
+      const noLifeIns = document.getElementById('no-life-ins').checked
+      if (!noLifeIns) {
+        const lifeRows = document.querySelectorAll('#life-ins-container .multi-section-card')
+        if (lifeRows.length) {
+          for (const row of lifeRows) {
+            if (!row.querySelector('[data-field="company"]').value.trim() || !row.querySelector('[data-field="policy_number"]').value.trim())
+              return showError(3, 'Please fill in the company and policy number for every life insurance policy.') || false
+          }
+        }
+      }
+      const noRetirement = document.getElementById('no-retirement').checked
+      if (!noRetirement) {
+        const retRows = document.querySelectorAll('#retirement-container .multi-section-card')
+        if (retRows.length) {
+          for (const row of retRows) {
+            if (!row.querySelector('[data-field="institution"]').value.trim() || !row.querySelector('[data-field="account_number"]').value.trim())
+              return showError(3, 'Please fill in the institution and account number for every retirement account.') || false
+          }
+        }
+      }
+    }
+    if (n === 4) {
+      const noProperties = document.getElementById('no-properties').checked
+      if (!noProperties) {
+        const propRows = document.querySelectorAll('#properties-container .multi-section-card')
+        if (!propRows.length)
+          return showError(4, 'Please add at least one property address, or check "No owned property."') || false
+        for (const row of propRows) {
+          if (!row.querySelector('[data-field="address"]').value.trim())
+            return showError(4, 'Please enter an address for every property.') || false
+        }
+        const noMortgage = document.getElementById('no-mortgage').checked
+        if (!noMortgage) {
+          if (!document.getElementById('mortgage-servicer').value.trim() || !document.getElementById('mortgage-loan').value.trim())
+            return showError(4, 'Please enter the mortgage servicer and loan number, or check "No mortgage."') || false
+        }
+      }
+      const noVehicles = document.getElementById('no-vehicles').checked
+      if (!noVehicles) {
+        const vehRows = document.querySelectorAll('#vehicles-container .multi-section-card')
+        if (!vehRows.length)
+          return showError(4, 'Please add at least one vehicle, or check "No vehicles."') || false
+        for (const row of vehRows) {
+          const year = row.querySelector('[data-field="year"]').value.trim()
+          const make = row.querySelector('[data-field="make"]').value.trim()
+          const model = row.querySelector('[data-field="model"]').value.trim()
+          if (!year || !make || !model)
+            return showError(4, 'Please fill in the year, make, and model for every vehicle.') || false
+        }
+      }
+      if (!document.getElementById('electric-provider').value.trim())
+        return showError(4, 'Please enter the electric utility provider name.') || false
+      if (!document.getElementById('cell-carrier').value.trim())
+        return showError(4, 'Please enter the cell phone carrier.') || false
+    }
+    if (n === 5) {
+      if (!document.getElementById('email-addresses').value.trim())
+        return showError(5, 'Please list the email addresses used.') || false
+      if (!document.getElementById('social-media').value.trim())
+        return showError(5, 'Please provide the Facebook and Instagram account details.') || false
+      const noAppleId = document.getElementById('no-apple-id').checked
+      if (!noAppleId && !document.getElementById('apple-id').value.trim())
+        return showError(5, 'Please enter the Apple ID email, or check "No Apple ID."') || false
+      if (!document.getElementById('subscriptions').value.trim())
+        return showError(5, 'Please list recurring subscriptions, or note "none known."') || false
+      if (!document.getElementById('health-carrier').value.trim() || !document.getElementById('health-member-id').value.trim())
+        return showError(5, 'Please enter the health insurance carrier and member ID.') || false
+      const noCpa = document.getElementById('no-cpa').checked
+      if (!noCpa) {
+        if (!document.getElementById('cpa-name').value.trim())
+          return showError(5, 'Please enter the CPA name, or check "No CPA — taxes were self-prepared."') || false
+      }
+      if (!document.getElementById('prior-tax-location').value.trim())
+        return showError(5, 'Please describe where the prior tax returns are located.') || false
+    }
+    return true
+  }
+
+  // ── None toggles ────────────────────────────────────────────────────────────
+  function toggleNone(checkboxId, wrapId) {
+    const cb    = document.getElementById(checkboxId)
+    const box   = document.getElementById(checkboxId + '-box')
+    const wrap  = document.getElementById(wrapId)
+    cb.checked  = !cb.checked
+    box.classList.toggle('checked', cb.checked)
+    if (wrap) wrap.style.display = cb.checked ? 'none' : ''
+  }
+
+  // ── Radio options ────────────────────────────────────────────────────────────
+  function selectOption(card, groupName) {
+    document.querySelectorAll('input[name="' + groupName + '"]').forEach(input => {
+      input.closest('.option-card').classList.remove('selected')
+    })
+    card.classList.add('selected')
+    const input = card.querySelector('input[type="radio"]')
+    if (input) input.checked = true
+    if (groupName === 'has-attorney') {
+      document.getElementById('attorney-fields').style.display = input?.value === 'yes' ? 'block' : 'none'
+    }
+  }
+
+  // ── SSN show/hide ────────────────────────────────────────────────────────────
+  function toggleSSN(btn) {
+    const input = document.getElementById('deceased-ssn')
+    const isHidden = input.type === 'password'
+    input.type = isHidden ? 'text' : 'password'
+    btn.querySelector('svg').style.opacity = isHidden ? '0.7' : '0.38'
+  }
+
+  // ── Multi-row helpers ────────────────────────────────────────────────────────
+  function updateRowLabels(container, prefix) {
+    const rows = container.querySelectorAll('.multi-section-card')
+    rows.forEach((row, i) => {
+      const label = row.querySelector('.multi-section-label')
+      if (label) label.textContent = label.dataset.prefix + ' ' + (i + 1)
+      const btn = row.querySelector('.remove-row-btn')
+      if (btn) btn.style.display = rows.length > 1 ? '' : 'none'
+    })
+  }
+
+  function removeRow(btn, containerId) {
+    const container = document.getElementById(containerId)
+    btn.closest('.multi-section-card').remove()
+    updateRowLabels(container)
+  }
+
+  // ── Beneficiaries ────────────────────────────────────────────────────────────
+  function addBeneficiary() {
+    const c = document.getElementById('beneficiaries-container')
+    const n = c.querySelectorAll('.multi-section-card').length + 1
+    const div = document.createElement('div')
+    div.className = 'multi-section-card'
+    div.innerHTML = `
+      <div class="multi-section-header">
+        <span class="multi-section-label" data-prefix="Beneficiary">Beneficiary ${n}</span>
+        <button type="button" class="remove-row-btn" onclick="removeRow(this,'beneficiaries-container')" style="display:${n>1?'':'none'}">× Remove</button>
+      </div>
+      <div class="two-col" style="margin-bottom:0.75rem;">
+        <div>
+          <label class="field-label" style="margin-bottom:0.3rem;">Full name <span style="color:var(--terracotta);">*</span></label>
+          <input type="text" data-field="name" class="form-input" placeholder="Full legal name" autocomplete="off" />
+        </div>
+        <div>
+          <label class="field-label" style="margin-bottom:0.3rem;">Relationship</label>
+          <input type="text" data-field="relationship" class="form-input" placeholder="e.g. Daughter, Son, Spouse" autocomplete="off" />
+        </div>
+      </div>
+      <div>
+        <label class="field-label" style="margin-bottom:0.3rem;">Phone or email</label>
+        <input type="text" data-field="contact" class="form-input" placeholder="Contact information" autocomplete="off" />
+      </div>`
+    c.appendChild(div)
+    updateRowLabels(c)
+  }
+
+  // ── Bank accounts ────────────────────────────────────────────────────────────
+  function addBankAccount() {
+    const c = document.getElementById('bank-accounts-container')
+    const n = c.querySelectorAll('.multi-section-card').length + 1
+    const div = document.createElement('div')
+    div.className = 'multi-section-card'
+    div.innerHTML = `
+      <div class="multi-section-header">
+        <span class="multi-section-label" data-prefix="Account">Account ${n}</span>
+        <button type="button" class="remove-row-btn" onclick="removeRow(this,'bank-accounts-container')" style="display:${n>1?'':'none'}">× Remove</button>
+      </div>
+      <div class="two-col" style="margin-bottom:0.75rem;">
+        <div>
+          <label class="field-label" style="margin-bottom:0.3rem;">Institution name <span style="color:var(--terracotta);">*</span></label>
+          <input type="text" data-field="institution" class="form-input" placeholder="e.g. Chase, Bank of America" autocomplete="off" />
+        </div>
+        <div>
+          <label class="field-label" style="margin-bottom:0.3rem;">Account number <span style="color:var(--terracotta);">*</span></label>
+          <input type="text" data-field="account_number" class="form-input" placeholder="Account number" autocomplete="off" />
+        </div>
+      </div>
+      <div>
+        <label class="field-label" style="margin-bottom:0.3rem;">Account type</label>
+        <select data-field="account_type" class="form-input">
+          <option value="checking">Checking</option>
+          <option value="savings">Savings</option>
+          <option value="money-market">Money Market</option>
+          <option value="other">Other</option>
+        </select>
+      </div>`
+    c.appendChild(div)
+    updateRowLabels(c)
+  }
+
+  // ── Life insurance ───────────────────────────────────────────────────────────
+  function addLifeIns() {
+    const c = document.getElementById('life-ins-container')
+    const n = c.querySelectorAll('.multi-section-card').length + 1
+    const div = document.createElement('div')
+    div.className = 'multi-section-card'
+    div.innerHTML = `
+      <div class="multi-section-header">
+        <span class="multi-section-label" data-prefix="Policy">Policy ${n}</span>
+        <button type="button" class="remove-row-btn" onclick="removeRow(this,'life-ins-container')" style="display:${n>1?'':'none'}">× Remove</button>
+      </div>
+      <div class="two-col" style="margin-bottom:0.75rem;">
+        <div>
+          <label class="field-label" style="margin-bottom:0.3rem;">Insurance company <span style="color:var(--terracotta);">*</span></label>
+          <input type="text" data-field="company" class="form-input" placeholder="e.g. Northwestern Mutual" autocomplete="off" />
+        </div>
+        <div>
+          <label class="field-label" style="margin-bottom:0.3rem;">Policy number <span style="color:var(--terracotta);">*</span></label>
+          <input type="text" data-field="policy_number" class="form-input" placeholder="Policy number" autocomplete="off" />
+        </div>
+      </div>
+      <div>
+        <label class="field-label" style="margin-bottom:0.3rem;">Primary beneficiary</label>
+        <input type="text" data-field="beneficiary" class="form-input" placeholder="Name of primary beneficiary" autocomplete="off" />
+      </div>`
+    c.appendChild(div)
+    updateRowLabels(c)
+  }
+
+  // ── Retirement accounts ──────────────────────────────────────────────────────
+  function addRetirement() {
+    const c = document.getElementById('retirement-container')
+    const n = c.querySelectorAll('.multi-section-card').length + 1
+    const div = document.createElement('div')
+    div.className = 'multi-section-card'
+    div.innerHTML = `
+      <div class="multi-section-header">
+        <span class="multi-section-label" data-prefix="Account">Account ${n}</span>
+        <button type="button" class="remove-row-btn" onclick="removeRow(this,'retirement-container')" style="display:${n>1?'':'none'}">× Remove</button>
+      </div>
+      <div class="two-col" style="margin-bottom:0.75rem;">
+        <div>
+          <label class="field-label" style="margin-bottom:0.3rem;">Institution or employer <span style="color:var(--terracotta);">*</span></label>
+          <input type="text" data-field="institution" class="form-input" placeholder="e.g. Fidelity, Vanguard, or employer name" autocomplete="off" />
+        </div>
+        <div>
+          <label class="field-label" style="margin-bottom:0.3rem;">Account number <span style="color:var(--terracotta);">*</span></label>
+          <input type="text" data-field="account_number" class="form-input" placeholder="Account number" autocomplete="off" />
+        </div>
+      </div>
+      <div>
+        <label class="field-label" style="margin-bottom:0.3rem;">Plan type</label>
+        <select data-field="plan_type" class="form-input">
+          <option value="401k">401(k)</option>
+          <option value="ira">IRA (Traditional)</option>
+          <option value="roth-ira">Roth IRA</option>
+          <option value="pension">Pension</option>
+          <option value="annuity">Annuity</option>
+          <option value="403b">403(b)</option>
+          <option value="other">Other</option>
+        </select>
+      </div>`
+    c.appendChild(div)
+    updateRowLabels(c)
+  }
+
+  // ── Investment accounts ──────────────────────────────────────────────────────
+  function addInvestment() {
+    const c = document.getElementById('investment-container')
+    const n = c.querySelectorAll('.multi-section-card').length + 1
+    const div = document.createElement('div')
+    div.className = 'multi-section-card'
+    div.innerHTML = `
+      <div class="multi-section-header">
+        <span class="multi-section-label" data-prefix="Account">Account ${n}</span>
+        <button type="button" class="remove-row-btn" onclick="removeRow(this,'investment-container')" style="display:${n>1?'':'none'}">× Remove</button>
+      </div>
+      <div class="two-col">
+        <div>
+          <label class="field-label" style="margin-bottom:0.3rem;">Institution</label>
+          <input type="text" data-field="institution" class="form-input" placeholder="e.g. Schwab, TD Ameritrade" autocomplete="off" />
+        </div>
+        <div>
+          <label class="field-label" style="margin-bottom:0.3rem;">Account number</label>
+          <input type="text" data-field="account_number" class="form-input" placeholder="Account number" autocomplete="off" />
+        </div>
+      </div>`
+    c.appendChild(div)
+    updateRowLabels(c)
+  }
+
+  // ── Properties ───────────────────────────────────────────────────────────────
+  function addProperty() {
+    const c = document.getElementById('properties-container')
+    const n = c.querySelectorAll('.multi-section-card').length + 1
+    const div = document.createElement('div')
+    div.className = 'multi-section-card'
+    div.innerHTML = `
+      <div class="multi-section-header">
+        <span class="multi-section-label" data-prefix="Property">Property ${n}</span>
+        <button type="button" class="remove-row-btn" onclick="removeRow(this,'properties-container')" style="display:${n>1?'':'none'}">× Remove</button>
+      </div>
+      <div>
+        <label class="field-label" style="margin-bottom:0.3rem;">Full address <span style="color:var(--terracotta);">*</span></label>
+        <input type="text" data-field="address" class="form-input" placeholder="Street address, City, State, ZIP" autocomplete="off" />
+      </div>`
+    c.appendChild(div)
+    updateRowLabels(c)
+  }
+
+  // ── Vehicles ─────────────────────────────────────────────────────────────────
+  function addVehicle() {
+    const c = document.getElementById('vehicles-container')
+    const n = c.querySelectorAll('.multi-section-card').length + 1
+    const div = document.createElement('div')
+    div.className = 'multi-section-card'
+    div.innerHTML = `
+      <div class="multi-section-header">
+        <span class="multi-section-label" data-prefix="Vehicle">Vehicle ${n}</span>
+        <button type="button" class="remove-row-btn" onclick="removeRow(this,'vehicles-container')" style="display:${n>1?'':'none'}">× Remove</button>
+      </div>
+      <div class="three-col" style="margin-bottom:0.75rem;">
+        <div>
+          <label class="field-label" style="margin-bottom:0.3rem;">Year <span style="color:var(--terracotta);">*</span></label>
+          <input type="text" data-field="year" class="form-input" placeholder="e.g. 2019" autocomplete="off" />
+        </div>
+        <div>
+          <label class="field-label" style="margin-bottom:0.3rem;">Make <span style="color:var(--terracotta);">*</span></label>
+          <input type="text" data-field="make" class="form-input" placeholder="e.g. Toyota" autocomplete="off" />
+        </div>
+        <div>
+          <label class="field-label" style="margin-bottom:0.3rem;">Model <span style="color:var(--terracotta);">*</span></label>
+          <input type="text" data-field="model" class="form-input" placeholder="e.g. Camry" autocomplete="off" />
+        </div>
+      </div>
+      <div>
+        <label class="field-label" style="margin-bottom:0.3rem;">VIN <span class="optional-tag">optional but helpful</span></label>
+        <input type="text" data-field="vin" class="form-input" placeholder="17-character vehicle identification number" autocomplete="off" />
+      </div>`
+    c.appendChild(div)
+    updateRowLabels(c)
+  }
+
+  // ── Data collection ──────────────────────────────────────────────────────────
+  function gatherRows(containerId, fields) {
+    const rows = document.querySelectorAll('#' + containerId + ' .multi-section-card')
+    const result = []
+    rows.forEach(row => {
+      const entry = {}
+      fields.forEach(f => {
+        const el = row.querySelector('[data-field="' + f + '"]')
+        entry[f] = el ? el.value.trim() : ''
+      })
+      result.push(entry)
+    })
+    return result
+  }
+
+  // ── Submit ───────────────────────────────────────────────────────────────────
+  async function submitForm() {
+    if (!validateStep(5)) return
+
+    const btn = document.getElementById('submit-btn')
+    btn.disabled = true
+    btn.textContent = 'Submitting…'
+
+    const errEl  = document.getElementById('submit-error')
+    const errTxt = document.getElementById('submit-error-text')
+
+    try {
+      const { supabase } = await import('./auth.js')
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) throw new Error('Not authenticated — please sign in.')
+
+      const gasP    = document.getElementById('gas-provider').value.trim()
+      const waterP  = document.getElementById('water-provider').value.trim()
+      const internetP = document.getElementById('internet-provider').value.trim()
+
+      const payload = {
+        client_id:        session.user.id,
+
+        // Step 1
+        deceased_dob:         document.getElementById('deceased-dob').value || null,
+        deceased_ssn:         document.getElementById('deceased-ssn').value.trim() || null,
+        deceased_dl_state:    document.getElementById('deceased-dl-state').value || null,
+        deceased_dl_number:   document.getElementById('deceased-dl-number').value.trim() || null,
+        deceased_medicare_id: document.getElementById('deceased-medicare-id').value.trim() || null,
+
+        // Step 2
+        will_location:   document.getElementById('no-will').checked ? 'No will exists' : document.getElementById('will-location').value.trim(),
+        has_attorney:    document.querySelector('input[name="has-attorney"]:checked')?.value === 'yes',
+        attorney_name:   document.getElementById('attorney-name').value.trim() || null,
+        attorney_contact:document.getElementById('attorney-contact').value.trim() || null,
+        beneficiaries:   gatherRows('beneficiaries-container', ['name','relationship','contact']),
+
+        // Step 3
+        bank_accounts:       gatherRows('bank-accounts-container', ['institution','account_number','account_type']),
+        life_insurance:      document.getElementById('no-life-ins').checked ? [] : gatherRows('life-ins-container', ['company','policy_number','beneficiary']),
+        retirement_accounts: document.getElementById('no-retirement').checked ? [] : gatherRows('retirement-container', ['institution','account_number','plan_type']),
+        investment_accounts: gatherRows('investment-container', ['institution','account_number']).filter(r => r.institution || r.account_number),
+
+        // Step 4
+        properties:          document.getElementById('no-properties').checked ? [] : gatherRows('properties-container', ['address']),
+        mortgage_servicer:   document.getElementById('no-mortgage').checked || document.getElementById('no-properties').checked ? null : document.getElementById('mortgage-servicer').value.trim() || null,
+        mortgage_loan_number:document.getElementById('no-mortgage').checked || document.getElementById('no-properties').checked ? null : document.getElementById('mortgage-loan').value.trim() || null,
+        landlord_contact:    document.getElementById('landlord-contact').value.trim() || null,
+        vehicles:            document.getElementById('no-vehicles').checked ? [] : gatherRows('vehicles-container', ['year','make','model','vin']),
+        vehicle_lease_info:  document.getElementById('vehicle-lease').value.trim() || null,
+        utility_electric:    { provider: document.getElementById('electric-provider').value.trim(), account_number: document.getElementById('electric-account').value.trim() },
+        utility_gas:         gasP ? { provider: gasP, account_number: document.getElementById('gas-account').value.trim() } : null,
+        utility_water:       waterP ? { provider: waterP, account_number: document.getElementById('water-account').value.trim() } : null,
+        utility_internet:    internetP ? { provider: internetP, account_number: document.getElementById('internet-account').value.trim() } : null,
+        cell_carrier:        document.getElementById('cell-carrier').value.trim() || null,
+        cell_account_number: document.getElementById('cell-account').value.trim() || null,
+
+        // Step 5
+        email_addresses:      document.getElementById('email-addresses').value.trim() || null,
+        social_media_accounts:document.getElementById('social-media').value.trim() || null,
+        apple_id_email:       document.getElementById('no-apple-id').checked ? null : document.getElementById('apple-id').value.trim() || null,
+        subscriptions:        document.getElementById('subscriptions').value.trim() || null,
+        health_ins_carrier:   document.getElementById('health-carrier').value.trim() || null,
+        health_ins_member_id: document.getElementById('health-member-id').value.trim() || null,
+        cpa_name:             document.getElementById('no-cpa').checked ? null : document.getElementById('cpa-name').value.trim() || null,
+        cpa_contact:          document.getElementById('no-cpa').checked ? null : document.getElementById('cpa-contact').value.trim() || null,
+        prior_tax_location:   document.getElementById('prior-tax-location').value.trim() || null,
+        crypto_info:          document.getElementById('crypto-info').value.trim() || null,
+        loyalty_programs:     document.getElementById('loyalty-programs').value.trim() || null,
+        professional_memberships: document.getElementById('prof-memberships').value.trim() || null,
+        additional_notes:     document.getElementById('additional-notes').value.trim() || null,
+      }
+
+      const { error } = await supabase
+        .from('estate_details')
+        .upsert(payload, { onConflict: 'client_id' })
+
+      if (error) throw new Error(error.message)
+
+      document.getElementById('form-card').style.display = 'none'
+      document.getElementById('progress-container').style.display = 'none'
+      document.getElementById('confirmation').style.display = 'block'
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+
+    } catch (err) {
+      errTxt.textContent = 'Could not save your details: ' + (err.message || 'Unknown error. Please try again.')
+      errEl.style.display = ''
+      errEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+      btn.disabled = false
+      btn.innerHTML = 'Submit Details <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>'
+    }
+  }
+
+  // ── Init ─────────────────────────────────────────────────────────────────────
+  updateProgress(1)
+  // Pre-populate first row of required sections
+  addBeneficiary()
+  addBankAccount()
+  addLifeIns()
+  addRetirement()
+  addProperty()
+  addVehicle()
+</script>
+
+<script type="module">
+  import { requireAuth } from './auth.js'
+  const auth = await requireAuth()
+  if (!auth) throw new Error('redirect')
+  document.body.style.visibility = 'visible'
+</script>
+
+</body>
+</html>
