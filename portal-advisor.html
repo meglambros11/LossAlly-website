@@ -660,7 +660,7 @@ async function loadClients() {
       const wasOpen = row.classList.contains('open')
       row.classList.toggle('open', !wasOpen)
       if (!wasOpen) {
-        loadClientTaskPanel(c.id, row, allTasks || [])
+        loadClientTaskPanel(c.id, row, allTasks || [], currentPlan)
         loadClientMessages(c.id, row)
         // Dismiss unread badge and mark messages as read
         row.querySelector('.unread-badge')?.remove()
@@ -705,7 +705,7 @@ async function loadClients() {
 
 const _loadedPanels = new Set()
 
-async function loadClientTaskPanel(clientId, row, allTasks) {
+async function loadClientTaskPanel(clientId, row, allTasks, plan) {
   if (_loadedPanels.has(clientId)) return
   _loadedPanels.add(clientId)
 
@@ -713,7 +713,7 @@ async function loadClientTaskPanel(clientId, row, allTasks) {
 
   const { data: ctRows, error } = await supabase
     .from('client_tasks')
-    .select('id,task_id,excluded')
+    .select('id,task_id,excluded,done')
     .eq('client_id', clientId)
 
   if (error) {
@@ -729,12 +729,20 @@ async function loadClientTaskPanel(clientId, row, allTasks) {
   const ctMap = {}
   for (const ct of ctRows) ctMap[ct.task_id] = ct
 
-  const totalCount    = allTasks.length
-  const excludedCount = allTasks.filter(t => ctMap[t.id]?.excluded).length
-  const summaryEl     = row.querySelector('.task-summary-label')
+  const summaryEl = row.querySelector('.task-summary-label')
   const updateSummary = () => {
-    const excl = allTasks.filter(t => ctMap[t.id]?.excluded).length
-    summaryEl.textContent = excl > 0 ? `${totalCount - excl} of ${totalCount} tasks active` : `${totalCount} tasks`
+    const active = allTasks.filter(t => !ctMap[t.id]?.excluded)
+    const done   = active.filter(t => ctMap[t.id]?.done).length
+    const total  = allTasks.length
+    if (plan === 'guided') {
+      summaryEl.textContent = active.length < total
+        ? `${done} of ${active.length} done · ${active.length} of ${total} active`
+        : `${done} of ${active.length} done`
+    } else {
+      summaryEl.textContent = active.length < total
+        ? `${active.length} of ${total} tasks active`
+        : `${total} tasks`
+    }
   }
   updateSummary()
 
@@ -758,6 +766,10 @@ async function loadClientTaskPanel(clientId, row, allTasks) {
         tasks.map(t => {
           const ct       = ctMap[t.id]
           const included = !ct?.excluded
+          const done     = ct?.done || false
+          const donePill = done && plan === 'guided'
+            ? `<span style="display:inline-flex;align-items:center;gap:0.2rem;font-size:0.62rem;font-weight:400;color:var(--forest);opacity:0.75;flex-shrink:0;white-space:nowrap;">${CHECK_SVG_SMALL.replace('stroke="#fff"','stroke="var(--forest)"')} Done</span>`
+            : ''
           return `
           <div class="adv-task-row">
             <button
@@ -769,6 +781,7 @@ async function loadClientTaskPanel(clientId, row, allTasks) {
               aria-label="${included ? 'Exclude' : 'Include'}: ${esc(t.title)}"
             >${included ? CHECK_SVG_SMALL : ''}</button>
             <span class="adv-task-label${included ? '' : ' excluded'}">${esc(t.title)}</span>
+            ${donePill}
           </div>`
         }).join('')
     }).join('')
