@@ -362,6 +362,14 @@
           <p class="field-hint">Found on their Medicare card. Needed if they were enrolled in Medicare or Medicaid.</p>
         </div>
 
+        <hr style="border:none;border-top:1px solid var(--mist);margin:0.5rem 0 1.5rem;" />
+
+        <div class="field-group">
+          <label class="field-label" for="executor-address">Your mailing address <span style="color:var(--terracotta);">*</span></label>
+          <input type="text" id="executor-address" class="form-input" placeholder="123 Main St, City, State, ZIP" autocomplete="street-address" />
+          <p class="field-hint">Your address as executor or next of kin — used as the return address on letter templates.</p>
+        </div>
+
         <div id="step1-error" style="display:none;background:rgba(196,114,74,0.08);border:1px solid rgba(196,114,74,0.25);border-radius:8px;padding:0.875rem 1rem;margin-bottom:1rem;">
           <p id="step1-error-text" style="font-size:0.82rem;color:var(--terracotta);font-weight:300;line-height:1.5;"></p>
         </div>
@@ -954,6 +962,8 @@
         return showError(1, 'Please select the driver\'s license state.') || false
       if (!document.getElementById('deceased-dl-number').value.trim())
         return showError(1, 'Please enter the driver\'s license number.') || false
+      if (!document.getElementById('executor-address').value.trim())
+        return showError(1, 'Please enter your mailing address.') || false
     }
     if (n === 2) {
       const noWill = document.getElementById('no-will').checked
@@ -1359,6 +1369,7 @@
         deceased_dl_state:    document.getElementById('deceased-dl-state').value || null,
         deceased_dl_number:   document.getElementById('deceased-dl-number').value.trim() || null,
         deceased_medicare_id: document.getElementById('deceased-medicare-id').value.trim() || null,
+        executor_address:     document.getElementById('executor-address').value.trim() || null,
 
         // Step 2
         will_location:   document.getElementById('no-will').checked ? 'No will exists' : document.getElementById('will-location').value.trim(),
@@ -1408,6 +1419,16 @@
         .upsert(payload, { onConflict: 'client_id' })
 
       if (error) throw new Error(error.message)
+
+      // Mirror address + DOB into profiles.client_details so letter template auto-fill works
+      const { data: profileRow } = await supabase
+        .from('profiles').select('client_details').eq('id', session.user.id).single()
+      const merged = {
+        ...(profileRow?.client_details || {}),
+        executor_address:       payload.executor_address,
+        deceased_date_of_birth: payload.deceased_dob,
+      }
+      await supabase.from('profiles').update({ client_details: merged }).eq('id', session.user.id)
 
       document.getElementById('form-card').style.display = 'none'
       document.getElementById('progress-container').style.display = 'none'

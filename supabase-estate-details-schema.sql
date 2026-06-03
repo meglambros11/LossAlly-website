@@ -17,6 +17,7 @@ create table if not exists public.estate_details (
   deceased_dl_state     text,
   deceased_dl_number    text,
   deceased_medicare_id  text,
+  executor_address      text,
 
   -- Step 2: Legal & Beneficiaries
   will_location         text,
