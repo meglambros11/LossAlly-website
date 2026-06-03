@@ -67,4 +67,8 @@ CREATE POLICY "advisors_update_intake"
 -- The Cloudflare Worker inserts via the service role key, which bypasses RLS.
 -- No INSERT policy is needed for application roles.
 
+-- Advisors (authenticated) can read and update submissions
 GRANT SELECT, UPDATE ON public.intake_submissions TO authenticated;
+
+-- Cloudflare Worker uses the service_role key to insert new submissions
+GRANT INSERT ON public.intake_submissions TO service_role;
