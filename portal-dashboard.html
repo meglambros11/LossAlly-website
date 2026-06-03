@@ -275,6 +275,109 @@
       #desk-nav { display: none  !important; }
       #mob-ham  { display: flex  !important; }
     }
+
+    /* ── Client Details Form ─────────────────────────────── */
+    .cd-form-field { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 0.75rem; }
+    .cd-form-field:last-of-type { margin-bottom: 0; }
+    .cd-label {
+      font-size: 0.68rem; font-weight: 500; letter-spacing: 0.07em;
+      text-transform: uppercase; color: var(--charcoal); opacity: 0.5;
+    }
+    .cd-input {
+      width: 100%; padding: 0.5rem 0.7rem; border-radius: 7px;
+      border: 1.5px solid var(--mist); background: var(--warm-white);
+      font-family: 'DM Sans', sans-serif; font-size: 0.83rem; font-weight: 300;
+      color: var(--charcoal); outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .cd-input:focus { border-color: var(--sage); box-shadow: 0 0 0 3px rgba(141,157,106,0.12); }
+    .cd-input::placeholder { color: var(--charcoal); opacity: 0.3; }
+    .cd-save-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+      background: var(--forest); color: #fff;
+      font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 400;
+      padding: 0.55rem 1.2rem; border-radius: 7px; border: none; cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      margin-top: 0.875rem;
+    }
+    .cd-save-btn:hover { background: var(--evergreen); }
+    .cd-save-btn:active { transform: scale(0.97); }
+    .cd-save-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+    .cd-status { font-size: 0.75rem; margin-top: 0.5rem; min-height: 1.1rem; transition: opacity 0.3s; }
+    .cd-status.ok  { color: var(--forest); }
+    .cd-status.err { color: var(--terracotta); }
+
+    /* ── Template Modal ──────────────────────────────────── */
+    #template-modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(44,44,42,0.55);
+      backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+      overflow-y: auto; padding: 1.5rem 1rem;
+    }
+    #template-modal-overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+    #template-modal {
+      background: var(--cream); border-radius: 16px;
+      width: 100%; max-width: 760px;
+      box-shadow: 0 24px 80px rgba(44,44,42,0.22), 0 4px 20px rgba(44,44,42,0.1);
+      border: 1px solid rgba(226,221,212,0.8);
+      display: flex; flex-direction: column; overflow: hidden; margin: auto;
+    }
+    .tpl-header {
+      padding: 1.5rem 1.75rem 1.25rem; border-bottom: 1px solid var(--mist); background: #fff;
+    }
+    .tpl-category-tag {
+      font-size: 0.62rem; font-weight: 500; letter-spacing: 0.13em;
+      text-transform: uppercase; color: var(--sage); margin-bottom: 0.3rem;
+    }
+    .tpl-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.3rem; font-weight: 500; color: var(--evergreen); line-height: 1.25;
+    }
+    .tpl-unfilled-banner {
+      background: rgba(201,168,112,0.12); border-left: 3px solid var(--gold);
+      padding: 0.75rem 1.25rem; font-size: 0.78rem; color: #7a5718; line-height: 1.6;
+    }
+    .tpl-body { padding: 1.25rem 1.75rem; flex: 1; }
+    #tpl-textarea {
+      width: 100%; min-height: 420px; resize: vertical;
+      font-family: 'Courier New', 'Courier', monospace;
+      font-size: 0.8rem; line-height: 1.75; color: var(--charcoal);
+      background: #fff; border: 1.5px solid var(--mist); border-radius: 8px;
+      padding: 1.25rem 1.5rem; outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    #tpl-textarea:focus { border-color: var(--sage); box-shadow: 0 0 0 3px rgba(141,157,106,0.1); }
+    .tpl-footer {
+      padding: 1rem 1.75rem 1.25rem; border-top: 1px solid var(--mist); background: #fff;
+      display: flex; flex-wrap: wrap; gap: 0.625rem; align-items: center;
+    }
+    .tpl-btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 400;
+      padding: 0.55rem 1.1rem; border-radius: 7px; border: none; cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .tpl-btn:active { transform: scale(0.97); }
+    .tpl-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+    .tpl-btn-primary { background: var(--forest); color: #fff; }
+    .tpl-btn-primary:hover { background: var(--evergreen); }
+    .tpl-btn-secondary { background: var(--warm-white); color: var(--charcoal); border: 1.5px solid var(--mist); }
+    .tpl-btn-secondary:hover { border-color: var(--sage); background: var(--cream); }
+    .tpl-btn-close { background: transparent; color: var(--charcoal); opacity: 0.5; border: 1.5px solid var(--mist); margin-left: auto; }
+    .tpl-btn-close:hover { opacity: 1; border-color: var(--terracotta); color: var(--terracotta); }
+    .tpl-copy-status { font-size: 0.72rem; color: var(--forest); opacity: 0; transition: opacity 0.3s; }
+    .tpl-copy-status.show { opacity: 1; }
+
+    @media (max-width: 600px) {
+      #template-modal-overlay { padding: 0; align-items: flex-end; }
+      #template-modal { border-radius: 16px 16px 0 0; max-height: 95vh; }
+      .tpl-header { padding: 1.25rem 1.25rem 1rem; }
+      .tpl-body { padding: 1rem 1.25rem; }
+      .tpl-footer { padding: 1rem 1.25rem; }
+      #tpl-textarea { min-height: 260px; font-size: 0.75rem; padding: 1rem; }
+      .tpl-btn { font-size: 0.76rem; padding: 0.5rem 0.9rem; }
+      .tpl-btn-close { margin-left: 0; margin-top: 0.25rem; }
+    }
   </style>
 </head>
 <body style="visibility:hidden;">
@@ -411,7 +514,7 @@
         </p>
       </div>
 
-      <!-- Advisor Notes card -->
+      <!-- Advisor Notes + Client Details card -->
       <div class="portal-card fade-up-2">
         <div class="card-label">From Your Advisor</div>
         <h2 class="card-title">Advisor Notes</h2>
@@ -420,7 +523,7 @@
             We've submitted the Social Security notification on your behalf. The next step is coordinating with the bank regarding the joint accounts — I'll reach out by end of week with next steps.
           </p>
         </div>
-        <div style="display:flex;align-items:center;gap:0.625rem;">
+        <div style="display:flex;align-items:center;gap:0.625rem;margin-bottom:1.75rem;">
           <div style="width:28px;height:28px;border-radius:50%;background:var(--sage);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg>
           </div>
@@ -429,11 +532,88 @@
             <div style="font-size:0.72rem;color:var(--charcoal);opacity:0.45;">Loss Ally</div>
           </div>
         </div>
+
+        <!-- Client Details for Template Auto-Fill -->
+        <div style="border-top:1px solid var(--mist);padding-top:1.5rem;">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;">
+            <div class="card-label" style="margin-bottom:0;">Estate Details</div>
+            <span style="font-size:0.65rem;padding:0.15rem 0.55rem;border-radius:20px;background:rgba(91,110,91,0.09);color:var(--forest);font-weight:400;">Used to fill letter templates</span>
+          </div>
+          <p style="font-size:0.75rem;color:var(--charcoal);opacity:0.5;margin-bottom:1rem;line-height:1.55;">These details pre-fill your letter templates automatically. Only you can see and edit this information.</p>
+
+          <form id="client-details-form" autocomplete="off">
+            <div class="cd-form-field">
+              <label class="cd-label" for="cd-deceased-name">Deceased Full Name</label>
+              <input class="cd-input" id="cd-deceased-name" name="deceased_full_name" type="text" placeholder="e.g. Margaret A. Johnson" />
+            </div>
+            <div class="cd-form-field">
+              <label class="cd-label" for="cd-dod">Date of Death</label>
+              <input class="cd-input" id="cd-dod" name="date_of_death" type="date" />
+            </div>
+            <div class="cd-form-field">
+              <label class="cd-label" for="cd-executor-name">Executor Full Name</label>
+              <input class="cd-input" id="cd-executor-name" name="executor_name" type="text" placeholder="Your full legal name" />
+            </div>
+            <div class="cd-form-field">
+              <label class="cd-label" for="cd-executor-address">Executor Mailing Address</label>
+              <input class="cd-input" id="cd-executor-address" name="executor_address" type="text" placeholder="123 Main St, City, ST 00000" />
+            </div>
+            <div class="cd-form-field">
+              <label class="cd-label" for="cd-executor-email">Executor Email</label>
+              <input class="cd-input" id="cd-executor-email" name="executor_email" type="email" placeholder="you@email.com" />
+            </div>
+            <div class="cd-form-field">
+              <label class="cd-label" for="cd-executor-phone">Executor Phone</label>
+              <input class="cd-input" id="cd-executor-phone" name="executor_phone" type="tel" placeholder="(555) 000-0000" />
+            </div>
+            <div class="cd-form-field">
+              <label class="cd-label" for="cd-estate-state">Estate State</label>
+              <input class="cd-input" id="cd-estate-state" name="estate_state" type="text" placeholder="e.g. California" />
+            </div>
+            <button type="submit" class="cd-save-btn">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Save Details
+            </button>
+            <div id="cd-status" class="cd-status"></div>
+          </form>
+        </div>
       </div>
 
     </div><!-- /inner-grid -->
   </div><!-- /outer-grid -->
 </main>
+
+
+<!-- ══ TEMPLATE MODAL ══════════════════════════════════════ -->
+<div id="template-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="tpl-title-text">
+  <div id="template-modal">
+    <div class="tpl-header">
+      <div class="tpl-category-tag" id="tpl-category-text"></div>
+      <div class="tpl-title" id="tpl-title-text"></div>
+    </div>
+    <div class="tpl-unfilled-banner" id="tpl-unfilled-banner" style="display:none;">
+      <strong>Fill in before sending:</strong> <span id="tpl-unfilled-list"></span>
+    </div>
+    <div class="tpl-body">
+      <textarea id="tpl-textarea" spellcheck="true" aria-label="Letter content — edit before sending"></textarea>
+    </div>
+    <div class="tpl-footer">
+      <button class="tpl-btn tpl-btn-primary" id="tpl-copy-btn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy to Clipboard
+      </button>
+      <button class="tpl-btn tpl-btn-secondary" id="tpl-download-btn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download .txt
+      </button>
+      <span class="tpl-copy-status" id="tpl-copy-status">Copied!</span>
+      <button class="tpl-btn tpl-btn-close" id="tpl-close-btn" aria-label="Close template">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        Close
+      </button>
+    </div>
+  </div>
+</div>
 
 
 <script type="module">
@@ -837,10 +1017,17 @@ function buildTaskDetail(task) {
   if (task.template) {
     const bar = document.createElement('div')
     bar.className = 'template-link-bar'
-    bar.innerHTML = `<a href="#">
+    const anchor = document.createElement('a')
+    anchor.href = '#'
+    anchor.innerHTML = `
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
       View Template: ${task.template}
-    </a>`
+    `
+    anchor.addEventListener('click', e => {
+      e.preventDefault()
+      openTemplateModal(task.template)
+    })
+    bar.appendChild(anchor)
     inner.appendChild(bar)
   }
 
@@ -901,6 +1088,205 @@ function updateHeroProgress() {
 
 // ─── Start ────────────────────────────────────────────────────────────────────
 initChecklist()
+initClientDetails()
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// CLIENT DETAILS FORM
+// ══════════════════════════════════════════════════════════════════════════════
+
+let clientDetails = {}
+
+const CD_FIELDS = [
+  'deceased_full_name', 'date_of_death', 'executor_name',
+  'executor_address', 'executor_email', 'executor_phone', 'estate_state'
+]
+
+const CD_INPUT_IDS = {
+  deceased_full_name: 'cd-deceased-name',
+  date_of_death:      'cd-dod',
+  executor_name:      'cd-executor-name',
+  executor_address:   'cd-executor-address',
+  executor_email:     'cd-executor-email',
+  executor_phone:     'cd-executor-phone',
+  estate_state:       'cd-estate-state',
+}
+
+async function initClientDetails() {
+  const profileId = auth.profile?.id
+  if (!profileId) return
+
+  // Load existing client_details from profile
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('client_details')
+    .eq('id', profileId)
+    .single()
+
+  if (!error && data?.client_details) {
+    clientDetails = data.client_details
+    for (const key of CD_FIELDS) {
+      const el = document.getElementById(CD_INPUT_IDS[key])
+      if (el && clientDetails[key]) el.value = clientDetails[key]
+    }
+  }
+
+  document.getElementById('client-details-form').addEventListener('submit', async e => {
+    e.preventDefault()
+    const statusEl = document.getElementById('cd-status')
+    statusEl.textContent = ''
+    statusEl.className = 'cd-status'
+
+    const updates = {}
+    for (const key of CD_FIELDS) {
+      const el = document.getElementById(CD_INPUT_IDS[key])
+      if (el) updates[key] = el.value.trim()
+    }
+
+    const { error: saveErr } = await supabase
+      .from('profiles')
+      .update({ client_details: updates })
+      .eq('id', profileId)
+
+    if (saveErr) {
+      statusEl.textContent = 'Could not save. Please try again.'
+      statusEl.className = 'cd-status err'
+    } else {
+      clientDetails = updates
+      statusEl.textContent = 'Details saved.'
+      statusEl.className = 'cd-status ok'
+      setTimeout(() => { statusEl.textContent = ''; statusEl.className = 'cd-status' }, 3000)
+    }
+  })
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// TEMPLATE MODAL
+// ══════════════════════════════════════════════════════════════════════════════
+
+// Placeholder → client_details key map
+const PLACEHOLDER_MAP = {
+  '[DECEASED_FULL_NAME]': 'deceased_full_name',
+  '[DATE_OF_DEATH]':      'date_of_death',
+  '[EXECUTOR_NAME]':      'executor_name',
+  '[EXECUTOR_ADDRESS]':   'executor_address',
+  '[EXECUTOR_EMAIL]':     'executor_email',
+  '[EXECUTOR_PHONE]':     'executor_phone',
+  '[ESTATE_STATE]':       'estate_state',
+}
+
+let currentTemplateName = ''
+
+function buildPersonalizedContent(rawContent) {
+  let text = rawContent
+  const unfilled = []
+
+  // Replace mapped placeholders with client details
+  for (const [placeholder, key] of Object.entries(PLACEHOLDER_MAP)) {
+    const value = clientDetails[key]
+    if (value) {
+      text = text.split(placeholder).join(value)
+    }
+  }
+
+  // Detect any remaining [PLACEHOLDER] patterns that weren't filled
+  const remaining = [...text.matchAll(/\[([A-Z_]+)\]/g)]
+  for (const match of remaining) {
+    if (!unfilled.includes(match[0])) unfilled.push(match[0])
+  }
+
+  return { text, unfilled }
+}
+
+async function openTemplateModal(templateName) {
+  currentTemplateName = templateName
+  const overlay = document.getElementById('template-modal-overlay')
+  const textarea = document.getElementById('tpl-textarea')
+  const titleEl = document.getElementById('tpl-title-text')
+  const categoryEl = document.getElementById('tpl-category-text')
+  const bannerEl = document.getElementById('tpl-unfilled-banner')
+  const unfilledListEl = document.getElementById('tpl-unfilled-list')
+
+  // Show overlay with loading state
+  titleEl.textContent = templateName
+  categoryEl.textContent = 'Loading…'
+  textarea.value = 'Loading template…'
+  bannerEl.style.display = 'none'
+  overlay.classList.add('open')
+  document.body.style.overflow = 'hidden'
+
+  // Fetch template from Supabase
+  const { data, error } = await supabase
+    .from('templates')
+    .select('name, category, type, content, subject_line')
+    .eq('name', templateName)
+    .single()
+
+  if (error || !data) {
+    textarea.value = 'Template could not be loaded. Please try again.'
+    categoryEl.textContent = ''
+    return
+  }
+
+  categoryEl.textContent = `${data.category} · ${data.type === 'letter' ? 'Letter Template' : 'Guide'}`
+  titleEl.textContent = data.name
+
+  const { text, unfilled } = buildPersonalizedContent(data.content)
+  textarea.value = text
+
+  if (unfilled.length > 0) {
+    unfilledListEl.textContent = unfilled.join(', ')
+    bannerEl.style.display = ''
+  } else {
+    bannerEl.style.display = 'none'
+  }
+}
+
+function closeTemplateModal() {
+  document.getElementById('template-modal-overlay').classList.remove('open')
+  document.body.style.overflow = ''
+}
+
+// Modal button handlers
+document.getElementById('tpl-close-btn').addEventListener('click', closeTemplateModal)
+
+document.getElementById('template-modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('template-modal-overlay')) closeTemplateModal()
+})
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeTemplateModal()
+})
+
+document.getElementById('tpl-copy-btn').addEventListener('click', async () => {
+  const text = document.getElementById('tpl-textarea').value
+  const statusEl = document.getElementById('tpl-copy-status')
+  try {
+    await navigator.clipboard.writeText(text)
+    statusEl.classList.add('show')
+    setTimeout(() => statusEl.classList.remove('show'), 2000)
+  } catch {
+    // Fallback for older browsers
+    const ta = document.getElementById('tpl-textarea')
+    ta.select()
+    document.execCommand('copy')
+    statusEl.classList.add('show')
+    setTimeout(() => statusEl.classList.remove('show'), 2000)
+  }
+})
+
+document.getElementById('tpl-download-btn').addEventListener('click', () => {
+  const text = document.getElementById('tpl-textarea').value
+  const safeName = currentTemplateName.replace(/[^a-z0-9]/gi, '-').toLowerCase()
+  const blob = new Blob([text], { type: 'text/plain' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `${safeName}.txt`
+  a.click()
+  URL.revokeObjectURL(url)
+})
 </script>
 
 </body>
