@@ -1228,8 +1228,10 @@ async function openTemplateModal(templateName) {
     .single()
 
   if (error || !data) {
-    textarea.value = 'Template could not be loaded. Please try again.'
-    categoryEl.textContent = ''
+    const msg = error ? `${error.code}: ${error.message}` : 'No matching template found in database.'
+    textarea.value = `Could not load template.\n\nError: ${msg}\n\nLooking for: "${templateName}"`
+    categoryEl.textContent = 'Error — check browser console for details'
+    console.error('[template modal] fetch failed', { templateName, error })
     return
   }
 
