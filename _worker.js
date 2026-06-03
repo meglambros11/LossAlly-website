@@ -207,9 +207,14 @@ async function handleInvite(request, env) {
     `${env.SUPABASE_URL}/rest/v1/intake_submissions?id=eq.${encodeURIComponent(intake_id)}&select=*`,
     { headers: serviceHeaders(env) }
   )
-  const intakes = await intakeRes.json()
+  const intakeRaw = await intakeRes.text()
+  if (!intakeRes.ok) {
+    return jsonResponse({ error: 'Supabase query failed', http_status: intakeRes.status, detail: intakeRaw }, 500)
+  }
+  let intakes
+  try { intakes = JSON.parse(intakeRaw) } catch { return jsonResponse({ error: 'Supabase returned invalid JSON', raw: intakeRaw }, 500) }
   if (!Array.isArray(intakes) || !intakes.length) {
-    return jsonResponse({ error: 'Intake submission not found' }, 404)
+    return jsonResponse({ error: 'Intake submission not found', intake_id_received: intake_id }, 404)
   }
   const intake = intakes[0]
 
