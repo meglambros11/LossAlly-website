@@ -671,11 +671,14 @@ async function loadClients() {
     planSelect.addEventListener('change', async e => {
       e.stopPropagation()
       const newPlan = planSelect.value
-      const { error } = await supabase
-        .from('profiles').update({ plan: newPlan }).eq('id', c.id)
+      const { data: updatedRows, error } = await supabase
+        .from('profiles').update({ plan: newPlan }).eq('id', c.id).select('id,plan')
       if (error) {
         planSelect.value = currentPlan
-        alert('Could not update plan: ' + error.message)
+        alert('Could not update plan: ' + error.code + ' — ' + error.message)
+      } else if (!updatedRows?.length) {
+        planSelect.value = currentPlan
+        alert('Plan update matched 0 rows — RLS may be blocking this update.')
       } else {
         currentPlan = newPlan
         subtitle.textContent = `${c.email || ''} · ${planLabel()} · Joined ${formatDate(c.created_at)}`
@@ -826,7 +829,7 @@ async function loadClientMessages(clientId, row) {
   thread.innerHTML = ''
 
   if (error) {
-    thread.innerHTML = `<p class="tasks-loading-msg" style="color:var(--terracotta);">Could not load messages.</p>`
+    thread.innerHTML = `<p class="tasks-loading-msg" style="color:var(--terracotta);">Could not load messages (${error.code}: ${error.message}).</p>`
     return
   }
 
