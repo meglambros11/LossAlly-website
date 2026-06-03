@@ -69,6 +69,12 @@ create table if not exists public.estate_details (
   additional_notes      text
 );
 
+-- ── Privileges ──────────────────────────────────────────────────────────────
+-- RLS policies alone are not enough — Supabase also requires explicit grants
+-- to the authenticated role before any operation is allowed.
+
+grant select, insert, update on public.estate_details to authenticated;
+
 -- ── Row Level Security ───────────────────────────────────────────────────────
 
 alter table public.estate_details enable row level security;
