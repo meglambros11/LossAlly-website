@@ -918,6 +918,34 @@ function buildTaskRow(task, done, ctId) {
     row.appendChild(expandBtn)
     item.appendChild(row)
     item.appendChild(detail)
+  } else if (isReadOnly && task.exec_note) {
+    // On supported/full_service plans the step-by-step panel is hidden, but tasks
+    // with an exec_note still require the executor's direct involvement — show a
+    // tappable badge that reveals the note inline.
+    const badge = document.createElement('button')
+    badge.setAttribute('aria-expanded', 'false')
+    badge.style.cssText = 'background:rgba(201,168,112,0.15);color:#7a5718;border:1px solid rgba(201,168,112,0.28);cursor:pointer;font-family:\'DM Sans\',sans-serif;font-size:0.63rem;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;padding:0.2rem 0.65rem;border-radius:20px;white-space:nowrap;flex-shrink:0;transition:background 0.15s;'
+    badge.textContent = 'Your input needed'
+
+    const notePanel = document.createElement('div')
+    notePanel.style.cssText = 'display:none;padding:0.15rem 0.5rem 0.75rem 2.75rem;'
+    const noteInner = document.createElement('div')
+    noteInner.style.cssText = 'background:rgba(201,168,112,0.1);border-left:2px solid var(--gold);padding:0.55rem 0.875rem;border-radius:0 6px 6px 0;font-size:0.8rem;line-height:1.65;color:#7a5718;font-family:\'Lora\',Georgia,serif;'
+    noteInner.textContent = task.exec_note
+    notePanel.appendChild(noteInner)
+
+    badge.addEventListener('click', e => {
+      e.stopPropagation()
+      const hidden = notePanel.style.display === 'none'
+      notePanel.style.display = hidden ? '' : 'none'
+      badge.setAttribute('aria-expanded', String(hidden))
+    })
+    badge.addEventListener('mouseenter', () => { badge.style.background = 'rgba(201,168,112,0.25)' })
+    badge.addEventListener('mouseleave', () => { badge.style.background = 'rgba(201,168,112,0.15)' })
+
+    row.appendChild(badge)
+    item.appendChild(row)
+    item.appendChild(notePanel)
   } else {
     item.appendChild(row)
   }
