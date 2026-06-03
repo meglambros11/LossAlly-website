@@ -1,0 +1,2081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loss Ally — Template Library</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1A1A18;--sage:#3D6142;--sage2:#6B9970;--terra:#B86840;
+  --gold:#A8843A;--cream:#F4EFE4;--warm:#FAFAF7;--mist:#E2DDD6;
+  --red:#9E3030;--amber:#8A5C10;--blue:#2A4A7A;--purple:#6A3A7A;
+  --mono:'IBM Plex Mono',monospace;--serif:'Playfair Display',serif;
+  --sans:'Source Sans 3',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);font-weight:300;background:var(--warm);color:var(--ink);font-size:15px;line-height:1.65}
+
+/* TOP BAR */
+.topbar{background:var(--ink);color:var(--cream);padding:14px 40px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:200}
+.tlogo{font-family:var(--serif);font-size:18px;letter-spacing:0.02em}
+.tlogo em{color:var(--gold);font-style:italic}
+.tcount{font-family:var(--mono);font-size:12px;color:rgba(244,239,228,0.5)}
+.tcount span{color:var(--gold);font-size:16px}
+
+/* HERO */
+.hero{background:var(--cream);border-bottom:1px solid var(--mist);padding:36px 40px 28px}
+.hero-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--terra);margin-bottom:10px}
+.hero h1{font-family:var(--serif);font-size:clamp(26px,3.5vw,44px);font-weight:400;line-height:1.1;color:var(--ink);margin-bottom:12px}
+.hero h1 em{font-style:italic;color:var(--sage)}
+.hero-sub{font-size:14px;color:var(--ink);opacity:0.6;max-width:700px;line-height:1.75;margin-bottom:20px}
+
+/* LEGEND */
+.legend{display:flex;flex-wrap:wrap;gap:10px}
+.leg{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink);opacity:0.7}
+.leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+
+/* CONTROLS */
+.controls{background:white;border-bottom:1px solid var(--mist);padding:14px 40px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;position:sticky;top:52px;z-index:100}
+.search-wrap{flex:1;min-width:200px;position:relative}
+.search-input{width:100%;padding:8px 14px 8px 34px;border:1px solid var(--mist);border-radius:4px;font-family:var(--sans);font-size:14px;color:var(--ink);background:var(--warm);outline:none;transition:border-color 0.2s}
+.search-input:focus{border-color:var(--sage)}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px;opacity:0.35;pointer-events:none}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:5px 12px;border-radius:20px;font-size:11px;cursor:pointer;border:1.5px solid transparent;font-weight:500;transition:all 0.15s;font-family:var(--sans);letter-spacing:0.04em}
+.chip-all{background:var(--ink);color:white}
+.chip-letter{background:#EEF2FA;color:var(--blue);border-color:#C8D4EE}
+.chip-letter.on{background:var(--blue);color:white}
+.chip-guide{background:#F5F0E8;color:var(--terra);border-color:#DDD0C0}
+.chip-guide.on{background:var(--terra);color:white}
+.chip-check{background:#EFF5EF;color:var(--sage);border-color:#B8D4B8}
+.chip-check.on{background:var(--sage);color:white}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:224px 1fr}
+
+/* SIDEBAR */
+.sidebar{border-right:1px solid var(--mist);background:white;position:sticky;top:101px;height:calc(100vh - 101px);overflow-y:auto;padding:18px 0}
+.sb-label{font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink);opacity:0.35;padding:0 18px 8px}
+.sb-item{display:flex;align-items:center;gap:9px;padding:8px 18px;cursor:pointer;font-size:13px;color:var(--ink);opacity:0.6;border-left:3px solid transparent;transition:all 0.15s}
+.sb-item:hover{opacity:1;background:var(--cream)}
+.sb-item.active{border-left-color:var(--sage);opacity:1;background:var(--cream);font-weight:500}
+.sb-ct{font-family:var(--mono);font-size:10px;margin-left:auto;opacity:0.4}
+.sb-div{height:1px;background:var(--mist);margin:10px 14px}
+
+/* MAIN */
+.main{padding:0 0 80px}
+.cat-block{padding:28px 36px 36px;border-bottom:2px solid var(--mist)}
+.cat-header{display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--mist)}
+.cat-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.cat-title{font-family:var(--serif);font-size:21px;font-weight:400;color:var(--ink);margin-bottom:2px}
+.cat-sub{font-size:12px;color:var(--ink);opacity:0.5}
+
+/* CARDS */
+.card{border:1px solid var(--mist);border-radius:6px;background:white;margin-bottom:10px;overflow:hidden;transition:box-shadow 0.2s}
+.card:hover{box-shadow:0 2px 12px rgba(0,0,0,0.06)}
+.card.hidden{display:none}
+.card-head{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;cursor:pointer;user-select:none}
+.card-type-bar{width:4px;border-radius:2px;flex-shrink:0;align-self:stretch;margin-top:2px}
+.card-meta{flex:1;min-width:0}
+.card-title{font-size:14px;font-weight:500;line-height:1.4;margin-bottom:4px}
+.card-brief{font-size:12px;color:var(--ink);opacity:0.55;line-height:1.5}
+.card-badges{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.badge{font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:3px}
+.b-letter{background:#EEF2FA;color:var(--blue)}
+.b-guide{background:#F5F0E8;color:var(--terra)}
+.b-check{background:#EFF5EF;color:var(--sage)}
+.b-exec{background:#F5EEF5;color:var(--purple)}
+.b-urgent{background:#FDF0F0;color:var(--red)}
+.expand-icon{font-size:11px;color:var(--ink);opacity:0.3;flex-shrink:0;margin-top:4px;transition:transform 0.2s}
+.card.open .expand-icon{transform:rotate(180deg)}
+
+/* CARD BODY */
+.card-body{display:none;border-top:1px solid var(--mist)}
+.card.open .card-body{display:block}
+
+/* TEMPLATE AREA */
+.template-wrap{padding:16px 20px}
+.template-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.template-label{font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--sage)}
+.btn-copy{padding:6px 14px;background:var(--sage);color:white;border:none;border-radius:4px;font-size:12px;font-family:var(--sans);cursor:pointer;transition:all 0.2s}
+.btn-copy:hover{background:#2d4a32}
+.btn-copy.copied{background:var(--gold)}
+.template-text{
+  background:var(--warm);border:1px solid var(--mist);border-radius:4px;
+  padding:18px 20px;font-size:13px;line-height:1.85;
+  white-space:pre-wrap;font-family:var(--sans);color:var(--ink);
+  max-height:500px;overflow-y:auto;
+}
+.field{
+  background:#FFF3CD;border-radius:3px;padding:1px 5px;
+  font-family:var(--mono);font-size:11px;color:#7A5500;
+  border:1px solid #F0D080;
+}
+
+/* INSTRUCTIONS */
+.instructions{padding:14px 20px;background:var(--cream);border-top:1px solid var(--mist)}
+.inst-label{font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--terra);margin-bottom:8px}
+.inst-items{display:flex;flex-direction:column;gap:5px}
+.inst-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--ink);opacity:0.8;line-height:1.5}
+.inst-dot{width:16px;height:16px;border-radius:50%;background:var(--terra);color:white;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;flex-shrink:0;margin-top:1px}
+
+/* GUIDE SECTION */
+.guide-body{padding:16px 20px}
+.guide-section{margin-bottom:16px}
+.guide-section-label{font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--sage);margin-bottom:8px}
+.guide-steps{display:flex;flex-direction:column;gap:7px}
+.guide-step{display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.55}
+.g-num{font-family:var(--mono);font-size:10px;font-weight:600;color:white;background:var(--sage);width:19px;height:19px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.tip-box{background:#FBF5EA;border-left:3px solid var(--gold);border-radius:4px;padding:9px 13px;font-size:12px;color:var(--ink);line-height:1.65}
+.warn-box{background:#FDF0F0;border-left:3px solid var(--red);border-radius:4px;padding:9px 13px;font-size:12px;color:var(--red);line-height:1.65}
+
+/* CHECKLIST TOOL */
+.checklist-body{padding:16px 20px}
+.cl-group{margin-bottom:16px}
+.cl-group-label{font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--sage);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--mist)}
+.cl-items{display:flex;flex-direction:column;gap:5px}
+.cl-item{display:flex;align-items:flex-start;gap:9px;padding:7px 10px;border:1px solid var(--mist);border-radius:4px;cursor:pointer;font-size:13px;color:var(--ink);background:white;transition:all 0.12s;user-select:none}
+.cl-item:hover{background:var(--cream)}
+.cl-item.checked{opacity:0.5;text-decoration:line-through}
+.cl-item.checked .cl-box{background:var(--sage);border-color:var(--sage);color:white}
+.cl-box{width:16px;height:16px;border-radius:3px;border:1.5px solid var(--mist);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;margin-top:1px;transition:all 0.15s}
+.cl-progress{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:12px;color:var(--ink);opacity:0.5}
+.cl-bar-track{flex:1;height:4px;background:var(--mist);border-radius:4px;overflow:hidden}
+.cl-bar-fill{height:4px;background:var(--sage);border-radius:4px;transition:width 0.3s}
+.cl-reset{font-size:11px;color:var(--terra);cursor:pointer;text-decoration:underline;margin-left:auto}
+
+.no-results{text-align:center;padding:60px 20px;font-family:var(--serif);font-style:italic;font-size:20px;color:var(--ink);opacity:0.3;display:none}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="tlogo">Loss <em>Ally</em> — Template Library</div>
+  <div class="tcount">Showing <span id="visCount">0</span> resources</div>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">Guided Plan Resource Library · Internal Use</div>
+  <h1>Template letters &<br><em>form guides.</em></h1>
+  <p class="hero-sub">Every resource a Guided-plan client needs to complete estate administration tasks themselves. All letters include bracketed fill-in fields. Copy, customize, and send. Form guides walk through every government form step by step.</p>
+  <div class="legend">
+    <div class="leg"><div class="leg-dot" style="background:var(--blue)"></div>Template Letter</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--terra)"></div>Form Guide</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--purple)"></div>Executor Signature Required</div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <div class="search-icon">🔍</div>
+    <input class="search-input" type="text" id="searchInput" placeholder="Search letters, forms, agencies…" oninput="applyFilters()">
+  </div>
+  <div class="chips">
+    <div class="chip chip-all" id="chip-all" onclick="setFilter('all',this)">All</div>
+    <div class="chip chip-letter" onclick="setFilter('letter',this)">✉ Letters</div>
+    <div class="chip chip-guide" onclick="setFilter('guide',this)">📋 Form Guides</div>
+  </div>
+</div>
+
+<div class="layout">
+<nav class="sidebar" id="sidebar"></nav>
+<div class="main" id="main">
+<div class="no-results" id="noResults">No resources match your search.</div>
+</div>
+</div>
+
+<script>
+// ─────────────────────────────────────
+// DATA
+// ─────────────────────────────────────
+const CATS = [
+
+{id:'govt', icon:'🏛️', bg:'#EEF2FA', title:'Government & Benefits', sub:'SSA, Medicare, VA, IRS, DMV',
+items:[
+
+{type:'letter', exec:false, urgent:true,
+title:'Social Security — Death Notification',
+brief:'Notify SSA of a death and request survivor benefits information.',
+tags:['call-first'],
+instructions:[
+  'Call SSA first at 1-800-772-1213 to report the death verbally — this stops payments immediately.',
+  'Follow up this notification letter if SSA requests written confirmation or if you cannot reach them by phone.',
+  'Send via certified mail with return receipt to your local SSA office (find it at ssa.gov/locator).',
+  'Keep the return receipt as proof of notification.',
+],
+template:`[DATE]
+
+Social Security Administration
+[LOCAL SSA OFFICE ADDRESS]
+[CITY, STATE, ZIP]
+
+Re: Notice of Death — [DECEASED FULL LEGAL NAME]
+Social Security Number: [DECEASED SSN]
+
+To Whom It May Concern:
+
+I am writing to formally notify the Social Security Administration of the death of [DECEASED FULL NAME], who passed away on [DATE OF DEATH] in [CITY, STATE].
+
+The deceased's information is as follows:
+  Full Legal Name: [DECEASED FULL NAME]
+  Date of Birth:   [DATE OF BIRTH]
+  Social Security Number: [SSN]
+  Date of Death:   [DATE OF DEATH]
+
+I am the [RELATIONSHIP, e.g. son / daughter / executor] of the deceased. My contact information is:
+
+  Name:    [YOUR FULL NAME]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE NUMBER]
+  Email:   [YOUR EMAIL]
+
+Please take the following actions:
+
+1. Cease all benefit payments effective [DATE OF DEATH]. I understand that any payments deposited after the date of death must be returned and I will cooperate fully with that process.
+
+2. Provide information regarding any survivor benefits for which I or other family members may be eligible.
+
+3. Confirm in writing that the account has been flagged and payments have been stopped.
+
+Enclosed: Certified copy of death certificate.
+
+Please contact me at the information above with any questions or requests for additional documentation.
+
+Sincerely,
+
+[YOUR SIGNATURE]
+
+[YOUR PRINTED NAME]
+[YOUR RELATIONSHIP TO DECEASED]
+[DATE]`},
+
+{type:'letter', exec:false, urgent:false,
+title:'Social Security — Survivor Benefits Application Cover Letter',
+brief:'Cover letter to accompany Form SSA-10 or SSA-5 when applying for survivor benefits.',
+tags:[],
+instructions:[
+  'Submit this letter with your completed SSA survivor benefits application form.',
+  'SSA does not accept online applications for survivor benefits — submit in person or by mail.',
+  'Attach certified death certificate, marriage certificate (for spouses), and birth certificates (for children).',
+  'Use Form SSA-10 for widow/widower benefits; SSA-5 for mother\'s/father\'s benefits; SSA-4 for child benefits.',
+],
+template:`[DATE]
+
+Social Security Administration
+[LOCAL SSA OFFICE ADDRESS]
+[CITY, STATE, ZIP]
+
+Re: Application for Survivor Benefits
+Deceased: [DECEASED FULL NAME], SSN [DECEASED SSN]
+Applicant: [YOUR FULL NAME], SSN [YOUR SSN]
+
+Dear Social Security Administration:
+
+I am submitting this application for survivor benefits following the death of my [RELATIONSHIP], [DECEASED FULL NAME], who passed away on [DATE OF DEATH].
+
+Enclosed with this letter, please find:
+
+  ☐ Completed Form [SSA-10 / SSA-5 / SSA-4] — Survivor Benefits Application
+  ☐ Certified copy of death certificate
+  ☐ [Certified copy of marriage certificate — for spouses]
+  ☐ [Certified birth certificate — for child applicants]
+  ☐ [Proof of citizenship or lawful alien status]
+  ☐ [Most recent W-2 or self-employment tax return]
+
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE NUMBER]
+  Email:   [YOUR EMAIL]
+
+I request that any correspondence be sent to the address above. Please contact me if you require any additional documentation to process this application.
+
+Thank you for your assistance during this difficult time.
+
+Sincerely,
+
+[YOUR SIGNATURE]
+
+[YOUR PRINTED NAME]
+[DATE]`},
+
+{type:'guide', exec:false, urgent:false,
+title:'IRS Form 1310 — Claiming a Refund for a Deceased Taxpayer',
+brief:'Step-by-step guide for claiming a tax refund owed to someone who has died.',
+tags:[],
+sections:[
+  {label:'When you need this form', steps:[
+    'Use Form 1310 when the deceased is owed a federal tax refund and you are NOT the surviving spouse filing a joint return.',
+    'A surviving spouse filing a joint return does NOT need Form 1310 — sign the return as usual.',
+    'An executor or administrator who has been appointed by a court should check Box B on the form.',
+    'A person other than a spouse or court-appointed representative should check Box C.',
+  ]},
+  {label:'How to complete the form', steps:[
+    'Line 1 — Enter the deceased\'s name, SSN, and date of death exactly as shown on the final 1040.',
+    'Line 2 — Check the appropriate box for who you are: Box A (surviving spouse), Box B (court-appointed executor), or Box C (other claimant).',
+    'Box C claimants must also check "Yes" or "No" to the probate question and attach a copy of the death certificate.',
+    'Sign and date the form as the claimant — not as the deceased.',
+    'Attach Form 1310 to the front of the final Form 1040 before mailing.',
+  ]},
+  {label:'Where to file', steps:[
+    'Mail the completed Form 1040 with Form 1310 attached to the IRS address shown in the 1040 instructions for the deceased\'s state.',
+    'Do not e-file if submitting Form 1310 — the IRS requires a paper return in most cases involving deceased taxpayers.',
+    'Processing time: 6–12 weeks for paper returns. The refund check will be made out to the estate or the claimant as you indicate on the form.',
+  ]},
+],
+tip:'If the deceased used a tax professional in prior years, contact that professional — they will have prior returns on file and can prepare the final return efficiently.',
+warn:'Do not cash a refund check made out to the deceased. It must be deposited into the estate bank account or reissued — contact the IRS if this happens.'},
+
+{type:'guide', exec:true, urgent:false,
+title:'IRS EIN Application — Estate Tax ID Number',
+brief:'How to apply for a federal Employer Identification Number for the estate.',
+tags:[],
+sections:[
+  {label:'Before you begin', steps:[
+    'You need an EIN if: the estate goes through probate, earns any income after death, or requires a separate estate bank account.',
+    'Only the executor or court-appointed administrator can apply — you\'ll need your own SSN for the application.',
+    'The online application is free and takes about 5 minutes. The EIN is issued immediately.',
+  ]},
+  {label:'Step-by-step online application', steps:[
+    'Go to irs.gov and search "EIN online application" or navigate directly to the EIN Assistant.',
+    'Select "Estate" as the entity type when prompted.',
+    'Enter the deceased\'s full legal name and SSN, their date of death, and the estate\'s legal name: "Estate of [Full Name]".',
+    'Enter your (the executor\'s) name, SSN, and address as the responsible party.',
+    'Select the reason: "Started a new business" is incorrect — select "Banking purpose" or "Estate administration."',
+    'Review and submit. The EIN appears immediately on screen — print or screenshot this page.',
+    'The IRS also mails a confirmation letter (CP 575) within 4 weeks. Keep this letter permanently.',
+  ]},
+  {label:'Using the EIN', steps:[
+    'Use the EIN (not the deceased\'s SSN) for: opening the estate bank account, filing Form 1041, and any financial transactions made on behalf of the estate after death.',
+    'The estate\'s tax year can be a fiscal year — consult a CPA for the most tax-efficient choice.',
+  ]},
+],
+tip:'The EIN application cannot be submitted more than once per day for the same estate. If the session times out, wait until the next day to try again.'},
+
+{type:'guide', exec:true, urgent:false,
+title:'IRS Form 1041 — Estate Income Tax Return Guide',
+brief:'When the estate must file its own income tax return, what it covers, and why a CPA is strongly recommended.',
+tags:[],
+sections:[
+  {label:'What Form 1041 is — and how it differs from the final 1040', steps:[
+    'Form 1040 is the deceased\'s final personal income tax return, covering income earned from January 1 of the year of death through the date of death. This is filed once.',
+    'Form 1041 is a separate return for the estate itself. After death, the estate becomes its own legal and tax entity. If that entity earns income — interest, dividends, rental income, business income, proceeds from asset sales — the estate must report and potentially pay tax on that income.',
+    'The two returns cover different time periods and different income. Both may be required. A CPA handles both.',
+  ]},
+  {label:'When Form 1041 is required', steps:[
+    'A Form 1041 must be filed if the estate has gross income of $600 or more during the tax year.',
+    'Common sources of estate income: interest earned in the estate bank account, dividends paid after the date of death, rental income from property still owned by the estate, capital gains from selling estate assets (real estate, investments, vehicles), and business income if the deceased owned a business.',
+    'If the estate earns less than $600 total, no 1041 is required — but confirm this with a CPA before assuming it does not apply.',
+  ]},
+  {label:'Key deadlines and tax year', steps:[
+    'Unlike individuals (who use a calendar year ending December 31), an estate can use either a calendar year or a fiscal year. The choice of tax year is made on the first Form 1041 filed and cannot be changed.',
+    'A fiscal year can be advantageous for tax planning — consult a CPA before the first return is due.',
+    'The 1041 is due on the 15th day of the fourth month after the end of the estate\'s tax year. For a calendar-year estate, this means April 15.',
+    'Extensions are available — Form 7004 extends the deadline by five months. File the extension before the original due date.',
+    'The estate\'s tax year begins the day after the date of death and ends on the chosen year-end date.',
+  ]},
+  {label:'What the executor needs to prepare', steps:[
+    'The estate\'s EIN (Employer Identification Number) — required to file. If you have not already obtained this, see the IRS EIN Application guide in this library.',
+    'All statements showing income earned by the estate after the date of death: bank interest statements, brokerage statements showing dividends or capital gains, rental income records, and any other income.',
+    'Records of estate administration expenses that may be deductible: executor fees, attorney fees, CPA fees, court costs, and costs of managing and preserving estate property.',
+    'If the estate sold any assets, you will need the date-of-death value (from the estate asset inventory or appraisal) to calculate capital gains.',
+  ]},
+  {label:'K-1s — what they are and why beneficiaries need them', steps:[
+    'If the estate distributes income to beneficiaries during the year, those distributions are reported on a Schedule K-1, which is issued to each beneficiary.',
+    'The K-1 tells each beneficiary what portion of the estate\'s income they received and must report on their own personal tax return.',
+    'Beneficiaries cannot file their own taxes accurately until they receive their K-1. Make sure the CPA issues K-1s promptly so beneficiaries are not delayed.',
+    'Keep copies of all K-1s issued permanently — beneficiaries may ask for them years later.',
+  ]},
+  {label:'Why a CPA is required for this return', steps:[
+    'Form 1041 is significantly more complex than a standard personal return. It involves elections, deductions, and planning opportunities that require professional expertise.',
+    'Errors on Form 1041 can result in penalties, overpayment of tax, or incorrect K-1s that cause problems for beneficiaries.',
+    'A CPA experienced in estate and trust taxation will also advise on the timing of distributions, the choice of tax year, and whether any deductions should be taken on the 1041 versus the estate tax return (Form 706).',
+    'Engage a CPA as early in the administration as possible — ideally before the estate begins earning income.',
+  ]},
+],
+tip:'If the estate earns any income at all after the date of death — even a small amount of bank interest — consult a CPA immediately. The decision about the estate\'s tax year must be made before the first return is due and cannot be undone.'},
+
+{type:'letter', exec:false, urgent:false,
+title:'Medicare / Medicaid — Death Notification',
+brief:'Notify Medicare and state Medicaid of a beneficiary\'s death.',
+tags:[],
+instructions:[
+  'Medicare Part A and B are automatically notified when you notify SSA — but Part C (Advantage) and Part D (drug plans) require separate contact.',
+  'Medicaid is administered by each state — contact your state Medicaid office directly.',
+  'Send certified mail with return receipt. Keep a copy for your records.',
+  'If the deceased received Medicaid, notify your estate attorney about potential estate recovery claims before distributing any assets.',
+],
+template:`[DATE]
+
+Medicare / [STATE MEDICAID OFFICE NAME]
+[ADDRESS]
+[CITY, STATE, ZIP]
+
+Re: Death Notification — [DECEASED FULL NAME]
+Medicare / Medicaid ID Number: [ID NUMBER]
+Date of Birth: [DATE OF BIRTH]
+
+To the Account Administration Department:
+
+I am writing to notify you of the death of [DECEASED FULL NAME], who passed away on [DATE OF DEATH].
+
+Please take the following actions immediately:
+  1. Terminate all coverage effective [DATE OF DEATH].
+  2. Cancel any pending referrals, authorizations, or scheduled services.
+  3. Provide written confirmation of account termination.
+  4. Advise me of any outstanding claims, balances, or amounts owed to or from the estate.
+
+[FOR MEDICAID ONLY: I understand that [STATE] may have an estate recovery program and I request that you inform me of any claims the state intends to make against the estate before I make any distributions to heirs.]
+
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Relationship: [RELATIONSHIP TO DECEASED]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
+
+Enclosed: Certified copy of death certificate.
+
+Sincerely,
+
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]`},
+
+{type:'letter', exec:false, urgent:false,
+title:'Veterans Affairs — Death Notification & Benefits Inquiry',
+brief:'Notify VA of a veteran\'s death and request information about survivor benefits.',
+tags:[],
+instructions:[
+  'Mail to your VA Regional Office — find it at va.gov/find-locations.',
+  'Call first at 1-800-827-1000 to get the exact forms required for your situation.',
+  'Gather the DD-214 (discharge papers) before applying for burial or survivor benefits.',
+  'Attach the death certificate to this letter.',
+],
+template:`[DATE]
+
+Department of Veterans Affairs
+[VA REGIONAL OFFICE ADDRESS]
+[CITY, STATE, ZIP]
+
+Re: Death Notification and Survivor Benefits Inquiry
+Veteran: [DECEASED FULL NAME]
+VA File Number / SSN: [VA FILE NUMBER OR SSN]
+Branch of Service: [BRANCH]
+Dates of Service: [FROM] to [TO]
+
+Dear Veterans Affairs:
+
+I am writing to notify you of the death of [DECEASED FULL NAME], a veteran of the [BRANCH OF SERVICE], who passed away on [DATE OF DEATH] in [CITY, STATE].
+
+I am the deceased's [RELATIONSHIP] and am serving as [executor of the estate / primary next of kin].
+
+I respectfully request:
+
+1. Formal confirmation that the veteran's file has been updated to reflect the date of death.
+2. Information regarding burial benefits, including burial allowances and grave markers.
+3. Information regarding Dependency and Indemnity Compensation (DIC) if the death was [service-connected / potentially service-connected].
+4. Information regarding the Survivors Pension program for surviving spouses.
+5. A complete accounting of any current benefits that should be terminated.
+
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
+  Email:   [YOUR EMAIL]
+
+Enclosed: Certified copy of death certificate, copy of DD-214 (if available).
+
+Thank you for the service of [DECEASED FIRST NAME] and for your assistance.
+
+Sincerely,
+
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]`},
+
+{type:'letter', exec:false, urgent:false,
+title:'DMV — Driver\'s License Cancellation',
+brief:'Notify the state DMV to cancel the deceased\'s driver\'s license.',
+tags:[],
+instructions:[
+  'Each state has its own process — check your state DMV website for the exact form and mailing address.',
+  'Include a certified copy of the death certificate and the physical license if you have it.',
+  'Vehicle title transfers are a separate process — this letter only cancels the license.',
+],
+template:`[DATE]
+
+[STATE] Department of Motor Vehicles
+[DMV ADDRESS]
+[CITY, STATE, ZIP]
+
+Re: Driver\'s License Cancellation — Death of License Holder
+License Number: [LICENSE NUMBER, if known]
+
+To Whom It May Concern:
+
+I am writing to request cancellation of the driver\'s license of [DECEASED FULL NAME], who passed away on [DATE OF DEATH].
+
+Deceased's Information:
+  Full Legal Name: [DECEASED FULL NAME]
+  Date of Birth:   [DATE OF BIRTH]
+  License Number:  [LICENSE NUMBER, if known]
+  Address on License: [ADDRESS]
+
+I am the [RELATIONSHIP] of the deceased. Enclosed, please find:
+  ☐ Certified copy of death certificate
+  ☐ Original driver\'s license (if enclosed)
+
+Please confirm cancellation in writing and advise me of any additional steps required, particularly regarding vehicle title transfers.
+
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
+
+Sincerely,
+
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]`},
+
+{type:'guide', exec:false, urgent:true,
+title:'VitalChek — How to Order Certified Death Certificates',
+brief:'Step-by-step guide for ordering the right number of certified copies, as quickly as possible.',
+tags:[],
+sections:[
+  {label:'How many copies to order', steps:[
+    'Simple estate (1 bank, no property, few accounts): order 15 certified copies.',
+    'Typical estate (2–3 banks, 1 home, retirement accounts, insurance): order 20–25 copies.',
+    'Complex estate (multiple properties, many accounts, business interests, VA, multi-state): order 30–35 copies.',
+    'Rule of thumb: each bank requires 1 copy, each insurance policy requires 1 copy, each government agency requires 1 copy, probate court requires 1–2 copies. Add 5 spare copies to whatever total you calculate.',
+    'Under-ordering is a serious mistake — reorders from some states take 2–4 weeks, stalling insurance claims, bank transfers, and probate filings in the meantime.',
+    'The cost of an extra copy ($10–$25) is trivial compared to the cost of a delayed estate.',
+  ]},
+  {label:'Standard vs. expedited delivery', steps:[
+    'Standard processing: 2–6 weeks depending on state. Acceptable if the death was months ago and there is no urgency.',
+    'Expedited processing: 3–7 business days. Costs an extra $10–$30 per order. Strongly recommended for all new engagements.',
+    'In-person at the county vital records office: same-day or next-day in many counties. Best option when speed is critical.',
+    'Funeral homes can often order on your behalf and have them within a week — ask at the time of arrangement.',
+  ]},
+  {label:'Ordering via VitalChek (vitalchek.com)', steps:[
+    'Go to vitalchek.com and click "Order Vital Records," then select "Death Certificate."',
+    'Select the state where the death OCCURRED (not where the deceased lived, if different).',
+    'Enter: deceased\'s full legal name, date of birth, date of death, county of death, and your name and relationship.',
+    'Select the quantity and delivery method. Provide a shipping address — use the executor\'s address.',
+    'Payment: credit or debit card. Total = (state fee × number of copies) + VitalChek convenience fee ($10–$20 flat).',
+    'You may be asked to upload a photo ID and a document proving your relationship to the deceased.',
+    'Save your order confirmation number. VitalChek\'s customer service is at 1-800-255-2414.',
+  ]},
+  {label:'When certificates arrive — what to do', steps:[
+    'Count the copies immediately upon arrival and confirm they are certified (they should have a raised seal or colored security paper).',
+    'Store all originals together in a labeled folder in a fireproof location. Do not fold, hole-punch, or write on them.',
+    'Keep a tracking log: record which institution received which copy, the date sent, and whether it was returned.',
+    'Some institutions return originals after review; most financial institutions retain them permanently.',
+    'If you run out: reorder immediately through VitalChek or directly through the state vital records office.',
+  ]},
+  {label:'State-specific notes', steps:[
+    'New York City deaths: order through the NYC Office of Vital Records (separate from NY State). Same-day service available in person at 125 Worth Street, Manhattan.',
+    'California: order through CDPH Vital Records or the county registrar. Fee: $21/copy. Expedited available via VitalChek.',
+    'Texas: order through DSHS or county clerk. Fee: $20/copy. 10–15 business day standard processing.',
+    'Florida: order through FDOH Bureau of Vital Statistics. Fee: $10 first copy, $4 each additional.',
+    'Pennsylvania: mail orders take 6–8 weeks. Consider ordering in person at the county courthouse for recent deaths.',
+  ]},
+],
+tip:'Note on digital uploads: Social media platforms and some subscription services accept a scanned or photographed death certificate for account closure. Reserve physical certified copies for banks, insurers, government agencies, and courts — these institutions require originals and rarely make exceptions.',
+warn:'Do not write on, fold, or laminate death certificates. Institutions may reject certificates that appear altered. Keep all originals in a secure, fireproof location.'},
+
+]},
+
+{id:'financial', icon:'🏦', bg:'#FBF5EA', title:'Financial Institutions', sub:'Banks, insurance, investments, retirement accounts',
+items:[
+
+{type:'letter', exec:false, urgent:true,
+title:'Bank / Credit Union — Death Notification',
+brief:'Notify financial institutions of a death and request account information.',
+tags:[],
+instructions:[
+  'Call the bank\'s bereavement or estate services team first — ask if they have a specific department.',
+  'Send this letter to the bank\'s estate administration address, which may differ from the branch address.',
+  'Attach a certified death certificate.',
+  'If you have Letters Testamentary, attach a certified copy — this speeds up access to funds.',
+  'Send one letter per financial institution.',
+],
+template:`[DATE]
+
+[BANK / CREDIT UNION NAME]
+Estate Services Department
+[ADDRESS]
+[CITY, STATE, ZIP]
+
+Re: Notification of Death — Account Holder [DECEASED FULL NAME]
+Account Number(s): [ACCOUNT NUMBER(S)]
+
+Dear Estate Services Team:
+
+I am writing to notify [BANK NAME] of the death of [DECEASED FULL NAME], who passed away on [DATE OF DEATH].
+
+I am the [RELATIONSHIP / EXECUTOR] of the deceased. My details are:
+  Name:    [YOUR FULL NAME]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
+  Email:   [YOUR EMAIL]
+
+I request that you:
+
+1. Flag all accounts held in the name of [DECEASED FULL NAME] as deceased.
+2. Provide a statement showing the balance in each account as of [DATE OF DEATH] — needed for estate inventory.
+3. Advise me of the documentation required to access or close each account.
+4. Confirm whether any accounts have a Payable on Death (POD) beneficiary designation and provide instructions for that process.
+5. Stop any automatic payments or debits from individual accounts pending estate administration.
+
+[IF JOINT ACCOUNT: I am a joint account holder and request that the account be re-titled in my name alone.]
+
+Enclosed:
+  ☐ Certified copy of death certificate
+  ☐ [Certified copy of Letters Testamentary, if available]
+  ☐ [Copy of government-issued ID]
+
+Please contact me at the information above to confirm receipt and advise on next steps.
+
+Sincerely,
+
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[RELATIONSHIP TO DECEASED]
+[DATE]`},
+
+{type:'letter', exec:false, urgent:false,
+title:'Credit Card Company — Account Cancellation',
+brief:'Cancel a credit card account and request a final statement.',
+tags:[],
+instructions:[
+  'Call first to report the death — most credit card companies have a bereavement line.',
+  'Request a final statement showing the balance as of the date of death.',
+  'Do not pay the balance from personal funds — it is an estate obligation.',
+  'If you are a joint cardholder (not just an authorized user), you remain liable for the balance.',
+  'Send one letter per credit card issuer.',
+],
+template:`[DATE]
+
+[CREDIT CARD COMPANY NAME]
+Customer Service / Estate Administration
+[ADDRESS]
+[CITY, STATE, ZIP]
+
+Re: Account Cancellation — Death of Account Holder
+Account Holder: [DECEASED FULL NAME]
+Account Number: [LAST 4 DIGITS or FULL NUMBER]
+
+Dear Estate Administration Team:
+
+I am writing to notify you of the death of [DECEASED FULL NAME], primary account holder, who passed away on [DATE OF DEATH].
+
+I am the [RELATIONSHIP / EXECUTOR] of the deceased and am managing the estate.
+
+Please:
+
+1. Cancel all cards associated with this account, including any authorized user cards, effective immediately.
+2. Provide a final statement showing the balance as of [DATE OF DEATH].
+3. Confirm the process for resolving any outstanding balance through the estate.
+4. Remove the deceased from any joint accounts or confirm my sole liability as the surviving joint cardholder.
+5. Confirm in writing that the account has been marked deceased to prevent fraudulent use.
+
+Please note: I am not personally responsible for the balance on an individual account. Outstanding balances will be settled through the estate administration process.
+
+Enclosed: Certified copy of death certificate.
+
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Relationship: [RELATIONSHIP]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
+
+Sincerely,
+
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]`},
+
+{type:'letter', exec:false, urgent:false,
+title:'Life Insurance — Claim Submission Cover Letter',
+brief:'Cover letter to submit with a life insurance death benefit claim.',
+tags:[],
+instructions:[
+  'Call the insurer\'s claims department first to obtain the specific claim form they require.',
+  'Each insurer has their own form — download it from their website or request by mail.',
+  'Attach: completed claim form, certified death certificate, and the original policy (if requested).',
+  'Send via certified mail with return receipt. The insurer must pay within 30–45 days in most states.',
+  'Send one letter per policy. Multiple policies at the same company may be combined.',
+],
+template:`[DATE]
+
+[INSURANCE COMPANY NAME]
+Life Insurance Claims Department
+[ADDRESS]
+[CITY, STATE, ZIP]
+
+Re: Life Insurance Death Benefit Claim
+Insured: [DECEASED FULL NAME]
+Policy Number: [POLICY NUMBER]
+Date of Death: [DATE OF DEATH]
+
+Dear Claims Department:
+
+I am submitting a claim for the death benefit under the above-referenced life insurance policy. The insured, [DECEASED FULL NAME], passed away on [DATE OF DEATH] in [CITY, STATE].
+
+I am the [PRIMARY BENEFICIARY / EXECUTOR / RELATIONSHIP] named [in the policy / under the terms of the estate].
+
+Enclosed with this letter, please find:
+  ☐ Completed death benefit claim form (Form [FORM NUMBER])
+  ☐ Certified copy of death certificate
+  ☐ [Original policy, if required]
+  ☐ [Proof of my identity — government-issued ID]
+  ☐ [Marriage certificate — if claiming as surviving spouse]
+
+Please process this claim and advise me of the payment options available. I request payment by [LUMP SUM / CHECK / DIRECT DEPOSIT].
+
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
+  Email:   [YOUR EMAIL]
+  SSN:     [YOUR SSN — for tax reporting purposes]
+
+If any additional documentation is required, please contact me promptly. I understand that payment is due within [30 / 45] days of receiving a complete claim.
+
+Sincerely,
+
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[RELATIONSHIP TO DECEASED / BENEFICIARY STATUS]
+[DATE]`},
+
+{type:'letter', exec:false, urgent:false,
+title:'401(k) / IRA / Retirement Account — Death Notification & Claim',
+brief:'Notify retirement account administrators and initiate the beneficiary claim process.',
+tags:[],
+instructions:[
+  'Call the plan administrator first to determine what forms they require.',
+  'Named beneficiaries claim directly — no Letters Testamentary required for accounts with a valid beneficiary.',
+  'Surviving spouses have unique rollover options — consult a financial advisor before taking distributions.',
+  'Non-spouse beneficiaries must open an Inherited IRA and distribute within 10 years under SECURE 2.0.',
+  'Send one letter per account / institution.',
+],
+template:`[DATE]
+
+[FINANCIAL INSTITUTION NAME]
+Retirement Accounts / Estate Services Department
+[ADDRESS]
+[CITY, STATE, ZIP]
+
+Re: Death Notification and Beneficiary Claim
+Account Holder: [DECEASED FULL NAME]
+Account Number: [ACCOUNT NUMBER]
+Account Type: [401(k) / Traditional IRA / Roth IRA / 403(b)]
+
+Dear Estate Services:
+
+I am writing to notify you of the death of [DECEASED FULL NAME], who passed away on [DATE OF DEATH].
+
+I am the [PRIMARY BENEFICIARY / EXECUTOR] of this account. My information:
+  Name:    [YOUR FULL NAME]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
+  SSN:     [YOUR SSN]
+  Relationship: [RELATIONSHIP TO DECEASED]
+
+I request that you:
+
+1. Confirm the beneficiary designation currently on file for this account.
+2. Provide the current account balance as of [DATE OF DEATH] for estate inventory purposes.
+3. Send me all required claim forms to initiate the distribution or transfer process.
+4. Advise me of the available options: [direct rollover to my IRA / Inherited IRA / lump sum distribution].
+
+[FOR SPOUSE: As the surviving spouse and sole primary beneficiary, I wish to explore a spousal rollover to my own IRA. Please advise on this process.]
+
+[FOR NON-SPOUSE: As a non-spouse beneficiary, I understand I am required to establish an Inherited IRA and take distributions within 10 years. Please provide instructions.]
+
+Enclosed: Certified copy of death certificate, [copy of Letters Testamentary if no named beneficiary].
+
+Sincerely,
+
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]`},
+
+{type:'letter', exec:false, urgent:false,
+title:'Pension / Defined Benefit Plan — Death Notification',
+brief:'Notify pension plan administrators and apply for survivor benefits.',
+tags:[],
+instructions:[
+  'Contact HR or the pension administrator to determine if a joint-and-survivor annuity was elected.',
+  'If no survivor annuity was elected (single life annuity), payments stop at death — no benefit is owed.',
+  'Federal employees: contact OPM at 1-888-767-6738 for CSRS or FERS survivor benefits.',
+  'Some pensions have a pre-retirement death benefit even if the employee had not yet retired.',
+],
+template:`[DATE]
+
+[PENSION PLAN ADMINISTRATOR / HR DEPARTMENT]
+[COMPANY / ORGANIZATION NAME]
+[ADDRESS]
+[CITY, STATE, ZIP]
+
+Re: Death Notification — Plan Participant [DECEASED FULL NAME]
+Employee ID / Plan Number: [ID NUMBER]
+
+Dear Plan Administrator:
+
+I am writing to notify you of the death of [DECEASED FULL NAME], a [current / former] participant in the [PLAN NAME], who passed away on [DATE OF DEATH].
+
+I am the [SPOUSE / BENEFICIARY / EXECUTOR] of the deceased.
+
+I request that you:
+
+1. Confirm the pension elections made by [DECEASED FIRST NAME], specifically whether a joint-and-survivor annuity, pre-retirement survivor benefit, or other survivor option was selected.
+2. Provide information on any death benefits payable to surviving beneficiaries.
+3. Confirm the process for applying for any survivor annuity or lump sum benefit.
+4. Provide a statement of account showing the accrued benefit as of the date of death.
+5. Confirm that benefit payments have been stopped and advise whether any payments made after [DATE OF DEATH] must be returned.
+
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Relationship: [RELATIONSHIP]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
+
+Enclosed: Certified copy of death certificate.
+
+Sincerely,
+
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]`},
+
+{type:'letter', exec:true, urgent:false,
+title:'Brokerage / Investment Account — Executor\'s Transfer Request',
+brief:'Executor\'s letter to transfer or liquidate individual investment accounts.',
+tags:[],
+instructions:[
+  'This letter requires Letters Testamentary to be enclosed — it is an executor-only action.',
+  'For TOD (Transfer on Death) accounts, the named beneficiary uses a simpler direct claim process.',
+  'Discuss stepped-up cost basis with a CPA before selling any inherited securities.',
+  'Most brokerages have a dedicated estate services team — call ahead to confirm the mailing address.',
+],
+template:`[DATE]
+
+[BROKERAGE FIRM NAME]
+Estate Services Department
+[ADDRESS]
+[CITY, STATE, ZIP]
+
+Re: Estate of [DECEASED FULL NAME] — Account Transfer / Liquidation
+Account Number: [ACCOUNT NUMBER]
+
+Dear Estate Services:
+
+I am the duly appointed Executor of the Estate of [DECEASED FULL NAME], who passed away on [DATE OF DEATH]. I have been granted Letters Testamentary by [COUNTY] [COURT NAME] on [DATE ISSUED].
+
+I am writing to request [transfer of the account assets to the heirs as described below / liquidation of the account and remittance to the estate account].
+
+Account Information:
+  Account Holder: [DECEASED FULL NAME]
+  Account Number: [ACCOUNT NUMBER]
+  Date of Death Value: Please provide a statement as of [DATE OF DEATH]
+
+[OPTION A — TRANSFER IN KIND:]
+Please transfer all holdings to the following beneficiary account:
+  Beneficiary: [HEIR NAME]
+  Institution: [RECEIVING BROKERAGE]
+  Account Number: [RECEIVING ACCOUNT]
+  DTC Participant Number: [IF APPLICABLE]
+
+[OPTION B — LIQUIDATE AND REMIT:]
+Please liquidate all holdings and wire proceeds to the estate account:
+  Bank: [ESTATE BANK NAME]
+  Account Name: Estate of [DECEASED FULL NAME]
+  Account Number: [ESTATE ACCOUNT NUMBER]
+  Routing Number: [ROUTING NUMBER]
+
+Enclosed:
+  ☐ Certified copy of Letters Testamentary
+  ☐ Certified copy of death certificate
+  ☐ Medallion Signature Guarantee (if required)
+  ☐ Completed estate distribution form (if provided by your firm)
+
+Sincerely,
+
+[EXECUTOR SIGNATURE]
+
+[EXECUTOR PRINTED NAME], Executor
+Estate of [DECEASED FULL NAME]
+[DATE]`},
+
+{type:'guide', exec:false, urgent:false,
+title:'Inherited IRA & 401(k) — Beneficiary Claim Guide',
+brief:'How to claim inherited retirement accounts without triggering an immediate tax bill. Rules differ significantly for spouses vs. non-spouses.',
+tags:[],
+sections:[
+  {label:'Before you do anything — three rules', steps:[
+    'Never take a direct distribution from the account without advice. A lump-sum distribution of a large IRA pushes all of it into ordinary income in a single tax year, often at the highest bracket.',
+    'Never roll it directly into your own existing IRA without confirming the correct rollover type — doing this wrong can trigger immediate taxation on the full balance.',
+    'Contact the account custodian (Fidelity, Vanguard, Schwab, etc.) before taking any action and ask specifically for the "estate services" or "inherited account" team.',
+  ]},
+  {label:'Step 1 — Contact the custodian', steps:[
+    'Call the brokerage\'s main number and ask for the estate services or inherited account department — not general customer service.',
+    'Tell them you are the beneficiary of a deceased account holder and need to initiate a beneficiary claim.',
+    'They will mail or email a claim packet specific to your situation.',
+    'Documents typically required: certified death certificate, completed beneficiary claim form, your government-issued photo ID, and your Social Security number.',
+    'Processing time after submission: typically 2–6 weeks.',
+  ]},
+  {label:'Options for surviving spouses', steps:[
+    'Spousal rollover: roll the deceased\'s IRA into your own IRA. No taxes due at rollover. Required Minimum Distributions (RMDs) are based on your own age. This is the most flexible option and generally the most tax-efficient — recommended in most cases.',
+    'Inherited IRA: treat the account as an inherited IRA (keep it separate from your own). Allows penalty-free withdrawals before age 59½ if you need income now. RMDs are required based on the deceased\'s age.',
+    'Lump sum: take the entire balance as a distribution. The full amount is taxable as ordinary income in the year received. Rarely the best option — consult a financial advisor first.',
+    'Qualified annuity: some plans allow the surviving spouse to receive the balance as a lifetime income annuity.',
+  ]},
+  {label:'Options for non-spouse beneficiaries (SECURE 2.0 Act, 2022)', steps:[
+    '10-year rule: most non-spouse beneficiaries must fully distribute the inherited account within 10 years of the owner\'s death. Annual distributions are NOT required — the account just must be emptied by the end of year 10.',
+    'Eligible Designated Beneficiaries (EDBs) get a longer window: minor children of the deceased (until age 21, then 10-year rule applies), disabled individuals, chronically ill individuals, and individuals not more than 10 years younger than the deceased.',
+    'Pre-2020 inherited IRAs follow the old "stretch IRA" rules if the original beneficiary designation predates the SECURE Act.',
+    'For the 10-year rule, think strategically about which years to take distributions — spreading withdrawals across 10 years keeps each distribution in a lower tax bracket than taking everything at once.',
+  ]},
+  {label:'When no beneficiary was named', steps:[
+    'If the beneficiary designation is missing, outdated (names someone who predeceased), or names "the estate," the account typically passes through probate.',
+    'A probate asset loses the tax-advantaged transfer rules — the estate\'s beneficiaries cannot use the inherited IRA structure.',
+    'The executor (with Letters Testamentary) can claim the account on behalf of the estate, but distribution rules are compressed — often requiring full distribution within 5 years.',
+    'This is one of the most costly beneficiary designation mistakes — strongly advise all living family members to review their own designations after every major life event.',
+  ]},
+],
+tip:'The stepped-up cost basis does NOT apply to IRAs and 401(k)s — these are pre-tax accounts and all distributions are fully taxable as ordinary income regardless of when the assets were purchased. This is different from inherited brokerage accounts, where the cost basis is stepped up to the date-of-death value.',
+warn:'Community property states (AZ, CA, ID, LA, NM, NV, TX, WA, WI): a surviving spouse may have a community property interest in a retirement account even if they are not the named beneficiary. Do not take any action on retirement accounts in these states without consulting an estate attorney.'},
+
+]},
+
+{id:'property', icon:'🏠', bg:'#EFF5EF', title:'Property & Home', sub:'Mortgage, landlord, utilities, HOA',
+items:[
+
+{type:'letter', exec:false, urgent:true,
+title:'Landlord / Property Manager — Lease Termination Notice',
+brief:'Notify a landlord of a tenant\'s death and begin the lease termination process.',
+tags:[],
+instructions:[
+  'Most states allow lease termination upon death with 30 days written notice — check your state\'s specific rules.',
+  'Send certified mail with return receipt to create a legal record of the date of notification.',
+  'Attach the death certificate.',
+  'Do not abandon the property — follow the formal termination process to protect the security deposit.',
+  'Coordinate the return of the security deposit — document the property\'s condition with photos.',
+],
+template:`[DATE]
+
+[LANDLORD / PROPERTY MANAGEMENT COMPANY]
+[ADDRESS]
+[CITY, STATE, ZIP]
+
+Re: Notice of Tenant Death and Lease Termination
+Tenant: [DECEASED FULL NAME]
+Property Address: [RENTAL PROPERTY ADDRESS]
+Lease: [LEASE START DATE] to [LEASE END DATE]
+
+Dear [LANDLORD NAME / Property Manager]:
+
+I am writing to formally notify you of the death of [DECEASED FULL NAME], tenant at the above-referenced property. [DECEASED FIRST NAME] passed away on [DATE OF DEATH].
+
+I am the [EXECUTOR OF THE ESTATE / NEXT OF KIN / LEGAL REPRESENTATIVE] of the deceased.
+
+Pursuant to [STATE] law, I am providing this written notice to terminate the lease effective [TERMINATION DATE — typically 30 days from this notice or the end of the current rental period, whichever is applicable per your state].
+
+I request that you:
+
+1. Confirm the effective termination date and any remaining rental obligations of the estate.
+2. Schedule a mutually convenient time for a final walkthrough of the property.
+3. Return the security deposit of $[AMOUNT], less any legitimate deductions, within the timeframe required by [STATE] law.
+4. Advise me of your preferred process for returning keys and personal property removal.
+
+The estate will ensure the property is vacated in good condition by [VACATE DATE]. Please contact me to coordinate.
+
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Role:    [EXECUTOR / NEXT OF KIN]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
+  Email:   [YOUR EMAIL]
+
+Enclosed: Certified copy of death certificate.
+
+Sincerely,
+
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]`},
+
+{type:'letter', exec:false, urgent:false,
+title:'Mortgage Servicer — Death Notification',
+brief:'Notify the mortgage servicer of a borrower\'s death and inquire about next steps.',
+tags:[],
+instructions:[
+  'Call the servicer first — ask for the loss mitigation or estate department.',
+  'Payments must continue to avoid foreclosure — coordinate who will make payments from estate funds.',
+  'The Garn-St Germain Act allows heirs to assume a mortgage without triggering a due-on-sale clause.',
+  'Request a payoff statement if the property will be sold.',
+  'Check whether a mortgage life insurance policy exists — this would pay off the loan.',
+],
+template:`[DATE]
+
+[MORTGAGE SERVICER NAME]
+Loan Administration / Loss Mitigation Department
+[ADDRESS]
+[CITY, STATE, ZIP]
+
+Re: Notification of Borrower Death
+Borrower: [DECEASED FULL NAME]
+Loan Number: [LOAN NUMBER]
+Property Address: [PROPERTY ADDRESS]
+
+Dear Loan Administration Team:
+
+I am writing to notify you of the death of [DECEASED FULL NAME], borrower on the above-referenced mortgage loan. [DECEASED FIRST NAME] passed away on [DATE OF DEATH].
+
+I am the [EXECUTOR OF THE ESTATE / SURVIVING SPOUSE / HEIR] and am managing the estate.
+
+I request that you:
+
+1. Note the death in your records and update the account accordingly.
+2. Advise me of the options available regarding this loan, including: assumption by an heir, sale of the property, or continued payment from estate funds.
+3. Provide a current payoff statement as of [DATE], including any fees or prepayment penalties.
+4. Confirm the monthly payment amount and due dates so payments can continue without interruption.
+5. Advise whether mortgage life insurance is associated with this loan that would satisfy the outstanding balance.
+
+[IF SURVIVING CO-BORROWER: I am a co-borrower on this loan and intend to continue making payments. Please update the account to reflect my sole borrower status.]
+
+I understand that under the Garn-St Germain Depository Institutions Act, I have the right to assume this mortgage as an heir without the loan being called due.
+
+Enclosed: Certified copy of death certificate, [Letters Testamentary if available].
+
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Role:    [ROLE]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
+
+Sincerely,
+
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]`},
+
+{type:'letter', exec:false, urgent:false,
+title:'HOA / Condo Association — Death Notification',
+brief:'Notify the homeowners association of a member\'s death.',
+tags:[],
+instructions:[
+  'HOA dues continue to accrue until ownership transfers — arrange payment from estate funds.',
+  'Request information about any HOA requirements for estate sales or property transfers.',
+  'Attach a certified death certificate.',
+],
+template:`[DATE]
+
+[HOA / CONDO ASSOCIATION NAME]
+Board of Directors / Management Office
+[ADDRESS]
+[CITY, STATE, ZIP]
+
+Re: Death Notification — Homeowner [DECEASED FULL NAME]
+Property Address: [PROPERTY ADDRESS]
+Unit / Lot: [UNIT OR LOT NUMBER]
+
+Dear Board of Directors:
+
+I am writing to notify the Association of the death of [DECEASED FULL NAME], owner of [PROPERTY ADDRESS], who passed away on [DATE OF DEATH].
+
+I am the [EXECUTOR OF THE ESTATE / HEIR] and am managing the estate during the administration period.
+
+I request that you:
+
+1. Update your records to reflect the change in ownership status.
+2. Confirm the current monthly dues amount and payment instructions so that dues can continue to be paid from estate funds during administration.
+3. Advise of any special assessments, outstanding balances, or fees currently owed.
+4. Provide information about any HOA requirements or restrictions regarding the sale or transfer of the property.
+
+Please direct all future communications to:
+  Name:    [YOUR FULL NAME]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
+  Email:   [YOUR EMAIL]
+
+Enclosed: Certified copy of death certificate.
+
+Sincerely,
+
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[RELATIONSHIP TO DECEASED]
+[DATE]`},
+
+{type:'letter', exec:false, urgent:true,
+title:'Utility Provider — Transfer or Cancellation',
+brief:'Transfer a utility account to a new name or cancel service.',
+tags:[],
+instructions:[
+  'Send one letter per utility provider — customize whether transferring or cancelling.',
+  'If the property will remain occupied, transfer to the estate or surviving occupant.',
+  'If the property will be vacated, cancel service effective the vacate date.',
+  'For gas and electric, request a final meter read on the date of cancellation.',
+  'Keep utilities connected through any estate sale showing period.',
+],
+template:`[DATE]
+
+[UTILITY COMPANY NAME]
+Customer Service / Account Management
+[ADDRESS]
+[CITY, STATE, ZIP]
+
+Re: [TRANSFER / CANCELLATION] of Account — Death of Account Holder
+Account Holder: [DECEASED FULL NAME]
+Account Number: [ACCOUNT NUMBER]
+Service Address: [SERVICE ADDRESS]
+
+Dear Customer Service:
+
+I am writing to request [transfer / cancellation] of the above utility account following the death of the account holder, [DECEASED FULL NAME], who passed away on [DATE OF DEATH].
+
+[IF TRANSFERRING:]
+Please transfer this account to the following name effective [DATE]:
+  New Account Holder: [NEW NAME]
+  Billing Address:    [NEW BILLING ADDRESS]
+  Phone:              [NEW PHONE]
+  Email:              [NEW EMAIL]
+
+[IF CANCELLING:]
+Please cancel service effective [CANCELLATION DATE] and arrange for a final meter read on that date. Please send the final bill to:
+  Name:    [YOUR FULL NAME]
+  Address: [YOUR ADDRESS]
+
+Please confirm [transfer / cancellation] in writing and advise of any outstanding balance or refund due.
+
+Enclosed: Certified copy of death certificate.
+
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Phone:   [YOUR PHONE]
+  Email:   [YOUR EMAIL]
+
+Sincerely,
+
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]`},
+
+]},
+
+{id:'employer', icon:'💼', bg:'#F5EEF5', title:'Employer & HR', sub:'Final pay, benefits, group insurance',
+items:[
+
+{type:'letter', exec:false, urgent:true,
+title:'Employer HR — Death Notification and Benefits Inquiry',
+brief:'Notify the employer\'s HR department and request information about all outstanding benefits.',
+tags:[],
+instructions:[
+  'This is one of the most important early calls — employers hold many overlapping benefits.',
+  'Call HR first. This letter confirms the conversation in writing.',
+  'Ask specifically about: group life insurance, AD&D, 401(k), pension, unpaid wages, accrued PTO, COBRA, and stock options or RSUs.',
+  'HR is also the gateway to the group life insurance claim process.',
+],
+template:`[DATE]
+
+[COMPANY NAME]
+Human Resources Department
+[ADDRESS]
+[CITY, STATE, ZIP]
+
+Re: Death Notification — Employee [DECEASED FULL NAME]
+Employee ID: [EMPLOYEE ID, if known]
+Department: [DEPARTMENT, if known]
+
+Dear Human Resources Team:
+
+I am writing to notify [COMPANY NAME] of the death of [DECEASED FULL NAME], [JOB TITLE], who passed away on [DATE OF DEATH]. [DECEASED FIRST NAME] was [actively employed / most recently employed from DATE to DATE].
+
+I am the [EXECUTOR OF THE ESTATE / SURVIVING SPOUSE / NEXT OF KIN].
+
+I request information and guidance on all of the following, as applicable:
+
+PAYROLL & WAGES
+  1. Final paycheck for wages earned through [DATE OF DEATH], including any accrued and unpaid paid time off.
+  2. Any outstanding expense reimbursements.
+
+BENEFITS
+  3. Group life insurance — carrier name, policy number, and claim process.
+  4. Accidental death and dismemberment (AD&D) insurance — if applicable.
+  5. COBRA continuation coverage — election notice for surviving dependents.
+  6. Flexible Spending Account (FSA) or Health Savings Account (HSA) balance.
+
+RETIREMENT
+  7. 401(k) plan — account balance as of [DATE OF DEATH] and beneficiary claim process.
+  8. Pension or defined benefit plan — survivor benefit information.
+  9. Employee stock purchase plan (ESPP) or unvested equity (RSUs, options) — disposition process.
+
+OTHER
+  10. Any other benefits, incentive pay, or compensation that may be owed to the estate.
+
+Please direct responses to:
+  Name:    [YOUR FULL NAME]
+  Relationship: [RELATIONSHIP]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
+  Email:   [YOUR EMAIL]
+
+Enclosed: Certified copy of death certificate.
+
+Sincerely,
+
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]`},
+
+]},
+
+{id:'digital', icon:'💻', bg:'#F0EEF8', title:'Digital & Subscriptions', sub:'Social media, streaming, email accounts',
+items:[
+
+{type:'letter', exec:false, urgent:false,
+title:'Subscription Service — Cancellation Request',
+brief:'Cancel any subscription or membership service upon death of the account holder.',
+tags:[],
+instructions:[
+  'Use this template for Netflix, Spotify, Amazon, gym memberships, news sites, software subscriptions, etc.',
+  'Customize the highlighted fields for each service.',
+  'Most services accept emailed requests — check if they have a bereavement email address.',
+  'Request a refund of any prepaid subscription period that extends beyond the date of death.',
+  'If you cannot reach anyone by email, use their live chat or call customer support.',
+],
+template:`[DATE]
+
+[SERVICE / COMPANY NAME]
+Customer Support / Account Services
+[EMAIL OR MAILING ADDRESS]
+
+Re: Account Cancellation — Death of Account Holder
+Account Email: [DECEASED'S EMAIL ADDRESS]
+Account Name:  [DECEASED FULL NAME]
+
+Dear Customer Support:
+
+I am writing to request cancellation of the [SERVICE NAME] account belonging to [DECEASED FULL NAME], who passed away on [DATE OF DEATH].
+
+I am the [EXECUTOR OF THE ESTATE / NEXT OF KIN / FAMILY MEMBER] managing the estate.
+
+Please:
+
+1. Cancel the account and all associated subscriptions effective immediately.
+2. Stop all future billing to the payment method on file.
+3. Issue a refund for any unused prepaid subscription period to the original payment method [or the estate, if the card has been cancelled].
+4. Confirm cancellation in writing to this email address: [YOUR EMAIL].
+
+If you require additional documentation, please let me know and I will provide a copy of the death certificate.
+
+Thank you for handling this promptly.
+
+Sincerely,
+
+[YOUR FULL NAME]
+[YOUR RELATIONSHIP TO DECEASED]
+[YOUR EMAIL]
+[YOUR PHONE]
+[DATE]`},
+
+{type:'letter', exec:false, urgent:false,
+title:'Facebook / Meta — Account Memorialization or Removal Request',
+brief:'Request memorialization or removal of a deceased person\'s Facebook or Instagram account.',
+tags:[],
+instructions:[
+  'Online submission is preferred — use facebook.com/special/remember for Facebook, help.instagram.com for Instagram.',
+  'This letter is for cases where the online form is not working or confirmation is needed in writing.',
+  'Attach a copy of the death certificate (scan is acceptable for online submission).',
+  'Memorialization preserves the profile as a tribute; removal deletes it entirely.',
+  'Processing typically takes 1–4 weeks.',
+],
+template:`[DATE]
+
+Meta Platforms, Inc.
+Attn: Special Request Team
+1 Meta Way
+Menlo Park, CA 94025
+
+Re: [MEMORIALIZATION / REMOVAL] Request — Deceased User Account
+Platform: [FACEBOOK / INSTAGRAM]
+Account Name: [DECEASED'S DISPLAY NAME]
+Profile URL: [PROFILE URL, if known]
+Account Email: [DECEASED'S EMAIL, if known]
+
+Dear Meta Support Team:
+
+I am writing to request [memorialization / permanent removal] of the [Facebook / Instagram] account belonging to [DECEASED FULL NAME], who passed away on [DATE OF DEATH].
+
+I am the [IMMEDIATE FAMILY MEMBER / EXECUTOR OF THE ESTATE] of the deceased.
+
+My request: Please [memorialize this account, preserving it as a place of remembrance for friends and family / permanently remove this account and all associated data from your platform].
+
+My information:
+  Name:         [YOUR FULL NAME]
+  Relationship: [RELATIONSHIP TO DECEASED]
+  Email:        [YOUR EMAIL]
+  Phone:        [YOUR PHONE]
+
+Enclosed: [Copy of death certificate] [Copy of document establishing my relationship to the deceased].
+
+Please confirm receipt of this request and provide an estimated timeline for completion.
+
+Sincerely,
+
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]`},
+
+{type:'letter', exec:false, urgent:false,
+title:'Cell Phone Carrier — Cancellation or Number Transfer',
+brief:'Cancel a deceased person\'s wireless lines or transfer a number to a family member\'s account.',
+tags:[],
+instructions:[
+  'All major US carriers (AT&T, Verizon, T-Mobile, US Cellular) waive early termination fees with a death certificate — request this explicitly.',
+  'If you want to keep the phone number (e.g., it\'s been the family\'s main contact number for years), request a number port to a new account in your name before cancelling.',
+  'If the deceased had a device payment plan balance, ask whether the carrier will waive it upon proof of death — many do.',
+  'Bring a death certificate and your own ID to a store, or call the carrier\'s bereavement line: AT&T: 1-800-331-0500 | Verizon: 1-800-922-0204 | T-Mobile: 1-800-937-8997.',
+  'Cancel Apple Watch cellular plans, tablets, and any other lines on the same account separately.',
+],
+template:`[DATE]
+
+[CARRIER NAME]
+Customer Service — Estate / Bereavement Department
+[CARRIER ADDRESS]
+[CITY, STATE, ZIP]
+
+Re: Account [CANCELLATION / NUMBER TRANSFER REQUEST]
+Account Holder: [DECEASED FULL NAME]
+Account Number: [ACCOUNT NUMBER]
+Phone Number(s): [PHONE NUMBER(S)]
+
+Dear Customer Service:
+
+I am writing regarding the wireless account of [DECEASED FULL NAME], who passed away on [DATE OF DEATH]. I am the [executor of the estate / spouse / authorized representative].
+
+[SELECT ONE — DELETE THE OTHER]
+
+[OPTION A — CANCELLATION:]
+Please cancel all lines associated with this account, effective [DATE]. I request that you waive all early termination fees and any remaining device payment plan balances as a bereavement accommodation — a certified death certificate is enclosed. Please issue a final billing statement and confirm cancellation in writing.
+
+[OPTION B — NUMBER TRANSFER:]
+I would like to transfer the phone number [PHONE NUMBER] to a new account in my name before cancelling the remaining account. My information for the new account:
+  Name:    [YOUR FULL NAME]
+  Address: [YOUR BILLING ADDRESS]
+  SSN (last 4): [XXXX]
+Please contact me to complete the port request and advise on any required steps.
+
+Please note: No family member has assumed personal liability for device payment plan balances — these are obligations of the estate. Any early termination fees should be waived per your standard bereavement policy.
+
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Relationship: [RELATIONSHIP]
+  Phone:   [YOUR PHONE]
+  Email:   [YOUR EMAIL]
+
+Enclosed: Certified copy of death certificate.
+
+Sincerely,
+
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]`},
+
+{type:'letter', exec:false, urgent:false,
+title:'Loyalty Program / Airline Miles — Points Transfer or Redemption Request',
+brief:'Request transfer or redemption of loyalty points, airline miles, and rewards belonging to the deceased.',
+tags:[],
+instructions:[
+  'Contact each program separately — there is no central registry for loyalty accounts.',
+  'Common programs to check: airline miles (Delta SkyMiles, United MileagePlus, American AAdvantage, Southwest Rapid Rewards), hotel points (Marriott Bonvoy, Hilton Honors, IHG Rewards), credit card rewards (Chase Ultimate Rewards, Amex Membership Rewards, Capital One miles), retail loyalty programs, and gas station rewards.',
+  'Most programs require a death certificate and proof of executor authority (Letters Testamentary).',
+  'Policies vary significantly: some programs allow transfer to a named beneficiary or surviving spouse; others allow redemption by the estate; a few allow neither and will forfeit the points entirely.',
+  'Check the program\'s terms of service before calling — look for the section on deceased members or estate claims.',
+  'If points are substantial, contact the program\'s customer service line directly before sending this letter — a phone call often resolves it faster.',
+  'Airline miles in particular can have significant value. United MileagePlus, Delta SkyMiles, and American AAdvantage all have established estate transfer policies.',
+  'Credit card rewards are typically accessible through the estate if the executor contacts the issuer.',
+  'Keep documentation of all points claimed, redeemed, or forfeited for the estate records.',
+],
+template:`[DATE]
+
+[LOYALTY PROGRAM NAME]
+Customer Service — Estate / Bereavement Department
+[MAILING ADDRESS OR EMAIL]
+
+Re: Estate Claim — Loyalty Account of Deceased Member
+Account Holder: [DECEASED FULL NAME]
+Member Number / Account ID: [ACCOUNT NUMBER, if known]
+Approximate Point / Mile Balance: [BALANCE, if known]
+
+Dear [PROGRAM NAME] Customer Service Team:
+
+I am writing to notify you of the death of [DECEASED FULL NAME], who passed away on [DATE OF DEATH], and to request information about the status and disposition of their loyalty account.
+
+I am the executor of the Estate of [DECEASED FULL NAME], appointed by [COURT NAME], [COUNTY], [STATE] on [DATE OF APPOINTMENT].
+
+I am requesting the following:
+
+  1. Confirmation of the current account balance as of the date of death;
+  2. Information about your policy for transferring or redeeming points or miles belonging to a deceased member;
+  3. The steps required to either transfer the balance to [BENEFICIARY NAME / the estate] or redeem the balance on behalf of the estate;
+  4. Any forms or documentation required to process this request.
+
+My contact information:
+  Name:         [YOUR FULL NAME]
+  Relationship: Executor, Estate of [DECEASED FULL NAME]
+  Address:      [YOUR ADDRESS]
+  Phone:        [YOUR PHONE]
+  Email:        [YOUR EMAIL]
+
+Enclosed: Certified copy of death certificate and Letters Testamentary.
+
+Please confirm receipt of this request and advise on next steps at your earliest convenience.
+
+Sincerely,
+
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+Executor, Estate of [DECEASED FULL NAME]
+[DATE]`},
+
+]},
+
+{id:'legal_letters', icon:'⚖️', bg:'#FDF0F0', title:'Legal & Authorization', sub:'Executor letters, authorization, beneficiary notices',
+items:[
+
+{type:'guide', exec:true, urgent:false,
+title:'How to Open Probate — Step-by-Step Process Guide',
+brief:'Plain-language overview of the probate opening process. Actual court forms vary by state — your estate attorney files the specific documents.',
+tags:[],
+sections:[
+  {label:'First: determine whether probate is even required', steps:[
+    'Assets that AVOID probate entirely (regardless of state): joint tenancy assets pass automatically to the surviving owner; assets with named beneficiaries (life insurance, retirement accounts, POD/TOD bank accounts) pass directly; assets held in a living trust pass through the trust.',
+    'Assets that typically REQUIRE probate: real property owned solely by the deceased, bank accounts in the deceased\'s name only with no beneficiary designation, personal property above state thresholds.',
+    'If the entire estate consists of non-probate assets, no court involvement is needed at all.',
+    'Many states have simplified small-estate procedures that avoid full probate — check your state\'s threshold (California: $184,500 / Texas: $75,000 / New York: $50,000 / Florida: $75,000).',
+    'If in doubt: a 30-minute consultation with an estate attorney is the most efficient way to answer this question.',
+  ]},
+  {label:'Documents you will need to open probate', steps:[
+    'Original will — not a copy. Courts will not accept photocopies in most states. If the original cannot be found, consult an attorney immediately.',
+    'Certified death certificate — typically 1–2 copies for the initial filing.',
+    'Petition to Admit Will to Probate (and to Appoint Executor) — obtained from the county court or your attorney.',
+    'List of all heirs at law and beneficiaries named in the will — full legal names and current addresses.',
+    'Filing fee — typically $50–$400 payable to the court by check or money order.',
+  ]},
+  {label:'Step-by-step: opening probate', steps:[
+    'Step 1 — File the petition at the correct court. File at the Probate Court (or Surrogate\'s Court in NY, Circuit Court in some states) in the COUNTY where the deceased was domiciled at death.',
+    'Step 2 — Pay the filing fee. Get a file-stamped copy of the petition for your records.',
+    'Step 3 — The court schedules a hearing — typically 2–8 weeks after filing. In some states, an uncontested will can be approved without a hearing.',
+    'Step 4 — Notify all heirs and beneficiaries of the hearing date. Most states require certified mail with return receipt. Keep the receipts as legal proof.',
+    'Step 5 — Publish a creditor notice in a newspaper of general circulation. Most states require 3–4 consecutive weeks of publication. Your attorney will arrange this.',
+    'Step 6 — Attend the hearing (or authorize your attorney to appear). The court admits the will to probate and formally appoints the executor.',
+    'Step 7 — Receive Letters Testamentary. Order 10–15 certified copies immediately ($5–$20 each). These are your legal authority to act.',
+  ]},
+  {label:'After probate is opened — ongoing obligations', steps:[
+    'File the estate asset inventory with the court (required within 60–90 days in most states).',
+    'Maintain an estate bank account — all income and expenses of the estate flow through it.',
+    'Keep detailed records of every financial transaction made on behalf of the estate.',
+    'At the conclusion, file a final accounting and petition for distribution — the court must approve final distributions in formal probate in most states.',
+    'In Texas and some other states, Independent Administration allows the executor to act without ongoing court supervision after initial appointment.',
+  ]},
+  {label:'State filing times and complexity', steps:[
+    'California: 18–24 months typical. Attorney fees are statutory (~4% of estate value). Court confirmation required for most real estate sales.',
+    'Texas: 6–12 months typical with Independent Administration. Muniment of Title available for some simple estates.',
+    'Florida: 6–12 months typical for formal administration. Summary Administration available for estates under $75,000.',
+    'New York: 12–18 months typical. NYC Surrogate\'s Court can be slower. Attorney representation strongly recommended.',
+    'Illinois, Pennsylvania, Michigan: 9–15 months typical.',
+  ]},
+],
+tip:'If the deceased had a living trust that was properly funded, the trust assets do not go through probate at all — they are distributed by the trustee according to the trust document. This can save 12–24 months and significant legal fees compared to probate.',
+warn:'Only the named executor can file the probate petition. Loss Ally cannot file on the executor\'s behalf — but Loss Ally can prepare all supporting documents, compile the asset list, and coordinate with your attorney so your time investment is minimal.'},
+
+{type:'guide', exec:true, urgent:false,
+title:'Estate Asset Inventory — How to Compile All Four Categories',
+brief:'A structured approach to documenting every estate asset with correct values. Required for probate court, estate taxes, and equitable distribution.',
+tags:[],
+sections:[
+  {label:'Why this matters — and the date-of-death rule', steps:[
+    'The estate asset inventory is the foundation of probate: the court requires it, the IRS uses it for estate taxes, and heirs need it for equitable distribution.',
+    'Every value in the inventory must reflect fair market value as of the DATE OF DEATH — not the current date, not the purchase price.',
+    'For tax purposes, inherited assets receive a "stepped-up cost basis" to the date-of-death value. This eliminates capital gains that accrued during the deceased\'s lifetime — a significant tax benefit.',
+    'Begin the inventory immediately. Values as of the date of death can be documented retroactively for financial accounts (request statements), real property (order an appraisal), and securities (look up closing prices on that date).',
+  ]},
+  {label:'Category 1 — Real property', steps:[
+    'List every property: address, legal description (from the deed), and ownership type (sole, joint tenancy, tenancy in common, community property).',
+    'Value: obtain a formal appraisal from a certified residential appraiser for each property. Cost: $300–$600 for a home. This is required for probate and estate taxes.',
+    'Note any mortgages, liens, or encumbrances — the net equity (value minus mortgage) is what enters the estate.',
+    'If property is held in joint tenancy with right of survivorship: it passes outside probate to the surviving owner. Still document it for the estate inventory.',
+    'Out-of-state real property requires ancillary probate in that state — flag these properties for your attorney immediately.',
+  ]},
+  {label:'Category 2 — Financial accounts', steps:[
+    'For each bank and investment account: institution name, account type, account number (last 4 digits only for security), and balance as of the date of death.',
+    'Request a "date of death statement" from each institution — many will provide this specifically for estate purposes.',
+    'For brokerage accounts: record each security holding and its closing price on the date of death. The total portfolio value on that date is the estate value.',
+    'For retirement accounts (IRA, 401k, 403b): record the balance and note the named beneficiary. If a named beneficiary exists, the account is a non-probate asset — still document it.',
+    'For life insurance: record the policy number, insurer, death benefit amount, and named beneficiary. Death benefits payable to a named individual are NOT estate assets — note them separately.',
+    'Savings bonds: check current value at treasurydirect.gov. Series EE and I bonds have specific redemption and transfer rules.',
+  ]},
+  {label:'Category 3 — Personal property', steps:[
+    'Personal property includes: vehicles, jewelry, art, furniture, electronics, clothing, tools, sporting equipment, collections, and all household contents.',
+    'High-value items ($500+): obtain a written appraisal from a certified appraiser. Required for jewelry, art, antiques, collectibles, and musical instruments.',
+    'Vehicles: use Kelley Blue Book (kbb.com) private party value as of the date of death. Note any outstanding loans.',
+    'Ordinary household furnishings: use a reasonable aggregate estimate (a professional estate sale company can provide this). Most courts accept a reasonable estimate for general household contents.',
+    'Firearms: document carefully. Transfers are subject to federal (and sometimes state) law. Flag for attorney before any transfer.',
+    'Photograph everything of significant value — timestamps on photos serve as documentation.',
+  ]},
+  {label:'Category 4 — Digital and intangible assets', steps:[
+    'Cryptocurrency: document type (Bitcoin, Ethereum, etc.), quantity held, and closing price on the date of death. Note where held — exchange account or hardware wallet.',
+    'Domain names and websites: document each domain, registrar, and estimated value. An actively monetized website may have significant income value.',
+    'Online business accounts (Etsy, Amazon seller, YouTube): document revenue and estimated value.',
+    'Loyalty points and airline miles: document each program, balance, and estimated cash value (airline miles can be worth $0.01–$0.02 each).',
+    'Intellectual property (patents, copyrights, royalty streams): these require specialized valuation and should be flagged for the estate attorney.',
+    'Digital assets with no clear value (photos, documents) have sentimental but not estate tax value — document them for family distribution purposes.',
+  ]},
+  {label:'Debts and liabilities — the other side of the ledger', steps:[
+    'The inventory must also document all debts: mortgages, car loans, credit card balances, personal loans, medical bills, and any outstanding judgments.',
+    'Debts are paid from estate assets before any distribution to heirs. The net estate = total assets minus total liabilities.',
+    'Do not pay debts from personal funds. All debt payments must flow through the estate bank account.',
+    'If liabilities exceed assets (insolvent estate): consult an attorney immediately. There is a statutory priority order for which debts get paid first.',
+  ]},
+],
+tip:'Use a spreadsheet with four tabs — one per category. Include columns for: item description, institution/location, account number (last 4), date-of-death value, source of valuation, and notes. This spreadsheet becomes the working document for the attorney, CPA, and court filing.',
+warn:'The inventory is a legal document filed with the probate court (in most states). Intentional omission of assets from the inventory is a serious legal violation that can expose the executor to personal liability.'},
+
+{type:'letter', exec:true, urgent:false,
+title:'Professional License Board — Cancellation Notice',
+brief:'Notify state licensing boards and professional associations of a licensed professional\'s death.',
+tags:[],
+instructions:[
+  'Applies to: attorneys (state bar), physicians (state medical board), CPAs (state board of accountancy), real estate agents, engineers, nurses, pharmacists, and any other licensed profession.',
+  'Most boards require formal notification to close the license and prevent fraudulent use.',
+  'Many associations will issue a formal acknowledgment or memorial notice — request this if it would be meaningful to the family.',
+  'Request a refund of any unused portion of annual dues or licensing fees.',
+  'For attorneys: notify the state bar within the timeframe required by state rules.',
+  'Send via certified mail with return receipt.',
+],
+template:`[DATE]
+
+[LICENSING BOARD / PROFESSIONAL ASSOCIATION NAME]
+[ADDRESS]
+[CITY, STATE, ZIP]
+
+Re: Notice of Death — Licensed Professional [DECEASED FULL NAME]
+License Number: [LICENSE NUMBER]
+License Type: [TYPE OF LICENSE / CREDENTIAL]
+
+Dear [LICENSING AUTHORITY]:
+
+I am writing to inform [ORGANIZATION NAME] of the death of [DECEASED FULL NAME], a [PROFESSION] licensed by your board, who passed away on [DATE OF DEATH]. I am the [executor of the estate / spouse / authorized representative].
+
+I respectfully request the following actions:
+
+1. Record the death and formally retire License Number [LICENSE NUMBER], effective [DATE OF DEATH].
+2. Confirm that the license has been closed to prevent unauthorized use.
+3. Advise whether any formal resignation, notice, or filing is required under [STATE] law or your organization\'s rules.
+4. Provide information about any refund of prepaid membership dues or licensing fees for the period following [DATE OF DEATH].
+5. Advise whether your organization issues any memorial recognition or acknowledgment for deceased members.
+
+A certified copy of the death certificate is enclosed for your records.
+
+Please direct all correspondence to me at the address below. Thank you for your assistance.
+
+Sincerely,
+
+[YOUR SIGNATURE]
+
+[YOUR PRINTED NAME]
+[YOUR RELATIONSHIP / ROLE]
+[YOUR ADDRESS]
+[CITY, STATE, ZIP]
+[PHONE / EMAIL]
+
+Enclosed: Certified copy of death certificate.
+Sent via: Certified Mail, Return Receipt Requested.`},
+
+{type:'letter', exec:true, urgent:false,
+title:'Heir Receipt and Release',
+brief:'Executor obtains a signed acknowledgment from each heir at the time of distribution. Creates legal proof that the heir received their share and releases the executor from further claims.',
+tags:[],
+instructions:[
+  'Obtain a signed Receipt and Release from EVERY heir or beneficiary at the time of distribution.',
+  'This document protects the executor personally — it confirms that each heir received what they were entitled to and releases the executor from future claims.',
+  'Do not make any distribution without getting this signed first.',
+  'Keep signed originals permanently. The executor may need to present these to the court in the final accounting.',
+  'If an heir refuses to sign, do not distribute until you have legal advice. A refusal to sign may signal a dispute.',
+  'Have your attorney review this form before use — state laws on final releases vary.',
+],
+template:`RECEIPT AND RELEASE OF EXECUTOR
+
+Estate of [DECEASED FULL NAME], Deceased
+
+Date of Death: [DATE OF DEATH]
+State of Administration: [STATE]
+
+I, [HEIR FULL NAME], residing at [HEIR ADDRESS], hereby acknowledge and agree as follows:
+
+1. RECEIPT OF DISTRIBUTION
+
+I have received from [EXECUTOR FULL NAME], Executor of the Estate of [DECEASED FULL NAME], the following distribution in full satisfaction of my interest in the estate:
+
+  [DESCRIBE DISTRIBUTION IN DETAIL]
+  Examples:
+    • Cash payment of $[AMOUNT], received by wire transfer / check on [DATE]
+    • Transfer of [PROPERTY DESCRIPTION] as described in the Will
+    • Transfer of [SPECIFIC PERSONAL PROPERTY ITEMS]
+
+2. ACKNOWLEDGMENT
+
+I acknowledge that this distribution represents my full and complete share of the estate as provided under the Will of [DECEASED FULL NAME] dated [WILL DATE] / under the laws of intestacy of [STATE].
+
+3. RELEASE
+
+In consideration of the above distribution, I hereby release and discharge [EXECUTOR FULL NAME], as Executor of the Estate of [DECEASED FULL NAME], and the estate itself, from any and all claims, demands, or causes of action that I may have or claim to have arising from the administration of the estate, to the extent permitted by law.
+
+4. AGREEMENT
+
+I agree that if it is subsequently determined that any additional assets exist, or that any distributions were made in error, I will cooperate in good faith to rectify the matter.
+
+Signed:
+
+______________________________
+[HEIR FULL NAME]
+
+Date: _________________________
+
+Address: [HEIR ADDRESS]
+
+[NOTARY BLOCK — RECOMMENDED]
+
+State of ________________, County of ________________
+
+Subscribed and sworn to before me this _____ day of __________, 20____.
+
+Notary Public: ___________________________
+My commission expires: ___________________
+
+————————————————————————————
+FOR EXECUTOR USE ONLY:
+
+Distribution made by: [EXECUTOR FULL NAME]
+Date of distribution: [DATE]
+Witnessed by: [WITNESS NAME, if any]`},
+
+{type:'letter', exec:true, urgent:false,
+title:'Limited Authorization Letter — Authorizing Loss Ally (or Third Party) to Communicate',
+brief:'Executor authorizes Loss Ally advisors to communicate with institutions on behalf of the estate.',
+tags:[],
+instructions:[
+  'The executor signs this letter once and Loss Ally keeps it on file.',
+  'Present this letter alongside a death certificate when making calls on behalf of the estate.',
+  'This does not grant Loss Ally the ability to execute transactions, sign documents, or access funds.',
+  'Some institutions will accept this; others require the executor to be on the call directly.',
+  'Keep multiple signed originals.',
+],
+template:`LIMITED AUTHORIZATION LETTER
+
+Date: [DATE]
+
+I, [EXECUTOR FULL NAME], hereby certify that I am the duly appointed Executor of the Estate of [DECEASED FULL NAME], deceased, who passed away on [DATE OF DEATH]. Letters Testamentary were issued to me by [COURT NAME], [COUNTY], [STATE] on [DATE OF LETTERS].
+
+AUTHORIZATION
+
+I hereby authorize [LOSS ALLY ADVISOR NAME / LOSS ALLY ESTATE SERVICES, INC.] to communicate with any institution, agency, or organization on behalf of the Estate of [DECEASED FULL NAME] for the following purposes:
+
+  1. Providing notification of the death of [DECEASED FULL NAME];
+  2. Requesting account information, statements, and balances;
+  3. Requesting and receiving documentation, claim forms, and correspondence;
+  4. Following up on the status of pending matters;
+  5. Providing information requested by the institution regarding the estate.
+
+LIMITATIONS
+
+This authorization does NOT grant the authorized party the ability to:
+  • Execute or sign any legal documents or contracts on behalf of the estate;
+  • Access, withdraw, or transfer any funds or assets;
+  • Make binding decisions regarding the estate;
+  • Act as executor, administrator, or legal representative of the estate.
+
+All legal authority remains solely with me as the appointed Executor.
+
+CONTACT INFORMATION
+
+Executor:
+  Name:    [EXECUTOR FULL NAME]
+  Address: [EXECUTOR ADDRESS]
+  Phone:   [EXECUTOR PHONE]
+  Email:   [EXECUTOR EMAIL]
+
+Authorized Representative:
+  Name:    [LOSS ALLY ADVISOR NAME]
+  Company: Loss Ally LLC
+  Phone:   [LOSS ALLY PHONE]
+  Email:   [LOSS ALLY EMAIL]
+
+Executor Signature: _______________________________
+
+Printed Name: [EXECUTOR FULL NAME]
+
+Date: _______________________________
+
+[NOTARY BLOCK — RECOMMENDED FOR FINANCIAL INSTITUTIONS]
+
+State of ________________, County of ________________
+
+Subscribed and sworn to before me this _____ day of __________, 20____.
+
+Notary Public: ___________________________
+My commission expires: ___________________`},
+
+{type:'letter', exec:true, urgent:false,
+title:'Beneficiary Notification Letter',
+brief:'Executor\'s formal written notice to beneficiaries named in the will.',
+tags:[],
+instructions:[
+  'Most states require this to be sent within 30–60 days of executor appointment.',
+  'Send via certified mail with return receipt — keep receipts as legal proof of notification.',
+  'Send to every person named in the will AND every legal heir (those who would inherit under intestacy).',
+  'This letter is a legal obligation — failure to notify can expose the executor to personal liability.',
+  'Customize for each recipient (their specific bequest, if appropriate).',
+],
+template:`[DATE]
+
+[BENEFICIARY FULL NAME]
+[BENEFICIARY ADDRESS]
+[CITY, STATE, ZIP]
+
+Re: Notice of Estate Administration — Estate of [DECEASED FULL NAME]
+
+Dear [BENEFICIARY FIRST NAME]:
+
+I am writing to notify you of the death of [DECEASED FULL NAME], who passed away on [DATE OF DEATH] in [CITY, STATE].
+
+I, [EXECUTOR FULL NAME], have been named as Executor of the Estate of [DECEASED FULL NAME] pursuant to [his/her/their] Last Will and Testament dated [WILL DATE]. Letters Testamentary were issued to me by [COURT NAME], [COUNTY], [STATE] on [DATE OF LETTERS TESTAMENTARY].
+
+The Will has been filed with [COURT NAME] in [COUNTY], [STATE], where it is available for public inspection during regular court hours.
+
+You are receiving this notice because you are [named as a beneficiary in the Will / a legal heir of the deceased].
+
+The estate is currently in the process of administration, which includes:
+  • Inventorying all estate assets
+  • Settling all outstanding debts, taxes, and expenses
+  • Distributing the remaining assets in accordance with the Will
+
+I will keep you informed of the progress of the estate. Please understand that distributions cannot be made until all debts and obligations of the estate are fully resolved.
+
+You have the right to contest the Will within the time period allowed by [STATE] law. If you have concerns, please consult an attorney promptly, as this period is strictly limited.
+
+For questions, please contact me at:
+  Name:    [EXECUTOR FULL NAME]
+  Address: [EXECUTOR ADDRESS]
+  Phone:   [EXECUTOR PHONE]
+  Email:   [EXECUTOR EMAIL]
+
+Sincerely,
+
+[EXECUTOR SIGNATURE]
+
+[EXECUTOR PRINTED NAME], Executor
+Estate of [DECEASED FULL NAME]
+[DATE]`},
+
+{type:'letter', exec:false, urgent:false,
+title:'Creditor Notification Letter',
+brief:'Proactively notify known creditors of the death to begin the claims process.',
+tags:[],
+instructions:[
+  'Send to all known creditors: credit cards, personal loans, medical providers, utilities owed money.',
+  'Creditors have a limited time to file claims against the estate — the clock often starts with notification.',
+  'Your estate attorney will advise on the formal creditor notice requirements in your state.',
+  'Keep a log of every creditor notified and when.',
+  'Do not pay creditor claims from personal funds — all payments from estate funds only.',
+],
+template:`[DATE]
+
+[CREDITOR NAME]
+[CREDITOR ADDRESS / BILLING DEPARTMENT]
+[CITY, STATE, ZIP]
+
+Re: Notice of Death — Account Holder [DECEASED FULL NAME]
+Account Number: [ACCOUNT NUMBER]
+
+Dear Account Services:
+
+I am writing to notify you of the death of [DECEASED FULL NAME], who passed away on [DATE OF DEATH].
+
+I am the [EXECUTOR OF THE ESTATE / LEGAL REPRESENTATIVE] of the deceased.
+
+The estate of [DECEASED FULL NAME] is currently under administration. I request that you:
+
+1. Note the death in your records and direct all future correspondence to me at the address below.
+2. Provide a current account statement showing the balance as of [DATE OF DEATH] and any interest or charges that have accrued since.
+3. Advise me of the process for filing a creditor claim against the estate, if applicable.
+4. Cease collection activities directed at family members or other persons who are not personally liable for this debt.
+
+Outstanding individual debts are obligations of the estate and will be addressed through the estate administration process in accordance with [STATE] law. I will contact you once the estate is able to process creditor claims.
+
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Role:    [EXECUTOR / REPRESENTATIVE]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
+  Email:   [YOUR EMAIL]
+
+Enclosed: Certified copy of death certificate.
+
+Sincerely,
+
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]`},
+
+]},
+
+
+]; // end CATS
+
+// ─────────────────────────────────────
+// RENDER
+// ─────────────────────────────────────
+let currentFilter='all';
+let checkStates={};
+
+function typeMeta(type){
+  if(type==='letter') return {color:'var(--blue)',label:'TEMPLATE LETTER',barColor:'var(--blue)'};
+  if(type==='guide')  return {color:'var(--terra)',label:'FORM GUIDE',barColor:'var(--terra)'};
+  if(type==='check')  return {color:'var(--sage)',label:'CHECKLIST TOOL',barColor:'var(--sage)'};
+  return {};
+}
+
+function renderBadges(item){
+  const m=typeMeta(item.type);
+  let h=`<span class="badge b-${item.type}">${m.label}</span>`;
+  if(item.exec) h+=`<span class="badge b-exec">EXECUTOR REQUIRED</span>`;
+  if(item.urgent) h+=`<span class="badge b-urgent">URGENT</span>`;
+  return h;
+}
+
+function renderLetter(item,id){
+  const tmpl=item.template.replace(/\[([^\]]+)\]/g,'<span class="field">[$1]</span>');
+  const instHtml=(item.instructions||[]).map((s,i)=>`<div class="inst-item"><div class="inst-dot">${i+1}</div><span>${s}</span></div>`).join('');
+  return `<div class="card-body">
+    <div class="template-wrap">
+      <div class="template-toolbar">
+        <div class="template-label">Letter Template</div>
+        <button class="btn-copy" onclick="copyText('raw_${id}',this)">Copy letter</button>
+      </div>
+      <div class="template-text" id="tmpl_${id}">${tmpl}</div>
+      <div style="display:none" id="raw_${id}">${item.template}</div>
+    </div>
+    ${instHtml?`<div class="instructions"><div class="inst-label">How to use this letter</div><div class="inst-items">${instHtml}</div></div>`:''}
+  </div>`;
+}
+
+function renderGuide(item,id){
+  const sectionsHtml=(item.sections||[]).map(sec=>`
+    <div class="guide-section">
+      <div class="guide-section-label">${sec.label}</div>
+      <div class="guide-steps">${sec.steps.map((s,i)=>`<div class="guide-step"><div class="g-num">${i+1}</div><div>${s}</div></div>`).join('')}</div>
+    </div>
+  `).join('');
+  return `<div class="card-body">
+    <div class="guide-body">
+      ${sectionsHtml}
+      ${item.tip?`<div class="tip-box"><strong>💡 Tip:</strong> ${item.tip}</div>`:''}
+      ${item.warn?`<div class="warn-box" style="margin-top:10px"><strong>⚠️ Warning:</strong> ${item.warn}</div>`:''}
+    </div>
+  </div>`;
+}
+
+function renderCheck(item,id){
+  const groupsHtml=item.groups.map((g,gi)=>{
+    const itemsHtml=g.items.map((text,ii)=>{
+      const k=`${id}_${gi}_${ii}`;
+      const checked=checkStates[k];
+      return `<div class="cl-item${checked?' checked':''}" id="cli_${k}" onclick="toggleCheck('${k}')">
+        <div class="cl-box">${checked?'✓':''}</div>
+        <span>${text}</span>
+      </div>`;
+    }).join('');
+    const total=g.items.length;
+    const done=g.items.filter((_,ii)=>checkStates[`${id}_${gi}_${ii}`]).length;
+    const pct=total?Math.round(done/total*100):0;
+    return `<div class="cl-group">
+      <div class="cl-group-label">${g.label}</div>
+      <div class="cl-items">${itemsHtml}</div>
+      <div class="cl-progress">
+        <span>${done}/${total}</span>
+        <div class="cl-bar-track"><div class="cl-bar-fill" id="clbar_${id}_${gi}" style="width:${pct}%"></div></div>
+        <span>${pct}%</span>
+      </div>
+    </div>`;
+  }).join('');
+  return `<div class="card-body">
+    <div class="checklist-body">
+      ${groupsHtml}
+      <div style="text-align:right;margin-top:8px"><span class="cl-reset" onclick="resetChecklist('${id}')">Reset all</span></div>
+    </div>
+  </div>`;
+}
+
+function toggleCheck(k){
+  checkStates[k]=!checkStates[k];
+  const el=document.getElementById('cli_'+k);
+  if(el){
+    el.classList.toggle('checked',checkStates[k]);
+    el.querySelector('.cl-box').textContent=checkStates[k]?'✓':'';
+  }
+  // update progress bar
+  const parts=k.split('_');
+  const id=parts[0]+'_'+parts[1];
+  const gi=parseInt(parts[2]);
+  const cat=CATS.find(c=>c.items.find(i=>i.id&&i.id===id));
+  // find item
+  let item=null;
+  for(const c of CATS){ item=c.items.find(i=>i.id===id); if(item) break; }
+  if(!item) return;
+  const g=item.groups[gi];
+  if(!g) return;
+  const total=g.items.length;
+  const done=g.items.filter((_,ii)=>checkStates[`${id}_${gi}_${ii}`]).length;
+  const pct=total?Math.round(done/total*100):0;
+  const bar=document.getElementById(`clbar_${id}_${gi}`);
+  if(bar) bar.style.width=pct+'%';
+  const prog=bar&&bar.closest('.cl-progress');
+  if(prog){
+    const spans=prog.querySelectorAll('span');
+    if(spans[0]) spans[0].textContent=`${done}/${total}`;
+    if(spans[1]) spans[1].textContent=`${pct}%`;
+  }
+}
+
+function resetChecklist(id){
+  Object.keys(checkStates).filter(k=>k.startsWith(id+'_')).forEach(k=>{
+    checkStates[k]=false;
+    const el=document.getElementById('cli_'+k);
+    if(el){ el.classList.remove('checked'); el.querySelector('.cl-box').textContent=''; }
+  });
+  document.querySelectorAll(`[id^="clbar_${id}_"]`).forEach(b=>b.style.width='0%');
+}
+
+function copyText(rawId,btn){
+  const raw=document.getElementById(rawId);
+  if(!raw) return;
+  navigator.clipboard.writeText(raw.textContent||raw.innerText).then(()=>{
+    btn.textContent='Copied ✓';
+    btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent='Copy letter'; btn.classList.remove('copied'); },2000);
+  });
+}
+
+function renderItem(item,catId,idx){
+  const id=`${catId}_${idx}`;
+  item.id=id;
+  const m=typeMeta(item.type);
+  let bodyHtml='';
+  if(item.type==='letter') bodyHtml=renderLetter(item,id);
+  else if(item.type==='guide') bodyHtml=renderGuide(item,id);
+  else if(item.type==='check') bodyHtml=renderCheck(item,id);
+  const searchText=(item.title+' '+(item.brief||'')+' '+(item.template||'')+' '+(item.sections||[]).map(s=>s.steps.join(' ')).join(' ')+' '+(item.groups||[]).map(g=>g.items.join(' ')).join(' ')).toLowerCase();
+  return `<div class="card" id="card_${id}" data-type="${item.type}" data-exec="${item.exec?'1':'0'}" data-text="${searchText.replace(/"/g,'&quot;')}">
+    <div class="card-head" onclick="toggleCard('${id}')">
+      <div class="card-type-bar" style="background:${m.barColor}"></div>
+      <div class="card-meta">
+        <div class="card-title">${item.title}</div>
+        <div class="card-brief">${item.brief}</div>
+        <div class="card-badges">${renderBadges(item)}</div>
+      </div>
+      <div class="expand-icon">▼</div>
+    </div>
+    ${bodyHtml}
+  </div>`;
+}
+
+function renderSidebar(){
+  const sb=document.getElementById('sidebar');
+  sb.innerHTML=CATS.map((cat,ci)=>`
+    ${ci>0?'<div class="sb-div"></div>':''}
+    <div class="sb-label">${cat.title}</div>
+    ${cat.items.map((item,idx)=>`
+      <div class="sb-item" onclick="scrollCard('${cat.id}_${idx}')">
+        <span style="font-size:11px;opacity:0.5">${typeMeta(item.type).label.split(' ')[0].charAt(0)}</span>
+        <span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${item.title}</span>
+      </div>
+    `).join('')}
+  `).join('');
+}
+
+function renderMain(){
+  const main=document.getElementById('main');
+  let total=0;
+  const catHtml=CATS.map(cat=>{
+    const itemsHtml=cat.items.map((item,idx)=>{ total++; return renderItem(item,cat.id,idx); }).join('');
+    return `<div class="cat-block" id="catblock_${cat.id}">
+      <div class="cat-header">
+        <div class="cat-icon" style="background:${cat.bg}">${cat.icon}</div>
+        <div>
+          <div class="cat-title">${cat.title}</div>
+          <div class="cat-sub">${cat.sub}</div>
+        </div>
+      </div>
+      ${itemsHtml}
+    </div>`;
+  }).join('');
+  main.innerHTML=catHtml+`<div class="no-results" id="noResults">No resources match your search.</div>`;
+  document.getElementById('visCount').textContent=total;
+  updateCount();
+}
+
+function toggleCard(id){
+  document.getElementById('card_'+id).classList.toggle('open');
+}
+
+function scrollCard(id){
+  const el=document.getElementById('card_'+id);
+  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function setFilter(f,el){
+  currentFilter=f;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  if(f!=='all') el.classList.add('on');
+  applyFilters();
+}
+
+function applyFilters(){
+  const q=document.getElementById('searchInput').value.toLowerCase().trim();
+  let vis=0;
+  document.querySelectorAll('.card').forEach(card=>{
+    const type=card.dataset.type;
+    const text=card.dataset.text;
+    let show=true;
+    if(currentFilter!=='all'&&type!==currentFilter) show=false;
+    if(q&&!text.includes(q)) show=false;
+    card.classList.toggle('hidden',!show);
+    if(show) vis++;
+  });
+  document.querySelectorAll('.cat-block').forEach(cb=>{
+    const v=cb.querySelectorAll('.card:not(.hidden)').length>0;
+    cb.style.display=v?'':'none';
+  });
+  updateCount(vis);
+  const nr=document.getElementById('noResults');
+  if(nr) nr.style.display=vis===0?'block':'none';
+}
+
+function updateCount(n){
+  if(n===undefined) n=document.querySelectorAll('.card:not(.hidden)').length;
+  document.getElementById('visCount').textContent=n;
+}
+
+renderSidebar();
+renderMain();
+</script>
+</body>
+</html>
