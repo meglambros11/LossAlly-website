@@ -91,19 +91,71 @@
       font-size: 0.7rem;
       font-weight: 400;
     }
-    .status-active {
-      background: rgba(141,157,106,0.12);
-      color: var(--forest);
-    }
-    @keyframes fade-up {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    .status-active { background: rgba(141,157,106,0.12); color: var(--forest); }
+    @keyframes fade-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
     .fade-up { animation: fade-up 0.5s ease forwards; }
     @media (min-width: 640px)  { #clients-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (min-width: 1024px) { #clients-grid { grid-template-columns: repeat(3, 1fr); } }
     @media (min-width: 1024px) { #desk-nav { display: flex !important; } #mob-ham { display: none  !important; } }
     @media (max-width: 1023px) { #desk-nav { display: none  !important; } #mob-ham { display: flex  !important; } }
+
+    /* ── Tabs ── */
+    .tab-bar { display: flex; gap: 0; border-bottom: 1px solid var(--mist); margin-bottom: 2rem; }
+    .tab-btn {
+      padding: 0.65rem 1.5rem; font-size: 0.83rem; font-weight: 300; cursor: pointer;
+      background: none; border: none; border-bottom: 2px solid transparent;
+      color: var(--charcoal); opacity: 0.5; font-family: 'DM Sans', sans-serif;
+      transition: opacity 0.15s, border-color 0.15s; margin-bottom: -1px;
+    }
+    .tab-btn:hover { opacity: 0.85; }
+    .tab-btn.active { opacity: 1; font-weight: 400; border-bottom-color: var(--forest); }
+    .tab-btn:focus-visible { outline: 2px solid var(--gold); border-radius: 4px; }
+    .tab-panel { display: none; } .tab-panel.active { display: block; }
+
+    /* ── Intake cards ── */
+    .intake-card {
+      background: #fff; border-radius: 12px; border: 1px solid rgba(226,221,212,0.6);
+      box-shadow: 0 2px 12px rgba(44,44,42,0.05); overflow: hidden;
+      transition: box-shadow 0.2s;
+    }
+    .intake-card:hover { box-shadow: 0 4px 24px rgba(44,44,42,0.09); }
+    .intake-card-head { padding: 1.25rem 1.25rem 1rem; cursor: pointer; user-select: none; }
+    .intake-card-body { display: none; padding: 0 1.25rem 1.25rem; border-top: 1px solid var(--mist); }
+    .intake-card.open .intake-card-body { display: block; }
+    .intake-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1.25rem; margin: 1rem 0; }
+    @media (max-width: 480px) { .intake-detail-grid { grid-template-columns: 1fr; } }
+    .intake-detail-label { font-size: 0.63rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sage); margin-bottom: 0.15rem; }
+    .intake-detail-value { font-size: 0.82rem; color: var(--charcoal); opacity: 0.8; line-height: 1.45; }
+    .intake-free-text { background: var(--cream); border-radius: 8px; padding: 0.75rem 1rem; font-size: 0.8rem; line-height: 1.7; color: var(--charcoal); opacity: 0.75; font-family: 'Lora', Georgia, serif; margin-bottom: 0.75rem; }
+    .intake-free-label { font-size: 0.63rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sage); margin-bottom: 0.4rem; }
+    .status-select {
+      font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 300;
+      padding: 0.3rem 0.6rem; border-radius: 6px; border: 1.5px solid var(--mist);
+      background: var(--warm-white); color: var(--charcoal); outline: none; cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .status-select:focus { border-color: var(--sage); }
+    .invite-btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: var(--forest); color: #fff;
+      font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 400;
+      padding: 0.5rem 1rem; border-radius: 7px; border: none; cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .invite-btn:hover { background: var(--evergreen); }
+    .invite-btn:active { transform: scale(0.97); }
+    .invite-btn:disabled { opacity: 0.5; cursor: default; }
+    .invite-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+    .invited-badge {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      font-size: 0.72rem; color: var(--forest);
+      background: rgba(91,110,91,0.09); padding: 0.3rem 0.7rem; border-radius: 20px;
+    }
+    .status-badge-new    { background:#F7EDD8; color:#6E4A10; }
+    .status-badge-contacted { background:#EEF2FA; color:#2A4A7A; }
+    .status-badge-consultation_scheduled { background:#F5EEF5; color:#6A3A7A; }
+    .status-badge-client { background:rgba(141,157,106,0.12); color:var(--forest); }
+    .status-badge-not_proceeding { background:rgba(226,221,212,0.5); color:var(--charcoal); opacity:0.6; }
   </style>
 </head>
 <body style="visibility:hidden;">
@@ -147,43 +199,57 @@
 <div style="background:var(--cream);border-bottom:1px solid var(--mist);padding:2.5rem 1.75rem 2.75rem;">
   <div style="max-width:1200px;margin:0 auto;">
     <span style="font-size:0.68rem;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--sage);">Advisor Portal</span>
-    <div style="display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-top:0.4rem;">
-      <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2rem,4vw,3rem);font-weight:400;letter-spacing:-0.02em;color:var(--charcoal);line-height:1.1;">Your Clients</h1>
-      <span id="client-count" style="font-size:0.8rem;color:var(--charcoal);opacity:0.45;padding:0.25rem 0.75rem;background:rgba(226,221,212,0.5);border-radius:20px;"></span>
-    </div>
+    <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2rem,4vw,3rem);font-weight:400;letter-spacing:-0.02em;color:var(--charcoal);line-height:1.1;margin-top:0.4rem;">Client Management</h1>
     <p style="font-size:0.9rem;line-height:1.7;color:var(--charcoal);opacity:0.55;margin-top:0.625rem;font-family:'Lora',Georgia,serif;font-style:italic;">
-      All active client accounts. To add a client, create their user account in the Supabase dashboard.
+      Intake submissions and active client accounts.
     </p>
   </div>
 </div>
 
 
-<!-- ══ CLIENT LIST ══════════════════════════════════════ -->
-<main style="max-width:1200px;margin:0 auto;padding:2.5rem 1.75rem 4rem;">
+<!-- ══ MAIN ══════════════════════════════════════════════ -->
+<main style="max-width:1200px;margin:0 auto;padding:2rem 1.75rem 4rem;">
 
-  <!-- Loading state -->
-  <div id="clients-loading" style="text-align:center;padding:4rem 0;color:var(--charcoal);opacity:0.4;">
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="animation:spin 1s linear infinite;display:inline-block;margin-bottom:0.75rem;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
-    <p style="font-size:0.85rem;">Loading clients…</p>
+  <!-- Tabs -->
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="intake">
+      Intake Submissions
+      <span id="intake-count-badge" style="margin-left:0.4rem;font-size:0.65rem;padding:0.1rem 0.5rem;border-radius:20px;background:rgba(196,114,74,0.12);color:var(--terracotta);display:none;"></span>
+    </button>
+    <button class="tab-btn" data-tab="clients">Active Clients</button>
   </div>
 
-  <!-- Client grid (populated by JS) -->
-  <div id="clients-grid" style="display:none;grid-template-columns:1fr;gap:1.25rem;"></div>
-
-  <!-- Empty state -->
-  <div id="clients-empty" style="display:none;text-align:center;padding:4rem 1.75rem;">
-    <div style="width:64px;height:64px;background:var(--cream);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+  <!-- ── TAB: Intake Submissions ── -->
+  <div id="tab-intake" class="tab-panel active">
+    <div id="intake-loading" style="text-align:center;padding:3rem 0;color:var(--charcoal);opacity:0.4;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="animation:spin 1s linear infinite;display:inline-block;margin-bottom:0.6rem;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+      <p style="font-size:0.82rem;">Loading submissions…</p>
     </div>
-    <h3 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;font-weight:400;color:var(--charcoal);margin-bottom:0.5rem;">No clients yet</h3>
-    <p style="font-size:0.85rem;line-height:1.65;color:var(--charcoal);opacity:0.5;max-width:380px;margin:0 auto;">
-      Create client accounts in the Supabase dashboard under Authentication → Users. Their profiles will appear here automatically.
-    </p>
+    <div id="intake-list" style="display:none;display:flex;flex-direction:column;gap:0.875rem;"></div>
+    <div id="intake-empty" style="display:none;text-align:center;padding:3rem 1.75rem;">
+      <p style="font-size:0.9rem;font-family:'Lora',Georgia,serif;font-style:italic;color:var(--charcoal);opacity:0.4;">No intake submissions yet.</p>
+    </div>
+    <div id="intake-error" style="display:none;text-align:center;padding:2rem;">
+      <p style="font-size:0.84rem;color:var(--terracotta);">Could not load submissions.</p>
+    </div>
   </div>
 
-  <!-- Error state -->
-  <div id="clients-error" style="display:none;text-align:center;padding:3rem 1.75rem;">
-    <p style="font-size:0.85rem;color:var(--terracotta);">Could not load clients. Check your Supabase configuration.</p>
+  <!-- ── TAB: Active Clients ── -->
+  <div id="tab-clients" class="tab-panel">
+    <div id="clients-loading" style="text-align:center;padding:3rem 0;color:var(--charcoal);opacity:0.4;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="animation:spin 1s linear infinite;display:inline-block;margin-bottom:0.6rem;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+      <p style="font-size:0.82rem;">Loading clients…</p>
+    </div>
+    <div id="clients-grid" style="display:none;grid-template-columns:1fr;gap:1.25rem;"></div>
+    <div id="clients-empty" style="display:none;text-align:center;padding:4rem 1.75rem;">
+      <h3 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;font-weight:400;color:var(--charcoal);margin-bottom:0.5rem;">No active clients yet</h3>
+      <p style="font-size:0.85rem;line-height:1.65;color:var(--charcoal);opacity:0.5;max-width:380px;margin:0 auto;">
+        Use the Intake Submissions tab to send a portal invite once a client is ready to onboard.
+      </p>
+    </div>
+    <div id="clients-error" style="display:none;text-align:center;padding:3rem 1.75rem;">
+      <p style="font-size:0.85rem;color:var(--terracotta);">Could not load clients. Check your Supabase configuration.</p>
+    </div>
   </div>
 
 </main>
@@ -191,43 +257,215 @@
 
 <style>
   @keyframes spin { to { transform: rotate(360deg); } }
-  @keyframes fade-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 
 <script type="module">
 import { requireAdvisor, signOut, supabase } from './auth.js'
 
-// ─── Auth guard ───────────────────────────────────────────────────────────────
 const auth = await requireAdvisor()
 if (!auth) throw new Error('redirect')
-
 document.body.style.visibility = 'visible'
 
-// ─── Fetch clients ────────────────────────────────────────────────────────────
-const loading  = document.getElementById('clients-loading')
-const grid     = document.getElementById('clients-grid')
-const empty    = document.getElementById('clients-empty')
-const errEl    = document.getElementById('clients-error')
-const countEl  = document.getElementById('client-count')
+// ── Nav / logout ──────────────────────────────────────────────────────────────
+document.getElementById('btn-logout').addEventListener('click', signOut)
+const mobLogout = document.getElementById('mob-logout')
+if (mobLogout) mobLogout.addEventListener('click', signOut)
+const ham = document.getElementById('mob-ham'), mobMenu = document.getElementById('mob-menu')
+ham.addEventListener('click', () => {
+  const open = mobMenu.style.display !== 'none'
+  mobMenu.style.display = open ? 'none' : ''
+  ham.setAttribute('aria-expanded', String(!open))
+})
+window.addEventListener('scroll', () => {
+  document.getElementById('site-nav').style.boxShadow =
+    window.scrollY > 4 ? '0 2px 20px rgba(44,44,42,0.08)' : ''
+})
 
-const { data: clients, error } = await supabase
-  .from('profiles')
-  .select('*')
-  .eq('role', 'client')
-  .order('full_name')
+// ── Tabs ──────────────────────────────────────────────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'))
+    btn.classList.add('active')
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active')
+  })
+})
 
-loading.style.display = 'none'
+// ── Load both in parallel ─────────────────────────────────────────────────────
+loadIntake()
+loadClients()
 
-if (error) {
-  errEl.style.display = ''
-  console.error('Error fetching clients:', error)
-} else if (!clients || clients.length === 0) {
-  empty.style.display = ''
-  countEl.textContent = '0 clients'
-} else {
-  countEl.textContent = `${clients.length} client${clients.length === 1 ? '' : 's'}`
+
+// ══════════════════════════════════════════════════════════════════════════════
+// INTAKE SUBMISSIONS
+// ══════════════════════════════════════════════════════════════════════════════
+
+const STATUS_LABELS = {
+  new:                    'New',
+  contacted:              'Contacted',
+  consultation_scheduled: 'Consult Scheduled',
+  client:                 'Client',
+  not_proceeding:         'Not Proceeding',
+}
+
+async function loadIntake() {
+  const { data: rows, error } = await supabase
+    .from('intake_submissions')
+    .select('*')
+    .order('submitted_at', { ascending: false })
+
+  document.getElementById('intake-loading').style.display = 'none'
+
+  if (error) { document.getElementById('intake-error').style.display = ''; return }
+  if (!rows?.length) { document.getElementById('intake-empty').style.display = ''; return }
+
+  // Badge: count of 'new' submissions
+  const newCount = rows.filter(r => r.status === 'new').length
+  if (newCount > 0) {
+    const badge = document.getElementById('intake-count-badge')
+    badge.textContent = `${newCount} new`
+    badge.style.display = ''
+  }
+
+  const list = document.getElementById('intake-list')
+  list.style.display = 'flex'
+  list.innerHTML = rows.map((r, i) => buildIntakeCard(r, i)).join('')
+
+  // Wire up expand toggles
+  list.querySelectorAll('.intake-card-head').forEach(head => {
+    head.addEventListener('click', () => head.closest('.intake-card').classList.toggle('open'))
+  })
+
+  // Wire up status selects
+  list.querySelectorAll('.status-select').forEach(sel => {
+    sel.addEventListener('change', async e => {
+      e.stopPropagation()
+      const id = sel.dataset.id
+      const newStatus = sel.value
+      const { error } = await supabase
+        .from('intake_submissions')
+        .update({ status: newStatus })
+        .eq('id', id)
+      if (error) { sel.value = sel.dataset.prev; alert('Could not update status.') }
+      else sel.dataset.prev = newStatus
+    })
+    // Prevent card toggle when clicking select
+    sel.addEventListener('click', e => e.stopPropagation())
+  })
+
+  // Wire up invite buttons
+  list.querySelectorAll('.invite-btn[data-id]').forEach(btn => {
+    btn.addEventListener('click', async e => {
+      e.stopPropagation()
+      if (!confirm(`Send a portal invite to ${btn.dataset.email}?`)) return
+      btn.disabled = true
+      btn.textContent = 'Sending…'
+
+      const { data: { session } } = await supabase.auth.getSession()
+      const res = await fetch('/api/invite', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ intake_id: btn.dataset.id }),
+      })
+      const json = await res.json()
+
+      if (res.ok) {
+        btn.closest('.intake-card').querySelector('.invite-action').innerHTML =
+          `<span class="invited-badge">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Invite sent
+          </span>`
+        // Update status select to 'client'
+        const sel = btn.closest('.intake-card').querySelector('.status-select')
+        if (sel) { sel.value = 'client'; sel.dataset.prev = 'client' }
+      } else {
+        btn.disabled = false
+        btn.textContent = 'Send Portal Invite'
+        alert(`Invite failed: ${json.error || 'Unknown error'}${json.detail ? '\n' + json.detail : ''}`)
+      }
+    })
+  })
+}
+
+function buildIntakeCard(r, i) {
+  const deceasedName = [r.deceased_first_name, r.deceased_last_name].filter(Boolean).join(' ') || '—'
+  const executorName = [r.first_name, r.last_name].filter(Boolean).join(' ') || '—'
+  const location     = [r.city_of_death, r.state].filter(Boolean).join(', ') || '—'
+  const isClient     = r.status === 'client'
+
+  const statusOptions = Object.entries(STATUS_LABELS).map(([v, l]) =>
+    `<option value="${v}"${r.status === v ? ' selected' : ''}>${l}</option>`
+  ).join('')
+
+  const inviteAction = isClient
+    ? `<span class="invited-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Invite sent</span>`
+    : `<button class="invite-btn" data-id="${esc(r.id)}" data-email="${esc(r.email || '')}">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+        Send Portal Invite
+       </button>`
+
+  return `
+  <div class="intake-card" style="animation:fade-up 0.4s ease ${i * 0.04}s forwards;opacity:0;">
+    <div class="intake-card-head">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+        <div>
+          <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.1rem;font-weight:500;color:var(--charcoal);margin-bottom:0.2rem;">${esc(executorName)}</div>
+          <div style="font-size:0.75rem;color:var(--charcoal);opacity:0.5;">${esc(r.email || '')} · ${esc(r.phone || '')}</div>
+          <div style="font-size:0.75rem;color:var(--charcoal);opacity:0.5;margin-top:0.15rem;">Deceased: ${esc(deceasedName)} · ${esc(location)} · ${r.date_of_passing ? formatDate(r.date_of_passing) : '—'}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.625rem;flex-shrink:0;" onclick="event.stopPropagation()">
+          <select class="status-select" data-id="${esc(r.id)}" data-prev="${esc(r.status)}">
+            ${statusOptions}
+          </select>
+          <div style="font-size:0.7rem;color:var(--charcoal);opacity:0.38;">${formatDate(r.submitted_at)}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="intake-card-body">
+      <div class="intake-detail-grid">
+        <div><div class="intake-detail-label">Relationship</div><div class="intake-detail-value">${esc(r.relationship || '—')}</div></div>
+        <div><div class="intake-detail-label">Executor Status</div><div class="intake-detail-value">${esc(r.executor_status || '—')}</div></div>
+        <div><div class="intake-detail-label">Will / Trust</div><div class="intake-detail-value">${esc(r.will_or_trust || '—')}</div></div>
+        <div><div class="intake-detail-label">Stage</div><div class="intake-detail-value">${esc(r.stage || '—')}</div></div>
+        <div><div class="intake-detail-label">Availability</div><div class="intake-detail-value">${esc(r.availability || '—')}</div></div>
+        <div><div class="intake-detail-label">Timezone</div><div class="intake-detail-value">${esc(r.timezone || '—')}</div></div>
+        ${r.assets?.length ? `<div style="grid-column:1/-1"><div class="intake-detail-label">Assets</div><div class="intake-detail-value">${esc(r.assets.join(', '))}</div></div>` : ''}
+      </div>
+
+      ${r.consultation_goal ? `<div class="intake-free-label">What they're hoping for</div><div class="intake-free-text">${esc(r.consultation_goal)}</div>` : ''}
+      ${r.how_doing ? `<div class="intake-free-label">How they're doing</div><div class="intake-free-text">${esc(r.how_doing)}</div>` : ''}
+      ${r.anything_else ? `<div class="intake-free-label">Anything else</div><div class="intake-free-text">${esc(r.anything_else)}</div>` : ''}
+
+      <div style="display:flex;align-items:center;justify-content:flex-end;padding-top:0.875rem;border-top:1px solid var(--mist);margin-top:0.875rem;">
+        <div class="invite-action">${inviteAction}</div>
+      </div>
+    </div>
+  </div>`
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ACTIVE CLIENTS
+// ══════════════════════════════════════════════════════════════════════════════
+
+async function loadClients() {
+  const { data: clients, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('role', 'client')
+    .order('full_name')
+
+  document.getElementById('clients-loading').style.display = 'none'
+
+  if (error) { document.getElementById('clients-error').style.display = ''; return }
+  if (!clients?.length) { document.getElementById('clients-empty').style.display = ''; return }
+
+  const grid = document.getElementById('clients-grid')
   grid.style.display = 'grid'
-
   grid.innerHTML = clients.map((c, i) => `
     <div class="client-card" style="animation:fade-up 0.45s ease ${i * 0.05}s forwards;opacity:0;">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem;">
@@ -240,26 +478,19 @@ if (error) {
             <div style="font-size:0.75rem;color:var(--charcoal);opacity:0.48;margin-top:0.1rem;">${esc(c.email || '')}</div>
           </div>
         </div>
-        <span class="status-pill status-active">
-          <span style="width:5px;height:5px;border-radius:50%;background:var(--sage);"></span>
-          Active
-        </span>
+        <span class="status-pill status-active"><span style="width:5px;height:5px;border-radius:50%;background:var(--sage);"></span>Active</span>
       </div>
-
       <div style="height:1px;background:var(--mist);margin-bottom:0.875rem;"></div>
-
       <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">
         <div>
           <div style="font-size:0.65rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.2rem;">Joined</div>
           <div style="font-size:0.8rem;color:var(--charcoal);opacity:0.65;">${formatDate(c.created_at)}</div>
         </div>
-        ${c.advisor_id ? `
         <div>
-          <div style="font-size:0.65rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.2rem;">Assigned To</div>
-          <div style="font-size:0.8rem;color:var(--charcoal);opacity:0.65;">You</div>
-        </div>` : ''}
+          <div style="font-size:0.65rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.2rem;">Plan</div>
+          <div style="font-size:0.8rem;color:var(--charcoal);opacity:0.65;">${esc(c.plan || 'guided')}</div>
+        </div>
       </div>
-
       ${c.notes ? `
       <div style="margin-top:0.875rem;padding-top:0.875rem;border-top:1px solid var(--mist);">
         <div style="font-size:0.65rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.35rem;">Notes</div>
@@ -269,49 +500,24 @@ if (error) {
   `).join('')
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
 function esc(str) {
-  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+  return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
 }
-
 function initials(name) {
-  const parts = (name || '').trim().split(/\s+/)
-  if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
-  return (parts[0] || '?')[0].toUpperCase()
+  const p = (name || '').trim().split(/\s+/)
+  return p.length >= 2 ? (p[0][0] + p[p.length-1][0]).toUpperCase() : (p[0]||'?')[0].toUpperCase()
 }
-
 function avatarColor(name) {
-  const colors = ['#7a8f5f','#6b8080','#8f7a5f','#5f7a8f','#806b5f']
-  let hash = 0
-  for (const ch of (name || '')) hash = (hash * 31 + ch.charCodeAt(0)) | 0
-  return colors[Math.abs(hash) % colors.length]
+  const c = ['#7a8f5f','#6b8080','#8f7a5f','#5f7a8f','#806b5f']
+  let h = 0; for (const ch of (name||'')) h = (h*31+ch.charCodeAt(0))|0
+  return c[Math.abs(h)%c.length]
 }
-
 function formatDate(iso) {
   if (!iso) return '—'
-  const d = new Date(iso)
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
-
-// ─── Logout ───────────────────────────────────────────────────────────────────
-document.getElementById('btn-logout').addEventListener('click', signOut)
-const mobLogout = document.getElementById('mob-logout')
-if (mobLogout) mobLogout.addEventListener('click', signOut)
-
-// ─── Mobile nav ───────────────────────────────────────────────────────────────
-const ham     = document.getElementById('mob-ham')
-const mobMenu = document.getElementById('mob-menu')
-ham.addEventListener('click', () => {
-  const open = mobMenu.style.display !== 'none'
-  mobMenu.style.display = open ? 'none' : ''
-  ham.setAttribute('aria-expanded', String(!open))
-})
-
-// ─── Scroll shadow ────────────────────────────────────────────────────────────
-window.addEventListener('scroll', () => {
-  document.getElementById('site-nav').style.boxShadow =
-    window.scrollY > 4 ? '0 2px 20px rgba(44,44,42,0.08)' : ''
-})
 </script>
 
 </body>

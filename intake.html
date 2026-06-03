@@ -457,7 +457,7 @@
     </div>
 
     <!-- Form card -->
-    <form id="intake-form" action="https://formspree.io/f/mqejygzd" method="POST">
+    <form id="intake-form" action="/api/intake" method="POST">
     <input type="hidden" name="_subject" value="New Consultation Request — Loss Ally" />
     <div id="form-card" style="background:#fff;border:1px solid var(--mist);border-radius:16px;padding:2.5rem 2.25rem;box-shadow:0 4px 28px rgba(44,44,42,0.07);">
 
@@ -488,6 +488,13 @@
           <label class="field-label" for="date-passing">Date of passing</label>
           <input type="date" id="date-passing" name="date_of_passing" class="form-input" />
           <p class="field-hint">Approximate is completely fine — please don't worry about getting the exact date.</p>
+        </div>
+
+        <!-- City of death -->
+        <div class="field-group">
+          <label class="field-label" for="city-of-death">City where they passed away</label>
+          <input type="text" id="city-of-death" name="city_of_death" class="form-input" placeholder="e.g. Charlotte" autocomplete="off" />
+          <p class="field-hint">The city they were living in or where the death occurred.</p>
         </div>
 
         <!-- State -->

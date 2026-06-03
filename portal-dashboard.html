@@ -533,46 +533,26 @@
           </div>
         </div>
 
-        <!-- Client Details for Template Auto-Fill -->
+        <!-- Client Details for Template Auto-Fill (manual fields only) -->
         <div style="border-top:1px solid var(--mist);padding-top:1.5rem;">
           <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;">
-            <div class="card-label" style="margin-bottom:0;">Estate Details</div>
+            <div class="card-label" style="margin-bottom:0;">My Details</div>
             <span style="font-size:0.65rem;padding:0.15rem 0.55rem;border-radius:20px;background:rgba(91,110,91,0.09);color:var(--forest);font-weight:400;">Used to fill letter templates</span>
           </div>
-          <p style="font-size:0.75rem;color:var(--charcoal);opacity:0.5;margin-bottom:1rem;line-height:1.55;">These details pre-fill your letter templates automatically. Only you can see and edit this information.</p>
+          <p style="font-size:0.75rem;color:var(--charcoal);opacity:0.5;margin-bottom:1rem;line-height:1.55;">Your other details were pre-filled from your intake form. Add the two fields below to complete template auto-fill.</p>
 
           <form id="client-details-form" autocomplete="off">
             <div class="cd-form-field">
-              <label class="cd-label" for="cd-deceased-name">Deceased Full Name</label>
-              <input class="cd-input" id="cd-deceased-name" name="deceased_full_name" type="text" placeholder="e.g. Margaret A. Johnson" />
-            </div>
-            <div class="cd-form-field">
-              <label class="cd-label" for="cd-dod">Date of Death</label>
-              <input class="cd-input" id="cd-dod" name="date_of_death" type="date" />
-            </div>
-            <div class="cd-form-field">
-              <label class="cd-label" for="cd-executor-name">Executor Full Name</label>
-              <input class="cd-input" id="cd-executor-name" name="executor_name" type="text" placeholder="Your full legal name" />
-            </div>
-            <div class="cd-form-field">
-              <label class="cd-label" for="cd-executor-address">Executor Mailing Address</label>
+              <label class="cd-label" for="cd-executor-address">Your Mailing Address</label>
               <input class="cd-input" id="cd-executor-address" name="executor_address" type="text" placeholder="123 Main St, City, ST 00000" />
             </div>
             <div class="cd-form-field">
-              <label class="cd-label" for="cd-executor-email">Executor Email</label>
-              <input class="cd-input" id="cd-executor-email" name="executor_email" type="email" placeholder="you@email.com" />
-            </div>
-            <div class="cd-form-field">
-              <label class="cd-label" for="cd-executor-phone">Executor Phone</label>
-              <input class="cd-input" id="cd-executor-phone" name="executor_phone" type="tel" placeholder="(555) 000-0000" />
-            </div>
-            <div class="cd-form-field">
-              <label class="cd-label" for="cd-estate-state">Estate State</label>
-              <input class="cd-input" id="cd-estate-state" name="estate_state" type="text" placeholder="e.g. California" />
+              <label class="cd-label" for="cd-deceased-dob">Deceased Date of Birth</label>
+              <input class="cd-input" id="cd-deceased-dob" name="deceased_date_of_birth" type="date" />
             </div>
             <button type="submit" class="cd-save-btn">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              Save Details
+              Save
             </button>
             <div id="cd-status" class="cd-status"></div>
           </form>
@@ -1097,26 +1077,16 @@ initClientDetails()
 
 let clientDetails = {}
 
-const CD_FIELDS = [
-  'deceased_full_name', 'date_of_death', 'executor_name',
-  'executor_address', 'executor_email', 'executor_phone', 'estate_state'
-]
-
-const CD_INPUT_IDS = {
-  deceased_full_name: 'cd-deceased-name',
-  date_of_death:      'cd-dod',
-  executor_name:      'cd-executor-name',
-  executor_address:   'cd-executor-address',
-  executor_email:     'cd-executor-email',
-  executor_phone:     'cd-executor-phone',
-  estate_state:       'cd-estate-state',
+// Only the 2 fields the client manually enters — everything else is pre-filled from intake
+const CD_MANUAL_FIELDS = {
+  executor_address:       'cd-executor-address',
+  deceased_date_of_birth: 'cd-deceased-dob',
 }
 
 async function initClientDetails() {
   const profileId = auth.profile?.id
   if (!profileId) return
 
-  // Load existing client_details from profile
   const { data, error } = await supabase
     .from('profiles')
     .select('client_details')
@@ -1125,8 +1095,8 @@ async function initClientDetails() {
 
   if (!error && data?.client_details) {
     clientDetails = data.client_details
-    for (const key of CD_FIELDS) {
-      const el = document.getElementById(CD_INPUT_IDS[key])
+    for (const [key, inputId] of Object.entries(CD_MANUAL_FIELDS)) {
+      const el = document.getElementById(inputId)
       if (el && clientDetails[key]) el.value = clientDetails[key]
     }
   }
@@ -1137,23 +1107,24 @@ async function initClientDetails() {
     statusEl.textContent = ''
     statusEl.className = 'cd-status'
 
-    const updates = {}
-    for (const key of CD_FIELDS) {
-      const el = document.getElementById(CD_INPUT_IDS[key])
-      if (el) updates[key] = el.value.trim()
+    // Merge the 2 manual fields into existing client_details — don't wipe intake-populated fields
+    const merged = { ...clientDetails }
+    for (const [key, inputId] of Object.entries(CD_MANUAL_FIELDS)) {
+      const el = document.getElementById(inputId)
+      if (el) merged[key] = el.value.trim()
     }
 
     const { error: saveErr } = await supabase
       .from('profiles')
-      .update({ client_details: updates })
+      .update({ client_details: merged })
       .eq('id', profileId)
 
     if (saveErr) {
       statusEl.textContent = 'Could not save. Please try again.'
       statusEl.className = 'cd-status err'
     } else {
-      clientDetails = updates
-      statusEl.textContent = 'Details saved.'
+      clientDetails = merged
+      statusEl.textContent = 'Saved.'
       statusEl.className = 'cd-status ok'
       setTimeout(() => { statusEl.textContent = ''; statusEl.className = 'cd-status' }, 3000)
     }
@@ -1171,6 +1142,7 @@ const PLACEHOLDER_MAP = {
   '[DECEASED FULL LEGAL NAME]': 'deceased_full_name',
   '[DECEASED FIRST NAME]':      'deceased_full_name',
   '[DATE OF DEATH]':            'date_of_death',
+  '[DATE OF BIRTH]':            'deceased_date_of_birth',
   '[YOUR FULL NAME]':           'executor_name',
   '[EXECUTOR FULL NAME]':       'executor_name',
   '[YOUR PRINTED NAME]':        'executor_name',
@@ -1185,6 +1157,10 @@ let currentTemplateName = ''
 function buildPersonalizedContent(rawContent) {
   let text = rawContent
   const unfilled = []
+
+  // Replace [CITY, STATE] with the compound value if both fields are available
+  const cityState = [clientDetails.city_of_death, clientDetails.estate_state].filter(Boolean).join(', ')
+  if (cityState) text = text.split('[CITY, STATE]').join(cityState)
 
   // Replace mapped placeholders with client details
   for (const [placeholder, key] of Object.entries(PLACEHOLDER_MAP)) {
