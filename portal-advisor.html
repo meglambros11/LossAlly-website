@@ -328,6 +328,10 @@ async function loadIntake() {
     badge.style.display = ''
   }
 
+  // Keep an in-memory map so the invite handler can look up the full row by ID
+  // without needing to re-fetch from Supabase or serialize into HTML attributes.
+  window._intakeMap = new Map(rows.map(r => [r.id, r]))
+
   const list = document.getElementById('intake-list')
   list.style.display = 'flex'
   list.innerHTML = rows.map((r, i) => buildIntakeCard(r, i)).join('')
@@ -371,7 +375,7 @@ async function loadIntake() {
         },
         body: JSON.stringify({
           intake_id: btn.dataset.id,
-          intake: JSON.parse(btn.closest('.intake-card').dataset.intake || '{}'),
+          intake: window._intakeMap?.get(btn.dataset.id) || {},
         }),
       })
       const json = await res.json()
@@ -412,7 +416,7 @@ function buildIntakeCard(r, i) {
        </button>`
 
   return `
-  <div class="intake-card" data-intake="${esc(JSON.stringify(r))}" style="animation:fade-up 0.4s ease ${i * 0.04}s forwards;opacity:0;">
+  <div class="intake-card" style="animation:fade-up 0.4s ease ${i * 0.04}s forwards;opacity:0;">
     <div class="intake-card-head">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
         <div>
