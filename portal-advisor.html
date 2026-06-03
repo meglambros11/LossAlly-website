@@ -132,6 +132,8 @@
     .invite-btn:active { transform: scale(0.97); }
     .invite-btn:disabled { opacity: 0.5; cursor: default; }
     .invite-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+    .resend-btn { background: transparent; color: var(--forest); border: 1px solid var(--forest); font-size: 0.72rem; padding: 0.3rem 0.7rem; }
+    .resend-btn:hover { background: rgba(91,110,91,0.08); }
     .invited-badge {
       display: inline-flex; align-items: center; gap: 0.3rem;
       font-size: 0.72rem; color: var(--forest);
@@ -384,11 +386,12 @@ async function loadIntake() {
     sel.addEventListener('click', e => e.stopPropagation())
   })
 
-  // Wire up invite buttons
+  // Wire up invite + resend buttons
   list.querySelectorAll('.invite-btn[data-id]').forEach(btn => {
     btn.addEventListener('click', async e => {
       e.stopPropagation()
-      if (!confirm(`Send a portal invite to ${btn.dataset.email}?`)) return
+      const isResend = btn.classList.contains('resend-btn')
+      if (!confirm(`${isResend ? 'Resend' : 'Send'} a portal invite to ${btn.dataset.email}?`)) return
       btn.disabled = true
       btn.textContent = 'Sending…'
 
@@ -411,17 +414,44 @@ async function loadIntake() {
       const json = await res.json()
 
       if (res.ok) {
-        btn.closest('.intake-card').querySelector('.invite-action').innerHTML =
-          `<span class="invited-badge">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-            Invite sent
-          </span>`
+        const actionEl = btn.closest('.invite-action')
+        const sentLabel = isResend ? 'Resent' : 'Invite sent'
+        actionEl.innerHTML =
+          `<div style="display:flex;align-items:center;gap:0.5rem;">
+            <span class="invited-badge">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              ${sentLabel}
+            </span>
+            <select class="plan-select" style="font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:300;padding:0.3rem 0.5rem;border:1px solid var(--mist);border-radius:6px;background:var(--warm-white);color:var(--charcoal);cursor:pointer;outline:none;">
+              <option value="guided">Guided</option>
+              <option value="supported">Supported</option>
+              <option value="full_service">Full Service</option>
+            </select>
+            <button class="invite-btn resend-btn" data-id="${btn.dataset.id}" data-email="${btn.dataset.email}">Resend</button>
+          </div>`
+        // Re-wire the new resend button
+        const newBtn = actionEl.querySelector('.resend-btn')
+        newBtn.addEventListener('click', async e => {
+          e.stopPropagation()
+          if (!confirm(`Resend a portal invite to ${newBtn.dataset.email}?`)) return
+          newBtn.disabled = true; newBtn.textContent = 'Sending…'
+          const planSel = actionEl.querySelector('.plan-select')
+          const { data: { session } } = await supabase.auth.getSession()
+          const r2 = await fetch('/api/invite', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+            body: JSON.stringify({ intake_id: newBtn.dataset.id, intake: window._intakeMap?.get(newBtn.dataset.id) || {}, plan: planSel?.value || 'guided' }),
+          })
+          const j2 = await r2.json()
+          if (r2.ok) { actionEl.querySelector('.invited-badge').textContent = '✓ Resent'; newBtn.disabled = false; newBtn.textContent = 'Resend' }
+          else { newBtn.disabled = false; newBtn.textContent = 'Resend'; alert(`Resend failed: ${j2.error || 'Unknown error'}`) }
+        })
         // Update status select to 'client'
         const sel = btn.closest('.intake-card').querySelector('.status-select')
         if (sel) { sel.value = 'client'; sel.dataset.prev = 'client' }
       } else {
         btn.disabled = false
-        btn.textContent = 'Send Portal Invite'
+        btn.textContent = btn.classList.contains('resend-btn') ? 'Resend' : 'Send Portal Invite'
         alert(`Invite failed: ${json.error || 'Unknown error'}${json.detail ? '\n' + json.detail : ''}`)
       }
     })
@@ -438,14 +468,20 @@ function buildIntakeCard(r, i) {
     `<option value="${v}"${r.status === v ? ' selected' : ''}>${l}</option>`
   ).join('')
 
-  const inviteAction = isClient
-    ? `<span class="invited-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Invite sent</span>`
-    : `<div style="display:flex;align-items:center;gap:0.5rem;">
-        <select class="plan-select" style="font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:300;padding:0.3rem 0.5rem;border:1px solid var(--mist);border-radius:6px;background:var(--warm-white);color:var(--charcoal);cursor:pointer;outline:none;">
+  const planSelectHtml = `<select class="plan-select" style="font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:300;padding:0.3rem 0.5rem;border:1px solid var(--mist);border-radius:6px;background:var(--warm-white);color:var(--charcoal);cursor:pointer;outline:none;">
           <option value="guided">Guided</option>
           <option value="supported">Supported</option>
           <option value="full_service">Full Service</option>
-        </select>
+        </select>`
+
+  const inviteAction = isClient
+    ? `<div style="display:flex;align-items:center;gap:0.5rem;">
+        <span class="invited-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Invite sent</span>
+        ${planSelectHtml}
+        <button class="invite-btn resend-btn" data-id="${esc(r.id)}" data-email="${esc(r.email || '')}">Resend</button>
+       </div>`
+    : `<div style="display:flex;align-items:center;gap:0.5rem;">
+        ${planSelectHtml}
         <button class="invite-btn" data-id="${esc(r.id)}" data-email="${esc(r.email || '')}">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
           Send Portal Invite
