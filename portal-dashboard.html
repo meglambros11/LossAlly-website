@@ -1165,15 +1165,19 @@ async function initClientDetails() {
 // TEMPLATE MODAL
 // ══════════════════════════════════════════════════════════════════════════════
 
-// Placeholder → client_details key map
+// Placeholder → client_details key map (matches template_library.html format)
 const PLACEHOLDER_MAP = {
-  '[DECEASED_FULL_NAME]': 'deceased_full_name',
-  '[DATE_OF_DEATH]':      'date_of_death',
-  '[EXECUTOR_NAME]':      'executor_name',
-  '[EXECUTOR_ADDRESS]':   'executor_address',
-  '[EXECUTOR_EMAIL]':     'executor_email',
-  '[EXECUTOR_PHONE]':     'executor_phone',
-  '[ESTATE_STATE]':       'estate_state',
+  '[DECEASED FULL NAME]':       'deceased_full_name',
+  '[DECEASED FULL LEGAL NAME]': 'deceased_full_name',
+  '[DECEASED FIRST NAME]':      'deceased_full_name',
+  '[DATE OF DEATH]':            'date_of_death',
+  '[YOUR FULL NAME]':           'executor_name',
+  '[EXECUTOR FULL NAME]':       'executor_name',
+  '[YOUR PRINTED NAME]':        'executor_name',
+  '[YOUR ADDRESS]':             'executor_address',
+  '[YOUR EMAIL]':               'executor_email',
+  '[YOUR PHONE]':               'executor_phone',
+  '[YOUR PHONE NUMBER]':        'executor_phone',
 }
 
 let currentTemplateName = ''

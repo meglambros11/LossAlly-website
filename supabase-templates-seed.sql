@@ -1,1846 +1,1776 @@
 -- ============================================================
--- Loss Ally — Template Library Seed
--- 30 letter templates + 7 form guides
+-- Loss Ally — Template Library Seed (from template_library.html)
+-- 25 letter templates + 3 extras for task links + 7 form guides
 -- Run AFTER supabase-templates-schema.sql
--- Safe to re-run: ON CONFLICT (name) DO NOTHING
+-- Safe to re-run: ON CONFLICT (name) DO UPDATE
 -- ============================================================
 
 -- Add unique constraint on name if not already present
 DO $$
 BEGIN
   IF NOT EXISTS (
-    SELECT 1 FROM pg_constraint
-    WHERE conname = 'templates_name_unique'
+    SELECT 1 FROM pg_constraint WHERE conname = 'templates_name_unique'
   ) THEN
     ALTER TABLE public.templates ADD CONSTRAINT templates_name_unique UNIQUE (name);
   END IF;
 END $$;
 
-INSERT INTO public.templates (name, category, type, subject_line, content, tags) VALUES
-
 -- ──────────────────────────────────────────────────────────────────────────────
--- GOVERNMENT & BENEFITS — 5 letters
+-- GOVERNMENT & BENEFITS — letters
 -- ──────────────────────────────────────────────────────────────────────────────
 
-(
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
   'SSA Death Notification Letter',
-  'Government & Benefits',
-  'letter',
-  'Death Notification — [DECEASED_FULL_NAME], SSN [DECEASED_SSN]',
-  '[EXECUTOR_NAME]
-[EXECUTOR_ADDRESS]
-[DATE]
+  'Government & Benefits', 'letter',
+$TPL$[DATE]
 
 Social Security Administration
-[LOCAL_SSA_OFFICE_ADDRESS]
+[LOCAL SSA OFFICE ADDRESS]
+[CITY, STATE, ZIP]
 
-Re: Death Notification — [DECEASED_FULL_NAME]
-Social Security Number: [DECEASED_SSN]
+Re: Notice of Death — [DECEASED FULL LEGAL NAME]
+Social Security Number: [DECEASED SSN]
 
-Dear Social Security Administration:
+To Whom It May Concern:
 
-I am writing to formally notify the Social Security Administration of the death of [DECEASED_FULL_NAME], Social Security Number [DECEASED_SSN], who passed away on [DATE_OF_DEATH].
+I am writing to formally notify the Social Security Administration of the death of [DECEASED FULL NAME], who passed away on [DATE OF DEATH] in [CITY, STATE].
 
-I am the [EXECUTOR_RELATIONSHIP] of [DECEASED_FULL_NAME] and am responsible for administering the estate and notifying the appropriate government agencies.
+The deceased's information is as follows:
+  Full Legal Name: [DECEASED FULL NAME]
+  Date of Birth:   [DATE OF BIRTH]
+  Social Security Number: [SSN]
+  Date of Death:   [DATE OF DEATH]
+
+I am the [RELATIONSHIP, e.g. son / daughter / executor] of the deceased. My contact information is:
+
+  Name:    [YOUR FULL NAME]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE NUMBER]
+  Email:   [YOUR EMAIL]
 
 Please take the following actions:
-  1. Flag the deceased''s Social Security account as deceased, effective [DATE_OF_DEATH].
-  2. Discontinue all future Social Security benefit payments.
-  3. Provide information regarding survivor benefits available to eligible family members.
 
-Please be advised that any Social Security payment deposited after [DATE_OF_DEATH] must be returned. I have notified the deceased''s financial institution accordingly.
+1. Cease all benefit payments effective [DATE OF DEATH]. I understand that any payments deposited after the date of death must be returned and I will cooperate fully with that process.
 
-Enclosed please find a certified copy of the Death Certificate for your records.
+2. Provide information regarding any survivor benefits for which I or other family members may be eligible.
 
-Please confirm receipt of this notification in writing. If you require additional documentation or information, please do not hesitate to contact me.
+3. Confirm in writing that the account has been flagged and payments have been stopped.
+
+Enclosed: Certified copy of death certificate.
+
+Please contact me at the information above with any questions or requests for additional documentation.
 
 Sincerely,
 
-[EXECUTOR_NAME]
-[EXECUTOR_RELATIONSHIP], Estate of [DECEASED_FULL_NAME]
-[EXECUTOR_ADDRESS]
-[EXECUTOR_EMAIL]
-[EXECUTOR_PHONE]
+[YOUR SIGNATURE]
 
-Enclosure: Certified Death Certificate',
+[YOUR PRINTED NAME]
+[YOUR RELATIONSHIP TO DECEASED]
+[DATE]$TPL$,
   ARRAY['social security', 'government', 'death notification']
-),
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
 
-(
-  'SSA Survivor Benefits Application Cover Letter',
-  'Government & Benefits',
-  'letter',
-  'Survivor Benefits Application — Estate of [DECEASED_FULL_NAME]',
-  '[APPLICANT_NAME]
-[APPLICANT_ADDRESS]
-[DATE]
+
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
+  'Social Security — Survivor Benefits Application Cover Letter',
+  'Government & Benefits', 'letter',
+$TPL$[DATE]
 
 Social Security Administration
-[LOCAL_SSA_OFFICE_ADDRESS]
+[LOCAL SSA OFFICE ADDRESS]
+[CITY, STATE, ZIP]
 
-Re: Application for Survivor Benefits — [DECEASED_FULL_NAME], SSN [DECEASED_SSN]
+Re: Application for Survivor Benefits
+Deceased: [DECEASED FULL NAME], SSN [DECEASED SSN]
+Applicant: [YOUR FULL NAME], SSN [YOUR SSN]
 
 Dear Social Security Administration:
 
-I am writing to apply for survivor benefits following the death of [DECEASED_FULL_NAME], who passed away on [DATE_OF_DEATH]. My relationship to the deceased is: [APPLICANT_RELATIONSHIP].
+I am submitting this application for survivor benefits following the death of my [RELATIONSHIP], [DECEASED FULL NAME], who passed away on [DATE OF DEATH].
 
-I believe I may be eligible for the following benefit(s):
-  [ ] Surviving spouse benefit
-  [ ] Child benefit (for [CHILD_NAME], date of birth [CHILD_DOB])
-  [ ] Lump-sum death payment of $255
-  [ ] Dependent parent benefit
+Enclosed with this letter, please find:
 
-Enclosed are the following documents in support of this application:
-  - Certified Death Certificate
-  - [PROOF_OF_RELATIONSHIP_DOCUMENT] (e.g., marriage certificate, birth certificate)
-  - My Social Security card
-  - [DECEASED_FULL_NAME]''s Social Security number: [DECEASED_SSN]
-  - Most recent W-2 or federal tax return for [DECEASED_FULL_NAME]
+  [ ] Completed Form [SSA-10 / SSA-5 / SSA-4] — Survivor Benefits Application
+  [ ] Certified copy of death certificate
+  [ ] Certified copy of marriage certificate — for spouses
+  [ ] Certified birth certificate — for child applicants
+  [ ] Proof of citizenship or lawful alien status
+  [ ] Most recent W-2 or self-employment tax return
 
-I understand that I cannot apply for survivor benefits online and am prepared to complete this process by telephone or in person as required. Please contact me to schedule an appointment or to request any additional documentation.
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE NUMBER]
+  Email:   [YOUR EMAIL]
+
+I request that any correspondence be sent to the address above. Please contact me if you require any additional documentation to process this application.
+
+Thank you for your assistance during this difficult time.
 
 Sincerely,
 
-[APPLICANT_NAME]
-[APPLICANT_ADDRESS]
-[APPLICANT_EMAIL]
-[APPLICANT_PHONE]
+[YOUR SIGNATURE]
 
-Enclosures: As listed above',
+[YOUR PRINTED NAME]
+[DATE]$TPL$,
   ARRAY['social security', 'survivor benefits', 'government']
-),
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
 
-(
+
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
   'Medicare & Medicaid Notification Letter',
-  'Government & Benefits',
-  'letter',
-  'Notification of Death — [DECEASED_FULL_NAME], Medicare Number [MEDICARE_NUMBER]',
-  '[EXECUTOR_NAME]
-[EXECUTOR_ADDRESS]
-[DATE]
+  'Government & Benefits', 'letter',
+$TPL$[DATE]
 
-Centers for Medicare & Medicaid Services
-7500 Security Boulevard
-Baltimore, MD 21244
+Medicare / [STATE MEDICAID OFFICE NAME]
+[ADDRESS]
+[CITY, STATE, ZIP]
 
-Re: Notification of Death — [DECEASED_FULL_NAME]
-Medicare Beneficiary Identifier: [MEDICARE_NUMBER]
+Re: Death Notification — [DECEASED FULL NAME]
+Medicare / Medicaid ID Number: [ID NUMBER]
+Date of Birth: [DATE OF BIRTH]
 
-Dear Medicare and Medicaid Services:
+To the Account Administration Department:
 
-I am writing to notify you of the death of [DECEASED_FULL_NAME], Medicare Beneficiary Identifier [MEDICARE_NUMBER], who passed away on [DATE_OF_DEATH].
+I am writing to notify you of the death of [DECEASED FULL NAME], who passed away on [DATE OF DEATH].
 
-I am the [EXECUTOR_RELATIONSHIP] of [DECEASED_FULL_NAME] and am responsible for administering the estate.
+Please take the following actions immediately:
+  1. Terminate all coverage effective [DATE OF DEATH].
+  2. Cancel any pending referrals, authorizations, or scheduled services.
+  3. Provide written confirmation of account termination.
+  4. Advise me of any outstanding claims, balances, or amounts owed to or from the estate.
 
-Please take the following actions:
-  1. Terminate Medicare Part A and Part B coverage effective [DATE_OF_DEATH].
-  2. If the deceased was enrolled in a Medicare Advantage (Part C) or Medicare Part D plan, please notify the applicable private plan administrator.
-  3. Terminate any Medigap (Medicare Supplement) coverage.
+FOR MEDICAID ONLY: I understand that [STATE] may have an estate recovery program and I request that you inform me of any claims the state intends to make against the estate before I make any distributions to heirs.
 
-Please note: Any Medicare payments made for services rendered after [DATE_OF_DEATH] must be refunded. Please notify me of any such payments.
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Relationship: [RELATIONSHIP TO DECEASED]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
 
-Regarding Medicaid: If [DECEASED_FULL_NAME] received Medicaid benefits, please provide information regarding any estate recovery claim your agency intends to pursue. I understand that Medicaid estate recovery may apply and I will ensure that any valid claims are addressed before distribution of estate assets.
-
-Enclosed please find a certified copy of the Death Certificate.
-
-Please confirm receipt and advise me in writing of any pending claims or recovery amounts. I can be reached at [EXECUTOR_EMAIL] or [EXECUTOR_PHONE].
+Enclosed: Certified copy of death certificate.
 
 Sincerely,
 
-[EXECUTOR_NAME]
-[EXECUTOR_RELATIONSHIP], Estate of [DECEASED_FULL_NAME]
-[EXECUTOR_ADDRESS]
-[EXECUTOR_EMAIL]
-[EXECUTOR_PHONE]
-
-Enclosure: Certified Death Certificate',
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]$TPL$,
   ARRAY['medicare', 'medicaid', 'government', 'health insurance']
-),
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
 
-(
+
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
   'VA Survivor Benefits Letter',
-  'Government & Benefits',
-  'letter',
-  'Notification of Veteran''s Death & Survivor Benefits Inquiry — [DECEASED_FULL_NAME]',
-  '[APPLICANT_NAME]
-[APPLICANT_ADDRESS]
-[DATE]
+  'Government & Benefits', 'letter',
+$TPL$[DATE]
 
 Department of Veterans Affairs
-[LOCAL_VA_REGIONAL_OFFICE_ADDRESS]
+[VA REGIONAL OFFICE ADDRESS]
+[CITY, STATE, ZIP]
 
-Re: Notification of Veteran''s Death and Inquiry Regarding Survivor Benefits
-Veteran: [DECEASED_FULL_NAME]
-VA File Number / SSN: [VA_FILE_NUMBER]
+Re: Death Notification and Survivor Benefits Inquiry
+Veteran: [DECEASED FULL NAME]
+VA File Number / SSN: [VA FILE NUMBER OR SSN]
+Branch of Service: [BRANCH]
+Dates of Service: [FROM] to [TO]
 
-Dear Department of Veterans Affairs:
+Dear Veterans Affairs:
 
-I am writing to notify the Department of Veterans Affairs of the death of [DECEASED_FULL_NAME], a United States Veteran, who passed away on [DATE_OF_DEATH]. My relationship to the deceased is: [APPLICANT_RELATIONSHIP].
+I am writing to notify you of the death of [DECEASED FULL NAME], a veteran of the [BRANCH OF SERVICE], who passed away on [DATE OF DEATH] in [CITY, STATE].
 
-I am writing to inquire about and initiate claims for applicable survivor benefits, which may include:
-  - Dependency and Indemnity Compensation (DIC) — VA Form 21P-534EZ
-  - Survivor''s Pension
-  - Burial Allowance — VA Form 21P-530
-  - Government Headstone or Marker — VA Form 40-1330
+I am the deceased's [RELATIONSHIP] and am serving as [executor of the estate / primary next of kin].
 
-Enclosed are the following documents:
-  - Certified Death Certificate
-  - DD-214 (Certificate of Release or Discharge from Active Duty)
-  - [PROOF_OF_RELATIONSHIP_DOCUMENT] (e.g., marriage certificate, birth certificate)
+I respectfully request:
 
-Please advise me on the specific forms required for each applicable benefit and the supporting documentation needed. I am prepared to cooperate fully with your office to ensure timely processing.
+1. Formal confirmation that the veteran's file has been updated to reflect the date of death.
+2. Information regarding burial benefits, including burial allowances and grave markers.
+3. Information regarding Dependency and Indemnity Compensation (DIC) if the death was [service-connected / potentially service-connected].
+4. Information regarding the Survivors Pension program for surviving spouses.
+5. A complete accounting of any current benefits that should be terminated.
 
-Please confirm receipt of this letter and contact me to discuss next steps.
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
+  Email:   [YOUR EMAIL]
+
+Enclosed: Certified copy of death certificate, copy of DD-214 (if available).
+
+Thank you for the service of [DECEASED FIRST NAME] and for your assistance.
 
 Sincerely,
 
-[APPLICANT_NAME]
-[APPLICANT_RELATIONSHIP] of [DECEASED_FULL_NAME]
-[APPLICANT_ADDRESS]
-[APPLICANT_EMAIL]
-[APPLICANT_PHONE]
-
-Enclosures: As listed above',
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]$TPL$,
   ARRAY['veterans affairs', 'VA', 'survivor benefits', 'government']
-),
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
 
-(
-  'VA Burial Benefits Application Letter',
-  'Government & Benefits',
-  'letter',
-  'Application for Burial Allowance — [DECEASED_FULL_NAME], Veteran',
-  '[APPLICANT_NAME]
-[APPLICANT_ADDRESS]
-[DATE]
 
-Department of Veterans Affairs
-[LOCAL_VA_REGIONAL_OFFICE_ADDRESS]
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
+  'DMV Driver''s License Cancellation Letter',
+  'Government & Benefits', 'letter',
+$TPL$[DATE]
 
-Re: Application for Burial Allowance — VA Form 21P-530
-Veteran: [DECEASED_FULL_NAME]
-VA File Number / SSN: [VA_FILE_NUMBER]
+[STATE] Department of Motor Vehicles
+[DMV ADDRESS]
+[CITY, STATE, ZIP]
 
-Dear Department of Veterans Affairs:
+Re: Driver's License Cancellation — Death of License Holder
+License Number: [LICENSE NUMBER, if known]
 
-I am submitting this letter in support of a claim for burial allowance following the death of [DECEASED_FULL_NAME], a United States Veteran who served in the [BRANCH_OF_SERVICE] and was discharged on [DISCHARGE_DATE].
+To Whom It May Concern:
 
-[DECEASED_FULL_NAME] passed away on [DATE_OF_DEATH] in [CITY_OF_DEATH], [STATE_OF_DEATH]. The cause of death was [CAUSE_OF_DEATH].
+I am writing to request cancellation of the driver's license of [DECEASED FULL NAME], who passed away on [DATE OF DEATH].
 
-The burial was conducted on [DATE_OF_BURIAL] at [BURIAL_LOCATION]. The total burial expenses were $[BURIAL_COST].
+Deceased's Information:
+  Full Legal Name: [DECEASED FULL NAME]
+  Date of Birth:   [DATE OF BIRTH]
+  License Number:  [LICENSE NUMBER, if known]
+  Address on License: [ADDRESS]
 
-I am the [CLAIMANT_RELATIONSHIP] and am requesting the applicable burial allowance. I have enclosed VA Form 21P-530 (Application for Burial Benefits), completed in full, along with the supporting documentation listed below.
+I am the [RELATIONSHIP] of the deceased. Enclosed, please find:
+  [ ] Certified copy of death certificate
+  [ ] Original driver's license (if enclosed)
 
-Enclosed documents:
-  - VA Form 21P-530 (completed)
-  - Certified Death Certificate
-  - DD-214 (Certificate of Release or Discharge from Active Duty)
-  - Funeral home itemized statement / proof of burial expenses
-  - [PROOF_OF_RELATIONSHIP_DOCUMENT]
+Please confirm cancellation in writing and advise me of any additional steps required, particularly regarding vehicle title transfers.
 
-Please process this claim and advise me of the status. I may be contacted at [APPLICANT_EMAIL] or [APPLICANT_PHONE].
-
-Sincerely,
-
-[APPLICANT_NAME]
-[CLAIMANT_RELATIONSHIP] of [DECEASED_FULL_NAME]
-[APPLICANT_ADDRESS]
-[APPLICANT_EMAIL]
-[APPLICANT_PHONE]
-
-Enclosures: As listed above',
-  ARRAY['veterans affairs', 'VA', 'burial', 'government']
-),
-
--- ──────────────────────────────────────────────────────────────────────────────
--- LEGAL & PROBATE — 4 letters
--- ──────────────────────────────────────────────────────────────────────────────
-
-(
-  'Probate Petition Cover Letter',
-  'Legal & Probate',
-  'letter',
-  'Petition to Open Probate — Estate of [DECEASED_FULL_NAME]',
-  '[EXECUTOR_NAME]
-[EXECUTOR_ADDRESS]
-[DATE]
-
-[PROBATE_COURT_NAME]
-[PROBATE_COURT_ADDRESS]
-
-Re: Petition to Open Probate — Estate of [DECEASED_FULL_NAME]
-Date of Death: [DATE_OF_DEATH]
-County of Filing: [COUNTY_NAME], [ESTATE_STATE]
-
-Dear Clerk of the [PROBATE_COURT_NAME]:
-
-I am submitting this letter and the enclosed documents to formally petition this Court to open probate proceedings for the Estate of [DECEASED_FULL_NAME], who passed away on [DATE_OF_DEATH] in [CITY_OF_DEATH], [ESTATE_STATE].
-
-[DECEASED_FULL_NAME] died [testate / intestate — choose one]. [If testate: The original Last Will and Testament, dated [WILL_DATE], is enclosed herewith.] The estimated gross value of the probate estate is approximately $[ESTATE_VALUE].
-
-I, [EXECUTOR_NAME], am named [Executor / Administrator] in the Will [or: am requesting appointment as Administrator] and respectfully request that this Court:
-  1. Accept the Will for probate (if applicable);
-  2. Appoint me as [Executor / Administrator] of the estate;
-  3. Issue Letters Testamentary (or Letters of Administration).
-
-Enclosed for your review:
-  - Original Last Will and Testament (if applicable)
-  - Certified Death Certificate
-  - Petition for Probate form ([FORM_NUMBER])
-  - Filing fee of $[FILING_FEE]
-  - [ANY_ADDITIONAL_REQUIRED_FORMS]
-
-I respectfully request that this matter be scheduled at the Court''s earliest convenience. Please contact me with any questions or requests for additional documentation.
-
-Respectfully submitted,
-
-[EXECUTOR_NAME]
-Petitioner
-[EXECUTOR_ADDRESS]
-[EXECUTOR_EMAIL]
-[EXECUTOR_PHONE]
-
-Enclosures: As listed above',
-  ARRAY['probate', 'court', 'legal', 'estate']
-),
-
-(
-  'Beneficiary Notification Letter',
-  'Legal & Probate',
-  'letter',
-  'Notice to Beneficiary — Estate of [DECEASED_FULL_NAME]',
-  '[EXECUTOR_NAME]
-[EXECUTOR_ADDRESS]
-[DATE]
-
-[BENEFICIARY_NAME]
-[BENEFICIARY_ADDRESS]
-
-Re: Notice to Beneficiary — Estate of [DECEASED_FULL_NAME]
-
-Dear [BENEFICIARY_NAME]:
-
-I am writing to formally notify you that you are named as a beneficiary in the Last Will and Testament of [DECEASED_FULL_NAME], who passed away on [DATE_OF_DEATH].
-
-I, [EXECUTOR_NAME], have been appointed as Executor of the Estate of [DECEASED_FULL_NAME] by the [PROBATE_COURT_NAME], [COUNTY_NAME] County, [ESTATE_STATE]. Letters Testamentary were issued on [LETTERS_DATE].
-
-Under the terms of the Will, you are entitled to receive:
-[BEQUEST_DESCRIPTION]
-
-The estate is currently in the process of being administered. This process includes:
-  1. Inventorying all estate assets
-  2. Notifying creditors and settling all valid debts
-  3. Filing required tax returns
-  4. Distributing assets to beneficiaries as directed by the Will
-
-Please be aware that distributions to beneficiaries cannot be made until all valid creditor claims and tax obligations of the estate have been resolved. I will keep you informed of the progress and timeline for distribution.
-
-If you have any questions or concerns, please do not hesitate to contact me directly.
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
 
 Sincerely,
 
-[EXECUTOR_NAME]
-Executor, Estate of [DECEASED_FULL_NAME]
-[EXECUTOR_ADDRESS]
-[EXECUTOR_EMAIL]
-[EXECUTOR_PHONE]',
-  ARRAY['probate', 'beneficiary', 'legal', 'estate', 'notification']
-),
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]$TPL$,
+  ARRAY['DMV', 'driver license', 'government', 'cancellation']
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
 
-(
-  'Letters Testamentary Request Letter',
-  'Legal & Probate',
-  'letter',
-  'Request for Letters Testamentary — Estate of [DECEASED_FULL_NAME]',
-  '[EXECUTOR_NAME]
-[EXECUTOR_ADDRESS]
-[DATE]
-
-[PROBATE_COURT_NAME]
-[PROBATE_COURT_ADDRESS]
-
-Re: Request for Letters Testamentary — Estate of [DECEASED_FULL_NAME]
-Case Number: [PROBATE_CASE_NUMBER]
-
-Dear Clerk of the Court:
-
-I respectfully request that the Court issue Letters Testamentary for the Estate of [DECEASED_FULL_NAME], in connection with the above-referenced probate case.
-
-[DECEASED_FULL_NAME] passed away on [DATE_OF_DEATH] in [CITY_OF_DEATH], [ESTATE_STATE], leaving a Last Will and Testament dated [WILL_DATE], which was filed with this Court on [WILL_FILING_DATE].
-
-I, [EXECUTOR_NAME], was named Executor in the Will and was appointed by Order of this Court on [APPOINTMENT_DATE]. I require Letters Testamentary to carry out my duties as Executor, including but not limited to:
-  - Accessing and closing financial accounts
-  - Notifying government agencies and creditors
-  - Managing and distributing estate assets
-  - Filing required tax returns
-
-I am requesting [NUMBER] certified copies of the Letters Testamentary. Enclosed is payment of the applicable fee of $[FEE_AMOUNT].
-
-Please contact me if additional documentation is required.
-
-Respectfully,
-
-[EXECUTOR_NAME]
-Executor, Estate of [DECEASED_FULL_NAME]
-[EXECUTOR_ADDRESS]
-[EXECUTOR_EMAIL]
-[EXECUTOR_PHONE]
-
-Enclosure: Payment of $[FEE_AMOUNT]',
-  ARRAY['probate', 'letters testamentary', 'court', 'legal', 'executor']
-),
-
-(
-  'Small Estate Affidavit Cover Letter',
-  'Legal & Probate',
-  'letter',
-  'Small Estate Affidavit — Estate of [DECEASED_FULL_NAME]',
-  '[AFFIANT_NAME]
-[AFFIANT_ADDRESS]
-[DATE]
-
-[INSTITUTION_NAME]
-[INSTITUTION_ADDRESS]
-
-Re: Small Estate Affidavit — Estate of [DECEASED_FULL_NAME]
-Date of Death: [DATE_OF_DEATH]
-
-Dear [INSTITUTION_NAME]:
-
-I am writing to request transfer of assets from the estate of [DECEASED_FULL_NAME], who passed away on [DATE_OF_DEATH] in [CITY_OF_DEATH], [ESTATE_STATE].
-
-The total value of [DECEASED_FULL_NAME]''s estate subject to administration does not exceed $[ESTATE_VALUE], which qualifies this estate for small estate procedures under [ESTATE_STATE] law ([STATE_STATUTE_REFERENCE]).
-
-I, [AFFIANT_NAME], am the [AFFIANT_RELATIONSHIP] of [DECEASED_FULL_NAME] and am entitled to the following asset(s) held at your institution:
-
-  Account / Asset: [ACCOUNT_DESCRIPTION]
-  Account Number: [ACCOUNT_NUMBER]
-  Estimated Value: $[ASSET_VALUE]
-
-Enclosed please find:
-  - Completed Small Estate Affidavit (signed and notarized)
-  - Certified Death Certificate
-  - [MY_IDENTIFICATION_DOCUMENT] (government-issued photo ID)
-  - [PROOF_OF_RELATIONSHIP_DOCUMENT] (if applicable)
-
-Please process this request and transfer the above-described asset(s) to me as lawful successor. I affirm that all statements in the enclosed affidavit are true and correct to the best of my knowledge.
-
-Sincerely,
-
-[AFFIANT_NAME]
-[AFFIANT_RELATIONSHIP], Estate of [DECEASED_FULL_NAME]
-[AFFIANT_ADDRESS]
-[AFFIANT_EMAIL]
-[AFFIANT_PHONE]
-
-Enclosures: As listed above',
-  ARRAY['small estate', 'affidavit', 'legal', 'probate', 'estate']
-),
 
 -- ──────────────────────────────────────────────────────────────────────────────
--- FINANCIAL ACCOUNTS — 10 letters
+-- FINANCIAL ACCOUNTS — letters
 -- ──────────────────────────────────────────────────────────────────────────────
 
-(
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
   'Financial Institution Notification Letter',
-  'Financial Accounts',
-  'letter',
-  'Notification of Death and Request for Account Information — [DECEASED_FULL_NAME]',
-  '[EXECUTOR_NAME]
-[EXECUTOR_ADDRESS]
-[DATE]
+  'Financial Accounts', 'letter',
+$TPL$[DATE]
 
-[INSTITUTION_NAME]
-[INSTITUTION_ADDRESS]
+[BANK / CREDIT UNION NAME]
+Estate Services Department
+[ADDRESS]
+[CITY, STATE, ZIP]
 
-Re: Notification of Death — [DECEASED_FULL_NAME]
-Account Number(s): [ACCOUNT_NUMBER]
+Re: Notification of Death — Account Holder [DECEASED FULL NAME]
+Account Number(s): [ACCOUNT NUMBER(S)]
 
-Dear [INSTITUTION_NAME]:
+Dear Estate Services Team:
 
-I am writing to formally notify [INSTITUTION_NAME] of the death of [DECEASED_FULL_NAME], who passed away on [DATE_OF_DEATH].
+I am writing to notify [BANK NAME] of the death of [DECEASED FULL NAME], who passed away on [DATE OF DEATH].
 
-I, [EXECUTOR_NAME], am the [EXECUTOR_RELATIONSHIP] of [DECEASED_FULL_NAME] and have been appointed Executor of the Estate. Letters Testamentary were issued by the [PROBATE_COURT_NAME] on [LETTERS_DATE], a certified copy of which is enclosed.
+I am the [RELATIONSHIP / EXECUTOR] of the deceased. My details are:
+  Name:    [YOUR FULL NAME]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
+  Email:   [YOUR EMAIL]
 
-I am requesting that [INSTITUTION_NAME]:
-  1. Freeze or flag all accounts associated with [DECEASED_FULL_NAME] to prevent unauthorized transactions;
-  2. Provide a complete account statement as of [DATE_OF_DEATH], including all account numbers, balances, and any pending transactions;
-  3. Advise me of the process for closing the account(s) and transferring any remaining funds to the estate.
+I request that you:
 
-Please also advise whether any accounts were held jointly or had a named beneficiary on file, as this will affect the transfer process.
+1. Flag all accounts held in the name of [DECEASED FULL NAME] as deceased.
+2. Provide a statement showing the balance in each account as of [DATE OF DEATH] — needed for estate inventory.
+3. Advise me of the documentation required to access or close each account.
+4. Confirm whether any accounts have a Payable on Death (POD) beneficiary designation and provide instructions for that process.
+5. Stop any automatic payments or debits from individual accounts pending estate administration.
 
-Enclosed please find:
-  - Certified Death Certificate
-  - Certified copy of Letters Testamentary (or, if applicable, Small Estate Affidavit)
-  - My government-issued photo ID
+IF JOINT ACCOUNT: I am a joint account holder and request that the account be re-titled in my name alone.
 
-Please confirm receipt and contact me to discuss next steps. I can be reached at [EXECUTOR_EMAIL] or [EXECUTOR_PHONE].
+Enclosed:
+  [ ] Certified copy of death certificate
+  [ ] Certified copy of Letters Testamentary, if available
+  [ ] Copy of government-issued ID
+
+Please contact me at the information above to confirm receipt and advise on next steps.
 
 Sincerely,
 
-[EXECUTOR_NAME]
-[EXECUTOR_RELATIONSHIP], Estate of [DECEASED_FULL_NAME]
-[EXECUTOR_ADDRESS]
-[EXECUTOR_EMAIL]
-[EXECUTOR_PHONE]
-
-Enclosures: As listed above',
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[RELATIONSHIP TO DECEASED]
+[DATE]$TPL$,
   ARRAY['bank', 'financial institution', 'accounts', 'notification']
-),
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
 
-(
+
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
   'Credit Card Company Notification Letter',
-  'Financial Accounts',
-  'letter',
-  'Notification of Death and Account Closure Request — [DECEASED_FULL_NAME]',
-  '[EXECUTOR_NAME]
-[EXECUTOR_ADDRESS]
-[DATE]
+  'Financial Accounts', 'letter',
+$TPL$[DATE]
 
-[CREDIT_CARD_COMPANY_NAME]
-[CREDIT_CARD_COMPANY_ADDRESS]
+[CREDIT CARD COMPANY NAME]
+Customer Service / Estate Administration
+[ADDRESS]
+[CITY, STATE, ZIP]
 
-Re: Notification of Death and Account Closure — [DECEASED_FULL_NAME]
-Account Number: [ACCOUNT_NUMBER] (last four digits: [LAST_FOUR])
+Re: Account Cancellation — Death of Account Holder
+Account Holder: [DECEASED FULL NAME]
+Account Number: [LAST 4 DIGITS or FULL NUMBER]
 
-Dear [CREDIT_CARD_COMPANY_NAME] Customer Service:
+Dear Estate Administration Team:
 
-I am writing to notify [CREDIT_CARD_COMPANY_NAME] of the death of [DECEASED_FULL_NAME], who passed away on [DATE_OF_DEATH].
+I am writing to notify you of the death of [DECEASED FULL NAME], primary account holder, who passed away on [DATE OF DEATH].
 
-I, [EXECUTOR_NAME], am the [EXECUTOR_RELATIONSHIP] of [DECEASED_FULL_NAME] and am responsible for administering the estate.
+I am the [RELATIONSHIP / EXECUTOR] of the deceased and am managing the estate.
 
-I am requesting that you:
-  1. Close all credit card accounts held in the name of [DECEASED_FULL_NAME], effective [DATE_OF_DEATH];
-  2. Provide a final account statement showing the balance as of [DATE_OF_DEATH];
-  3. Advise me of the process for resolving any outstanding balance from estate funds;
-  4. Cancel any automatic charges or recurring payments associated with the account;
-  5. Remove any authorized users if applicable.
+Please:
 
-Please note that any charges incurred after [DATE_OF_DEATH] should be reversed as the cardholder was deceased.
+1. Cancel all cards associated with this account, including any authorized user cards, effective immediately.
+2. Provide a final statement showing the balance as of [DATE OF DEATH].
+3. Confirm the process for resolving any outstanding balance through the estate.
+4. Remove the deceased from any joint accounts or confirm my sole liability as the surviving joint cardholder.
+5. Confirm in writing that the account has been marked deceased to prevent fraudulent use.
 
-Enclosed please find:
-  - Certified Death Certificate
-  - Certified copy of Letters Testamentary (or Small Estate Affidavit)
-  - My government-issued photo ID
+Please note: I am not personally responsible for the balance on an individual account. Outstanding balances will be settled through the estate administration process.
 
-Please confirm receipt and provide written confirmation of account closure. If the estate owes a balance, please submit a formal claim to the estate at the address above. I can be reached at [EXECUTOR_EMAIL] or [EXECUTOR_PHONE].
+Enclosed: Certified copy of death certificate.
+
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Relationship: [RELATIONSHIP]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
 
 Sincerely,
 
-[EXECUTOR_NAME]
-[EXECUTOR_RELATIONSHIP], Estate of [DECEASED_FULL_NAME]
-[EXECUTOR_ADDRESS]
-[EXECUTOR_EMAIL]
-[EXECUTOR_PHONE]
-
-Enclosures: As listed above',
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]$TPL$,
   ARRAY['credit card', 'financial', 'accounts', 'closure', 'notification']
-),
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
 
-(
+
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
   'Life Insurance Claim Letter',
-  'Financial Accounts',
-  'letter',
-  'Life Insurance Claim — Policy No. [POLICY_NUMBER] — [DECEASED_FULL_NAME]',
-  '[BENEFICIARY_NAME]
-[BENEFICIARY_ADDRESS]
-[DATE]
+  'Financial Accounts', 'letter',
+$TPL$[DATE]
 
-[INSURANCE_COMPANY_NAME]
-[INSURANCE_COMPANY_ADDRESS]
+[INSURANCE COMPANY NAME]
+Life Insurance Claims Department
+[ADDRESS]
+[CITY, STATE, ZIP]
 
-Re: Life Insurance Claim — Policy No. [POLICY_NUMBER]
-Insured: [DECEASED_FULL_NAME]
-Date of Death: [DATE_OF_DEATH]
+Re: Life Insurance Death Benefit Claim
+Insured: [DECEASED FULL NAME]
+Policy Number: [POLICY NUMBER]
+Date of Death: [DATE OF DEATH]
 
 Dear Claims Department:
 
-I am writing to submit a claim for life insurance benefits under Policy No. [POLICY_NUMBER] issued to [DECEASED_FULL_NAME], who passed away on [DATE_OF_DEATH] in [CITY_OF_DEATH], [ESTATE_STATE].
+I am submitting a claim for the death benefit under the above-referenced life insurance policy. The insured, [DECEASED FULL NAME], passed away on [DATE OF DEATH] in [CITY, STATE].
 
-I, [BENEFICIARY_NAME], am listed as [PRIMARY / CONTINGENT] beneficiary under this policy. My relationship to the insured is: [BENEFICIARY_RELATIONSHIP].
+I am the [PRIMARY BENEFICIARY / EXECUTOR / RELATIONSHIP] named [in the policy / under the terms of the estate].
 
-I am requesting that the death benefit in the amount of $[POLICY_FACE_VALUE] (or as otherwise determined by your records) be paid to me as designated beneficiary.
+Enclosed with this letter, please find:
+  [ ] Completed death benefit claim form (Form [FORM NUMBER])
+  [ ] Certified copy of death certificate
+  [ ] Original policy, if required
+  [ ] Proof of my identity — government-issued ID
+  [ ] Marriage certificate — if claiming as surviving spouse
 
-Enclosed please find the following documentation in support of this claim:
-  - Completed claim form (enclosed / or please send to me at the address above)
-  - Certified Death Certificate
-  - Original or copy of the policy (if available)
-  - [BENEFICIARY_IDENTIFICATION_DOCUMENT] (government-issued photo ID)
+Please process this claim and advise me of the payment options available. I request payment by [LUMP SUM / CHECK / DIRECT DEPOSIT].
 
-Please advise me of any additional documentation required to process this claim. I prefer to receive the benefit payment via [CHECK / DIRECT DEPOSIT], and my banking information is enclosed separately.
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
+  Email:   [YOUR EMAIL]
+  SSN:     [YOUR SSN — for tax reporting purposes]
 
-I understand this process may take several weeks. Please confirm receipt of this letter and contact me with any questions.
+If any additional documentation is required, please contact me promptly. I understand that payment is due within [30 / 45] days of receiving a complete claim.
 
 Sincerely,
 
-[BENEFICIARY_NAME]
-Beneficiary
-[BENEFICIARY_ADDRESS]
-[BENEFICIARY_EMAIL]
-[BENEFICIARY_PHONE]
-
-Enclosures: As listed above',
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[RELATIONSHIP TO DECEASED / BENEFICIARY STATUS]
+[DATE]$TPL$,
   ARRAY['life insurance', 'claim', 'financial', 'insurance']
-),
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
 
-(
+
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
+  '401k / IRA Retirement Account Death Notification',
+  'Financial Accounts', 'letter',
+$TPL$[DATE]
+
+[FINANCIAL INSTITUTION NAME]
+Retirement Accounts / Estate Services Department
+[ADDRESS]
+[CITY, STATE, ZIP]
+
+Re: Death Notification and Beneficiary Claim
+Account Holder: [DECEASED FULL NAME]
+Account Number: [ACCOUNT NUMBER]
+Account Type: [401(k) / Traditional IRA / Roth IRA / 403(b)]
+
+Dear Estate Services:
+
+I am writing to notify you of the death of [DECEASED FULL NAME], who passed away on [DATE OF DEATH].
+
+I am the [PRIMARY BENEFICIARY / EXECUTOR] of this account. My information:
+  Name:    [YOUR FULL NAME]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
+  SSN:     [YOUR SSN]
+  Relationship: [RELATIONSHIP TO DECEASED]
+
+I request that you:
+
+1. Confirm the beneficiary designation currently on file for this account.
+2. Provide the current account balance as of [DATE OF DEATH] for estate inventory purposes.
+3. Send me all required claim forms to initiate the distribution or transfer process.
+4. Advise me of the available options: [direct rollover to my IRA / Inherited IRA / lump sum distribution].
+
+FOR SPOUSE: As the surviving spouse and sole primary beneficiary, I wish to explore a spousal rollover to my own IRA. Please advise on this process.
+
+FOR NON-SPOUSE: As a non-spouse beneficiary, I understand I am required to establish an Inherited IRA and take distributions within 10 years. Please provide instructions.
+
+Enclosed: Certified copy of death certificate, [copy of Letters Testamentary if no named beneficiary].
+
+Sincerely,
+
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]$TPL$,
+  ARRAY['401k', 'IRA', 'retirement', 'financial', 'beneficiary claim']
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
+
+
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
   'Pension Administrator Notification Letter',
-  'Financial Accounts',
-  'letter',
-  'Notification of Death and Survivor Benefits Inquiry — [DECEASED_FULL_NAME]',
-  '[EXECUTOR_NAME]
-[EXECUTOR_ADDRESS]
-[DATE]
+  'Financial Accounts', 'letter',
+$TPL$[DATE]
 
-[PENSION_PLAN_NAME]
-[PENSION_ADMINISTRATOR_ADDRESS]
+[PENSION PLAN ADMINISTRATOR / HR DEPARTMENT]
+[COMPANY / ORGANIZATION NAME]
+[ADDRESS]
+[CITY, STATE, ZIP]
 
-Re: Notification of Death — [DECEASED_FULL_NAME]
-Participant ID / SSN: [PARTICIPANT_ID]
-Plan Name: [PENSION_PLAN_NAME]
+Re: Death Notification — Plan Participant [DECEASED FULL NAME]
+Employee ID / Plan Number: [ID NUMBER]
 
 Dear Plan Administrator:
 
-I am writing to notify you of the death of [DECEASED_FULL_NAME], a plan participant, who passed away on [DATE_OF_DEATH].
+I am writing to notify you of the death of [DECEASED FULL NAME], a [current / former] participant in the [PLAN NAME], who passed away on [DATE OF DEATH].
 
-I, [EXECUTOR_NAME], am the [EXECUTOR_RELATIONSHIP] of [DECEASED_FULL_NAME] and am administering the estate.
+I am the [SPOUSE / BENEFICIARY / EXECUTOR] of the deceased.
 
-I am writing to:
-  1. Formally notify the plan of the participant''s death;
-  2. Request information regarding any survivor or beneficiary benefits available under the plan;
-  3. Request a statement of any accrued but unpaid benefits as of [DATE_OF_DEATH];
-  4. Obtain the applicable claim forms for processing any benefit payments due to the estate or named beneficiaries.
+I request that you:
 
-Please also confirm the name(s) of any designated beneficiary on file for this account, as this will determine the appropriate next steps.
+1. Confirm the pension elections made by [DECEASED FIRST NAME], specifically whether a joint-and-survivor annuity, pre-retirement survivor benefit, or other survivor option was selected.
+2. Provide information on any death benefits payable to surviving beneficiaries.
+3. Confirm the process for applying for any survivor annuity or lump sum benefit.
+4. Provide a statement of account showing the accrued benefit as of the date of death.
+5. Confirm that benefit payments have been stopped and advise whether any payments made after [DATE OF DEATH] must be returned.
 
-Enclosed please find:
-  - Certified Death Certificate
-  - Certified copy of Letters Testamentary (if applicable)
-  - My government-issued photo ID
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Relationship: [RELATIONSHIP]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
 
-Please confirm receipt of this notice and provide the appropriate claim forms at your earliest convenience. I can be reached at [EXECUTOR_EMAIL] or [EXECUTOR_PHONE].
+Enclosed: Certified copy of death certificate.
 
 Sincerely,
 
-[EXECUTOR_NAME]
-[EXECUTOR_RELATIONSHIP], Estate of [DECEASED_FULL_NAME]
-[EXECUTOR_ADDRESS]
-[EXECUTOR_EMAIL]
-[EXECUTOR_PHONE]
-
-Enclosures: As listed above',
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]$TPL$,
   ARRAY['pension', 'retirement', 'financial', 'survivor benefits', 'notification']
-),
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
 
-(
-  '401k / IRA Beneficiary Claim Letter',
-  'Financial Accounts',
-  'letter',
-  'Beneficiary Claim — Retirement Account — [DECEASED_FULL_NAME]',
-  '[BENEFICIARY_NAME]
-[BENEFICIARY_ADDRESS]
-[DATE]
 
-[FINANCIAL_INSTITUTION_NAME]
-[FINANCIAL_INSTITUTION_ADDRESS]
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
+  'Brokerage Investment Account Executor Transfer Request',
+  'Financial Accounts', 'letter',
+$TPL$[DATE]
 
-Re: Beneficiary Claim — Retirement Account
-Account Holder: [DECEASED_FULL_NAME]
-Account Number: [ACCOUNT_NUMBER]
-Date of Death: [DATE_OF_DEATH]
+[BROKERAGE FIRM NAME]
+Estate Services Department
+[ADDRESS]
+[CITY, STATE, ZIP]
 
-Dear Retirement Services Department:
+Re: Estate of [DECEASED FULL NAME] — Account Transfer / Liquidation
+Account Number: [ACCOUNT NUMBER]
 
-I am writing to submit a beneficiary claim for the retirement account(s) held by [DECEASED_FULL_NAME], who passed away on [DATE_OF_DEATH].
+Dear Estate Services:
 
-I, [BENEFICIARY_NAME], am listed as [PRIMARY / CONTINGENT] beneficiary for Account No. [ACCOUNT_NUMBER]. My relationship to the deceased account holder is: [BENEFICIARY_RELATIONSHIP].
+I am the duly appointed Executor of the Estate of [DECEASED FULL NAME], who passed away on [DATE OF DEATH]. I have been granted Letters Testamentary by [COUNTY] [COURT NAME] on [DATE ISSUED].
 
-I am requesting guidance on the options available to me as a beneficiary for this account, including:
-  - Distribution options (lump sum, rollover to inherited IRA, required minimum distributions)
-  - Applicable tax implications
-  - Required forms and documentation for processing the claim
+I am writing to request [transfer of the account assets to the heirs as described below / liquidation of the account and remittance to the estate account].
 
-Enclosed please find:
-  - Certified Death Certificate
-  - Completed beneficiary claim form (enclosed / or please send to the address above)
-  - My government-issued photo ID
-  - [MY_SOCIAL_SECURITY_NUMBER] (provided separately for identity verification)
+Account Information:
+  Account Holder: [DECEASED FULL NAME]
+  Account Number: [ACCOUNT NUMBER]
+  Date of Death Value: Please provide a statement as of [DATE OF DEATH]
 
-Please advise me of the timeline for processing and any additional documentation required. I understand I may have specific deadlines to elect distribution options and would appreciate your guidance on these requirements.
+OPTION A — TRANSFER IN KIND:
+Please transfer all holdings to the following beneficiary account:
+  Beneficiary: [HEIR NAME]
+  Institution: [RECEIVING BROKERAGE]
+  Account Number: [RECEIVING ACCOUNT]
+  DTC Participant Number: [IF APPLICABLE]
 
-Sincerely,
+OPTION B — LIQUIDATE AND REMIT:
+Please liquidate all holdings and wire proceeds to the estate account:
+  Bank: [ESTATE BANK NAME]
+  Account Name: Estate of [DECEASED FULL NAME]
+  Account Number: [ESTATE ACCOUNT NUMBER]
+  Routing Number: [ROUTING NUMBER]
 
-[BENEFICIARY_NAME]
-Beneficiary
-[BENEFICIARY_ADDRESS]
-[BENEFICIARY_EMAIL]
-[BENEFICIARY_PHONE]
-
-Enclosures: As listed above',
-  ARRAY['401k', 'IRA', 'retirement', 'financial', 'beneficiary claim']
-),
-
-(
-  'Investment / Brokerage Account Notification Letter',
-  'Financial Accounts',
-  'letter',
-  'Notification of Death and Account Transfer Request — [DECEASED_FULL_NAME]',
-  '[EXECUTOR_NAME]
-[EXECUTOR_ADDRESS]
-[DATE]
-
-[BROKERAGE_FIRM_NAME]
-[BROKERAGE_FIRM_ADDRESS]
-
-Re: Notification of Death and Account Transfer — [DECEASED_FULL_NAME]
-Account Number(s): [ACCOUNT_NUMBER]
-
-Dear [BROKERAGE_FIRM_NAME]:
-
-I am writing to formally notify [BROKERAGE_FIRM_NAME] of the death of [DECEASED_FULL_NAME], who passed away on [DATE_OF_DEATH].
-
-I, [EXECUTOR_NAME], have been appointed Executor of the Estate of [DECEASED_FULL_NAME] by the [PROBATE_COURT_NAME]. Letters Testamentary were issued on [LETTERS_DATE].
-
-I am requesting that [BROKERAGE_FIRM_NAME]:
-  1. Freeze Account No. [ACCOUNT_NUMBER] to prevent any unauthorized transactions;
-  2. Provide a complete account statement including all holdings and values as of [DATE_OF_DEATH];
-  3. Advise me of any named beneficiaries or transfer-on-death (TOD) designations on the account;
-  4. Provide the appropriate forms to transfer or liquidate the account.
-
-Please note that if the account has a valid TOD designation, I understand the assets may pass directly to the named beneficiary outside of probate. Please advise accordingly.
-
-Enclosed please find:
-  - Certified Death Certificate
-  - Certified copy of Letters Testamentary
-  - My government-issued photo ID
-
-Please confirm receipt and advise me of the next steps. I can be reached at [EXECUTOR_EMAIL] or [EXECUTOR_PHONE].
+Enclosed:
+  [ ] Certified copy of Letters Testamentary
+  [ ] Certified copy of death certificate
+  [ ] Medallion Signature Guarantee (if required)
+  [ ] Completed estate distribution form (if provided by your firm)
 
 Sincerely,
 
-[EXECUTOR_NAME]
-Executor, Estate of [DECEASED_FULL_NAME]
-[EXECUTOR_ADDRESS]
-[EXECUTOR_EMAIL]
-[EXECUTOR_PHONE]
+[EXECUTOR SIGNATURE]
 
-Enclosures: As listed above',
-  ARRAY['brokerage', 'investment', 'stocks', 'financial', 'accounts']
-),
+[EXECUTOR PRINTED NAME], Executor
+Estate of [DECEASED FULL NAME]
+[DATE]$TPL$,
+  ARRAY['brokerage', 'investment', 'stocks', 'financial', 'executor']
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
 
-(
-  'Annuity Claim Letter',
-  'Financial Accounts',
-  'letter',
-  'Annuity Death Benefit Claim — Contract No. [CONTRACT_NUMBER] — [DECEASED_FULL_NAME]',
-  '[BENEFICIARY_NAME]
-[BENEFICIARY_ADDRESS]
-[DATE]
-
-[INSURANCE_COMPANY_NAME]
-[INSURANCE_COMPANY_ADDRESS]
-
-Re: Annuity Death Benefit Claim — Contract No. [CONTRACT_NUMBER]
-Annuitant / Contract Owner: [DECEASED_FULL_NAME]
-Date of Death: [DATE_OF_DEATH]
-
-Dear Annuity Services Department:
-
-I am writing to submit a death benefit claim under Annuity Contract No. [CONTRACT_NUMBER], held by [DECEASED_FULL_NAME], who passed away on [DATE_OF_DEATH].
-
-I, [BENEFICIARY_NAME], am listed as [PRIMARY / CONTINGENT] beneficiary under this contract. My relationship to the annuitant is: [BENEFICIARY_RELATIONSHIP].
-
-I am requesting:
-  1. Confirmation of the death benefit amount payable under this contract;
-  2. The applicable claim forms for processing this benefit;
-  3. Information on available payout options, including any spousal continuation provisions if applicable;
-  4. The applicable tax forms I will receive in connection with this distribution.
-
-Enclosed please find:
-  - Certified Death Certificate
-  - My government-issued photo ID
-  - [BENEFICIARY_SOCIAL_SECURITY_NUMBER] (provided for tax reporting purposes)
-
-Please advise me of the documentation required to complete this claim and the expected processing timeline. I can be reached at [BENEFICIARY_EMAIL] or [BENEFICIARY_PHONE].
-
-Sincerely,
-
-[BENEFICIARY_NAME]
-Beneficiary
-[BENEFICIARY_ADDRESS]
-[BENEFICIARY_EMAIL]
-[BENEFICIARY_PHONE]
-
-Enclosures: As listed above',
-  ARRAY['annuity', 'insurance', 'financial', 'death benefit', 'beneficiary']
-),
-
-(
-  'Credit Bureau Deceased Notification Letter',
-  'Financial Accounts',
-  'letter',
-  'Notification of Death — [DECEASED_FULL_NAME] — Credit File Update Request',
-  '[EXECUTOR_NAME]
-[EXECUTOR_ADDRESS]
-[DATE]
-
-[CREDIT_BUREAU_NAME]
-[CREDIT_BUREAU_ADDRESS]
-
-Re: Notification of Death — [DECEASED_FULL_NAME]
-Social Security Number: [DECEASED_SSN]
-Date of Birth: [DECEASED_DATE_OF_BIRTH]
-
-Dear [CREDIT_BUREAU_NAME]:
-
-I am writing to notify [CREDIT_BUREAU_NAME] of the death of [DECEASED_FULL_NAME], Social Security Number [DECEASED_SSN], who passed away on [DATE_OF_DEATH].
-
-I, [EXECUTOR_NAME], am the [EXECUTOR_RELATIONSHIP] of [DECEASED_FULL_NAME].
-
-I am requesting that [CREDIT_BUREAU_NAME]:
-  1. Flag the credit file of [DECEASED_FULL_NAME] as "deceased" to prevent identity theft and fraudulent new credit applications;
-  2. Provide a final credit report for the estate''s records;
-  3. Confirm in writing that the "deceased" indicator has been added to the file.
-
-This notification is being submitted to protect the estate and surviving family members from identity fraud involving the deceased''s personal information.
-
-Enclosed please find:
-  - Certified Death Certificate
-  - My government-issued photo ID
-  - Certified copy of Letters Testamentary (or Small Estate Affidavit)
-
-Note: This same letter is being sent to all three major credit bureaus (Equifax, Experian, and TransUnion) simultaneously.
-
-Please confirm receipt and the effective date of the "deceased" flag. If you have questions, I can be reached at [EXECUTOR_EMAIL] or [EXECUTOR_PHONE].
-
-Sincerely,
-
-[EXECUTOR_NAME]
-[EXECUTOR_RELATIONSHIP], Estate of [DECEASED_FULL_NAME]
-[EXECUTOR_ADDRESS]
-[EXECUTOR_EMAIL]
-[EXECUTOR_PHONE]
-
-Enclosures: As listed above',
-  ARRAY['credit bureau', 'credit', 'identity protection', 'financial', 'notification']
-),
-
-(
-  'Treasury / Savings Bond Redemption Letter',
-  'Financial Accounts',
-  'letter',
-  'Request for Redemption of U.S. Savings Bonds — Estate of [DECEASED_FULL_NAME]',
-  '[EXECUTOR_NAME]
-[EXECUTOR_ADDRESS]
-[DATE]
-
-Treasury Retail Securities Services
-P.O. Box 9150
-Minneapolis, MN 55480-9150
-
-Re: Redemption of U.S. Savings Bonds — Estate of [DECEASED_FULL_NAME]
-Date of Death: [DATE_OF_DEATH]
-
-Dear Treasury Retail Securities Services:
-
-I am writing to request redemption of U.S. Savings Bond(s) held by [DECEASED_FULL_NAME], who passed away on [DATE_OF_DEATH].
-
-I, [EXECUTOR_NAME], am the Executor of the Estate of [DECEASED_FULL_NAME], as evidenced by the enclosed Letters Testamentary.
-
-The following bond(s) are being submitted for redemption:
-
-  Bond Serial Number: [BOND_SERIAL_NUMBER]
-  Bond Series / Denomination: [BOND_SERIES]
-  Issue Date: [BOND_ISSUE_DATE]
-  Current Value (estimated): $[BOND_VALUE]
-
-[Additional bonds listed separately if applicable.]
-
-I am requesting that the redemption proceeds be paid by check made out to "Estate of [DECEASED_FULL_NAME]" and mailed to the executor address above, or direct deposited to the estate account as described on the enclosed Form PD F 1048.
-
-Enclosed please find:
-  - Original paper bond(s) (if paper series)
-  - Form PD F 1048 (Claim for Lost, Stolen, or Destroyed U.S. Savings Bonds) or FS Form 5336 (Payment to Estate)
-  - Certified Death Certificate
-  - Certified copy of Letters Testamentary
-  - My government-issued photo ID
-
-Please confirm receipt and advise me of the processing timeline.
-
-Respectfully,
-
-[EXECUTOR_NAME]
-Executor, Estate of [DECEASED_FULL_NAME]
-[EXECUTOR_ADDRESS]
-[EXECUTOR_EMAIL]
-[EXECUTOR_PHONE]
-
-Enclosures: As listed above',
-  ARRAY['savings bonds', 'treasury', 'financial', 'redemption']
-),
-
-(
-  'IRS Estate EIN Application Cover Letter',
-  'Financial Accounts',
-  'letter',
-  'EIN Application for Estate — Estate of [DECEASED_FULL_NAME]',
-  '[EXECUTOR_NAME]
-[EXECUTOR_ADDRESS]
-[DATE]
-
-Internal Revenue Service
-Attn: EIN Operation
-Cincinnati, OH 45999
-
-Re: Application for Employer Identification Number — Estate of [DECEASED_FULL_NAME]
-Date of Death: [DATE_OF_DEATH]
-Responsible Party (Executor): [EXECUTOR_NAME]
-
-Dear IRS:
-
-I am submitting this letter and the enclosed Form SS-4 to apply for an Employer Identification Number (EIN) for the Estate of [DECEASED_FULL_NAME].
-
-[DECEASED_FULL_NAME] passed away on [DATE_OF_DEATH] in [CITY_OF_DEATH], [ESTATE_STATE]. I, [EXECUTOR_NAME], have been appointed Executor of the estate and am required to obtain an EIN for purposes of:
-  - Opening an estate bank account
-  - Filing Form 1041 (U.S. Income Tax Return for Estates and Trusts) if required
-  - Receiving income on behalf of the estate
-
-The estate''s estimated income for the period of administration is $[ESTIMATED_ESTATE_INCOME].
-
-Note: An EIN may also be obtained immediately and at no cost via the IRS online application at irs.gov/businesses/small-businesses-self-employed/apply-for-an-employer-identification-number-ein-online. The online process is generally faster than this paper application.
-
-Enclosed please find:
-  - Form SS-4 (Application for Employer Identification Number)
-  - Certified Death Certificate
-
-If you require additional information, please contact me at [EXECUTOR_EMAIL] or [EXECUTOR_PHONE].
-
-Respectfully,
-
-[EXECUTOR_NAME]
-Executor, Estate of [DECEASED_FULL_NAME]
-[EXECUTOR_ADDRESS]
-[EXECUTOR_EMAIL]
-[EXECUTOR_PHONE]
-
-Enclosures: As listed above',
-  ARRAY['IRS', 'EIN', 'tax', 'estate', 'financial']
-),
 
 -- ──────────────────────────────────────────────────────────────────────────────
--- PROPERTY & HOME — 4 letters
+-- PROPERTY & HOME — letters
 -- ──────────────────────────────────────────────────────────────────────────────
 
-(
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
   'Landlord Death Notification Letter',
-  'Property & Home',
-  'letter',
-  'Notification of Tenant''s Death — [DECEASED_FULL_NAME]',
-  '[EXECUTOR_NAME]
-[EXECUTOR_ADDRESS]
-[DATE]
+  'Property & Home', 'letter',
+$TPL$[DATE]
 
-[LANDLORD_NAME]
-[LANDLORD_ADDRESS]
+[LANDLORD / PROPERTY MANAGEMENT COMPANY]
+[ADDRESS]
+[CITY, STATE, ZIP]
 
-Re: Notification of Tenant''s Death — [DECEASED_FULL_NAME]
-Property Address: [RENTAL_PROPERTY_ADDRESS]
-Lease / Unit: [UNIT_NUMBER]
+Re: Notice of Tenant Death and Lease Termination
+Tenant: [DECEASED FULL NAME]
+Property Address: [RENTAL PROPERTY ADDRESS]
+Lease: [LEASE START DATE] to [LEASE END DATE]
 
-Dear [LANDLORD_NAME]:
+Dear [LANDLORD NAME / Property Manager]:
 
-I am writing to notify you of the death of [DECEASED_FULL_NAME], who was a tenant at [RENTAL_PROPERTY_ADDRESS], and passed away on [DATE_OF_DEATH].
+I am writing to formally notify you of the death of [DECEASED FULL NAME], tenant at the above-referenced property. [DECEASED FIRST NAME] passed away on [DATE OF DEATH].
 
-I, [EXECUTOR_NAME], am the [EXECUTOR_RELATIONSHIP] of [DECEASED_FULL_NAME] and am administering the estate.
+I am the [EXECUTOR OF THE ESTATE / NEXT OF KIN / LEGAL REPRESENTATIVE] of the deceased.
 
-I am writing to address the following matters:
-  1. Provide formal notice of the tenant''s death as required under the lease agreement;
-  2. Discuss the termination of the lease, effective [PROPOSED_LEASE_END_DATE];
-  3. Arrange for removal of the deceased''s personal property from the unit;
-  4. Ensure the return of any security deposit held on the account ($[SECURITY_DEPOSIT_AMOUNT]).
+Pursuant to [STATE] law, I am providing this written notice to terminate the lease effective [TERMINATION DATE — typically 30 days from this notice or the end of the current rental period, whichever is applicable per your state].
 
-I would appreciate the opportunity to speak with you at your earliest convenience to coordinate access to the unit and agree on a timeline for vacating. I will ensure the property is left in proper condition.
+I request that you:
 
-Please advise me of your procedures and any documentation you require from the estate.
+1. Confirm the effective termination date and any remaining rental obligations of the estate.
+2. Schedule a mutually convenient time for a final walkthrough of the property.
+3. Return the security deposit of $[AMOUNT], less any legitimate deductions, within the timeframe required by [STATE] law.
+4. Advise me of your preferred process for returning keys and personal property removal.
+
+The estate will ensure the property is vacated in good condition by [VACATE DATE]. Please contact me to coordinate.
+
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Role:    [EXECUTOR / NEXT OF KIN]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
+  Email:   [YOUR EMAIL]
+
+Enclosed: Certified copy of death certificate.
 
 Sincerely,
 
-[EXECUTOR_NAME]
-[EXECUTOR_RELATIONSHIP], Estate of [DECEASED_FULL_NAME]
-[EXECUTOR_ADDRESS]
-[EXECUTOR_EMAIL]
-[EXECUTOR_PHONE]
-
-Enclosure: Certified Death Certificate',
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]$TPL$,
   ARRAY['landlord', 'rental', 'lease', 'property', 'notification']
-),
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
 
-(
+
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
   'Mortgage Servicer Notification Letter',
-  'Property & Home',
-  'letter',
-  'Notification of Borrower''s Death — [DECEASED_FULL_NAME] — Loan No. [LOAN_NUMBER]',
-  '[EXECUTOR_NAME]
-[EXECUTOR_ADDRESS]
-[DATE]
+  'Property & Home', 'letter',
+$TPL$[DATE]
 
-[MORTGAGE_SERVICER_NAME]
-[MORTGAGE_SERVICER_ADDRESS]
+[MORTGAGE SERVICER NAME]
+Loan Administration / Loss Mitigation Department
+[ADDRESS]
+[CITY, STATE, ZIP]
 
-Re: Notification of Borrower''s Death — [DECEASED_FULL_NAME]
-Loan Number: [LOAN_NUMBER]
-Property Address: [PROPERTY_ADDRESS]
+Re: Notification of Borrower Death
+Borrower: [DECEASED FULL NAME]
+Loan Number: [LOAN NUMBER]
+Property Address: [PROPERTY ADDRESS]
 
-Dear [MORTGAGE_SERVICER_NAME]:
+Dear Loan Administration Team:
 
-I am writing to formally notify [MORTGAGE_SERVICER_NAME] of the death of [DECEASED_FULL_NAME], who passed away on [DATE_OF_DEATH]. [DECEASED_FULL_NAME] was the [sole / joint] borrower on Loan No. [LOAN_NUMBER], secured by the property at [PROPERTY_ADDRESS].
+I am writing to notify you of the death of [DECEASED FULL NAME], borrower on the above-referenced mortgage loan. [DECEASED FIRST NAME] passed away on [DATE OF DEATH].
 
-I, [EXECUTOR_NAME], am the Executor of the Estate of [DECEASED_FULL_NAME], as evidenced by the enclosed Letters Testamentary.
+I am the [EXECUTOR OF THE ESTATE / SURVIVING SPOUSE / HEIR] and am managing the estate.
 
-I am writing to:
-  1. Formally notify you of the borrower''s death as required under the loan agreement;
-  2. Request a current statement of the outstanding loan balance, interest rate, and payment schedule;
-  3. Discuss the options available to the estate, including:
-     - Continuing to make payments from estate funds while the property is administered;
-     - Refinancing or assuming the loan by a co-borrower or heir;
-     - Sale of the property to satisfy the loan.
+I request that you:
 
-Please advise me of your process for working with an executor and whether there are any immediate actions required to protect the loan status.
+1. Note the death in your records and update the account accordingly.
+2. Advise me of the options available regarding this loan, including: assumption by an heir, sale of the property, or continued payment from estate funds.
+3. Provide a current payoff statement as of [DATE], including any fees or prepayment penalties.
+4. Confirm the monthly payment amount and due dates so payments can continue without interruption.
+5. Advise whether mortgage life insurance is associated with this loan that would satisfy the outstanding balance.
 
-Note: Pursuant to the Garn-St. Germain Act, the "due on sale" clause may not be enforced in certain circumstances involving transfer by inheritance.
+IF SURVIVING CO-BORROWER: I am a co-borrower on this loan and intend to continue making payments. Please update the account to reflect my sole borrower status.
 
-Enclosed please find:
-  - Certified Death Certificate
-  - Certified copy of Letters Testamentary
+I understand that under the Garn-St Germain Depository Institutions Act, I have the right to assume this mortgage as an heir without the loan being called due.
 
-Please confirm receipt and contact me to discuss next steps. I can be reached at [EXECUTOR_EMAIL] or [EXECUTOR_PHONE].
+Enclosed: Certified copy of death certificate, Letters Testamentary if available.
+
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Role:    [ROLE]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
 
 Sincerely,
 
-[EXECUTOR_NAME]
-Executor, Estate of [DECEASED_FULL_NAME]
-[EXECUTOR_ADDRESS]
-[EXECUTOR_EMAIL]
-[EXECUTOR_PHONE]
-
-Enclosures: As listed above',
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]$TPL$,
   ARRAY['mortgage', 'property', 'home', 'loan', 'notification']
-),
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
 
-(
-  'HOA / Condo Association Notification Letter',
-  'Property & Home',
-  'letter',
-  'Notification of Owner''s Death — [DECEASED_FULL_NAME] — Unit [UNIT_NUMBER]',
-  '[EXECUTOR_NAME]
-[EXECUTOR_ADDRESS]
-[DATE]
 
-[HOA_NAME]
-[HOA_MANAGEMENT_ADDRESS]
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
+  'HOA Condo Association Death Notification Letter',
+  'Property & Home', 'letter',
+$TPL$[DATE]
 
-Re: Notification of Owner''s Death — [DECEASED_FULL_NAME]
-Property Address / Unit: [PROPERTY_ADDRESS], Unit [UNIT_NUMBER]
-Account Number: [HOA_ACCOUNT_NUMBER]
+[HOA / CONDO ASSOCIATION NAME]
+Board of Directors / Management Office
+[ADDRESS]
+[CITY, STATE, ZIP]
 
-Dear [HOA_NAME] Board / Management:
+Re: Death Notification — Homeowner [DECEASED FULL NAME]
+Property Address: [PROPERTY ADDRESS]
+Unit / Lot: [UNIT OR LOT NUMBER]
 
-I am writing to notify [HOA_NAME] of the death of [DECEASED_FULL_NAME], who passed away on [DATE_OF_DEATH]. [DECEASED_FULL_NAME] was the owner of Unit [UNIT_NUMBER] at [PROPERTY_ADDRESS].
+Dear Board of Directors:
 
-I, [EXECUTOR_NAME], am the Executor of the Estate of [DECEASED_FULL_NAME] and am responsible for administering the estate, including this property.
+I am writing to notify the Association of the death of [DECEASED FULL NAME], owner of [PROPERTY ADDRESS], who passed away on [DATE OF DEATH].
 
-I am writing to:
-  1. Formally notify the association of the change in ownership status;
-  2. Request a current statement of any outstanding dues, assessments, or fees;
-  3. Confirm that regular HOA dues will continue to be paid from estate funds during the period of administration;
-  4. Update the association''s records and provide my contact information as the authorized representative for this unit.
+I am the [EXECUTOR OF THE ESTATE / HEIR] and am managing the estate during the administration period.
 
-Please also advise me of any transfer fees, resale packages, or governing documents I should be aware of in connection with the estate administration and eventual transfer or sale of this property.
+I request that you:
 
-Enclosed please find:
-  - Certified Death Certificate
-  - Certified copy of Letters Testamentary (or Small Estate Affidavit)
+1. Update your records to reflect the change in ownership status.
+2. Confirm the current monthly dues amount and payment instructions so that dues can continue to be paid from estate funds during administration.
+3. Advise of any special assessments, outstanding balances, or fees currently owed.
+4. Provide information about any HOA requirements or restrictions regarding the sale or transfer of the property.
+
+Please direct all future communications to:
+  Name:    [YOUR FULL NAME]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
+  Email:   [YOUR EMAIL]
+
+Enclosed: Certified copy of death certificate.
 
 Sincerely,
 
-[EXECUTOR_NAME]
-Executor, Estate of [DECEASED_FULL_NAME]
-[EXECUTOR_ADDRESS]
-[EXECUTOR_EMAIL]
-[EXECUTOR_PHONE]
-
-Enclosures: As listed above',
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[RELATIONSHIP TO DECEASED]
+[DATE]$TPL$,
   ARRAY['HOA', 'condo', 'property', 'homeowners association', 'notification']
-),
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
 
-(
-  'Vehicle Lease Termination Letter',
-  'Property & Home',
-  'letter',
-  'Early Lease Termination Due to Death — [DECEASED_FULL_NAME] — Account [ACCOUNT_NUMBER]',
-  '[EXECUTOR_NAME]
-[EXECUTOR_ADDRESS]
-[DATE]
 
-[LEASE_COMPANY_NAME]
-[LEASE_COMPANY_ADDRESS]
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
+  'Utility Provider Transfer or Cancellation Letter',
+  'Property & Home', 'letter',
+$TPL$[DATE]
 
-Re: Early Lease Termination Due to Death of Lessee — [DECEASED_FULL_NAME]
-Lease Account Number: [ACCOUNT_NUMBER]
-Vehicle: [VEHICLE_YEAR] [VEHICLE_MAKE] [VEHICLE_MODEL], VIN [VEHICLE_VIN]
+[UTILITY COMPANY NAME]
+Customer Service / Account Management
+[ADDRESS]
+[CITY, STATE, ZIP]
 
-Dear [LEASE_COMPANY_NAME]:
+Re: [TRANSFER / CANCELLATION] of Account — Death of Account Holder
+Account Holder: [DECEASED FULL NAME]
+Account Number: [ACCOUNT NUMBER]
+Service Address: [SERVICE ADDRESS]
 
-I am writing to request early termination of the vehicle lease agreement for the above-referenced vehicle, due to the death of the lessee, [DECEASED_FULL_NAME], who passed away on [DATE_OF_DEATH].
+Dear Customer Service:
 
-I, [EXECUTOR_NAME], am the [EXECUTOR_RELATIONSHIP] of [DECEASED_FULL_NAME] and am administering the estate.
+I am writing to request [transfer / cancellation] of the above utility account following the death of the account holder, [DECEASED FULL NAME], who passed away on [DATE OF DEATH].
 
-I understand that early termination may result in a fee or remaining balance obligation under the lease terms. Please provide:
-  1. The payoff amount required to terminate the lease;
-  2. Any early termination fees applicable under the agreement;
-  3. Instructions for returning the vehicle;
-  4. Confirmation of the final settlement amount that will be due from the estate.
+IF TRANSFERRING:
+Please transfer this account to the following name effective [DATE]:
+  New Account Holder: [NEW NAME]
+  Billing Address:    [NEW BILLING ADDRESS]
+  Phone:              [NEW PHONE]
+  Email:              [NEW EMAIL]
 
-Many lease agreements contain provisions allowing for early termination without penalty upon the death of the lessee. Please advise whether this provision applies to this agreement.
+IF CANCELLING:
+Please cancel service effective [CANCELLATION DATE] and arrange for a final meter read on that date. Please send the final bill to:
+  Name:    [YOUR FULL NAME]
+  Address: [YOUR ADDRESS]
 
-The vehicle is currently located at [VEHICLE_CURRENT_LOCATION] and is in [good / the following] condition: [VEHICLE_CONDITION_NOTES].
+Please confirm [transfer / cancellation] in writing and advise of any outstanding balance or refund due.
 
-Enclosed please find:
-  - Certified Death Certificate
-  - Certified copy of Letters Testamentary (or Small Estate Affidavit)
+Enclosed: Certified copy of death certificate.
 
-Please confirm receipt and advise me of the return and settlement process. I can be reached at [EXECUTOR_EMAIL] or [EXECUTOR_PHONE].
-
-Sincerely,
-
-[EXECUTOR_NAME]
-[EXECUTOR_RELATIONSHIP], Estate of [DECEASED_FULL_NAME]
-[EXECUTOR_ADDRESS]
-[EXECUTOR_EMAIL]
-[EXECUTOR_PHONE]
-
-Enclosures: As listed above',
-  ARRAY['vehicle', 'lease', 'car', 'property', 'termination']
-),
-
--- ──────────────────────────────────────────────────────────────────────────────
--- PERSONAL & SERVICES — 7 letters
--- ──────────────────────────────────────────────────────────────────────────────
-
-(
-  'Health Insurance Cancellation Letter',
-  'Personal & Memberships',
-  'letter',
-  'Request for Policy Cancellation Due to Death — [DECEASED_FULL_NAME] — Policy [POLICY_NUMBER]',
-  '[EXECUTOR_NAME]
-[EXECUTOR_ADDRESS]
-[DATE]
-
-[INSURANCE_COMPANY_NAME]
-[INSURANCE_COMPANY_ADDRESS]
-
-Re: Request for Health Insurance Policy Cancellation — [DECEASED_FULL_NAME]
-Policy Number: [POLICY_NUMBER]
-Date of Death: [DATE_OF_DEATH]
-
-Dear [INSURANCE_COMPANY_NAME]:
-
-I am writing to request cancellation of the health insurance policy(ies) held by [DECEASED_FULL_NAME], who passed away on [DATE_OF_DEATH].
-
-I, [EXECUTOR_NAME], am the [EXECUTOR_RELATIONSHIP] of [DECEASED_FULL_NAME].
-
-Please cancel Policy No. [POLICY_NUMBER] effective [DATE_OF_DEATH] and:
-  1. Provide a final accounting of any outstanding premiums or refunds due;
-  2. Confirm in writing that the policy is cancelled and any automatic premium drafts have been stopped;
-  3. If there are any outstanding claims in process for dates of service prior to [DATE_OF_DEATH], please continue processing those claims and direct payment to the estate;
-  4. If any dependents are covered under this policy, advise me regarding COBRA continuation coverage or conversion options available to them.
-
-Enclosed please find:
-  - Certified Death Certificate
-
-Please confirm receipt and the effective cancellation date. If any premium refund is due, please issue payment to "Estate of [DECEASED_FULL_NAME]" at the executor address above. I can be reached at [EXECUTOR_EMAIL] or [EXECUTOR_PHONE].
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Phone:   [YOUR PHONE]
+  Email:   [YOUR EMAIL]
 
 Sincerely,
 
-[EXECUTOR_NAME]
-[EXECUTOR_RELATIONSHIP], Estate of [DECEASED_FULL_NAME]
-[EXECUTOR_ADDRESS]
-[EXECUTOR_EMAIL]
-[EXECUTOR_PHONE]
-
-Enclosure: Certified Death Certificate',
-  ARRAY['health insurance', 'insurance', 'cancellation', 'policy']
-),
-
-(
-  'Cell Phone Carrier Notification Letter',
-  'Personal & Memberships',
-  'letter',
-  'Account Cancellation Due to Death — [DECEASED_FULL_NAME] — Account [ACCOUNT_NUMBER]',
-  '[EXECUTOR_NAME]
-[EXECUTOR_ADDRESS]
-[DATE]
-
-[CARRIER_NAME] Customer Service
-[CARRIER_ADDRESS]
-
-Re: Account Cancellation Due to Death — [DECEASED_FULL_NAME]
-Account Number: [ACCOUNT_NUMBER]
-Phone Number(s): [PHONE_NUMBER]
-
-Dear [CARRIER_NAME] Customer Service:
-
-I am writing to cancel the wireless service account(s) held by [DECEASED_FULL_NAME], who passed away on [DATE_OF_DEATH].
-
-I, [EXECUTOR_NAME], am the [EXECUTOR_RELATIONSHIP] of [DECEASED_FULL_NAME].
-
-Please cancel Account No. [ACCOUNT_NUMBER] and all associated lines effective [DATE_OF_DEATH] and:
-  1. Stop all billing and automatic payments effective immediately;
-  2. Provide a final account statement and confirm any outstanding balance or refund due;
-  3. If there are any early termination fees, please advise whether your policy provides a waiver in the event of a subscriber''s death;
-  4. Retain or transfer any remaining device payments in accordance with estate obligations.
-
-Enclosed please find:
-  - Certified Death Certificate
-
-Please confirm cancellation and advise me of any final balance due or refund owed. Correspondence may be sent to the executor address above. I can be reached at [EXECUTOR_EMAIL] or [EXECUTOR_PHONE].
-
-Sincerely,
-
-[EXECUTOR_NAME]
-[EXECUTOR_RELATIONSHIP], Estate of [DECEASED_FULL_NAME]
-[EXECUTOR_ADDRESS]
-[EXECUTOR_EMAIL]
-[EXECUTOR_PHONE]
-
-Enclosure: Certified Death Certificate',
-  ARRAY['cell phone', 'wireless', 'carrier', 'cancellation', 'services']
-),
-
-(
-  'Utility Service Cancellation Letter',
-  'Personal & Memberships',
-  'letter',
-  'Service Cancellation or Transfer Due to Death — [DECEASED_FULL_NAME] — Account [ACCOUNT_NUMBER]',
-  '[EXECUTOR_NAME]
-[EXECUTOR_ADDRESS]
-[DATE]
-
-[UTILITY_COMPANY_NAME]
-[UTILITY_COMPANY_ADDRESS]
-
-Re: Service Cancellation / Transfer Due to Death — [DECEASED_FULL_NAME]
-Account Number: [ACCOUNT_NUMBER]
-Service Address: [SERVICE_ADDRESS]
-
-Dear [UTILITY_COMPANY_NAME] Customer Service:
-
-I am writing regarding the utility account held by [DECEASED_FULL_NAME], who passed away on [DATE_OF_DEATH].
-
-I, [EXECUTOR_NAME], am the [EXECUTOR_RELATIONSHIP] of [DECEASED_FULL_NAME].
-
-I am requesting that you [CANCEL / TRANSFER] the above-referenced account, effective [REQUESTED_DATE]:
-
-If cancelling:
-  - Please disconnect service at [SERVICE_ADDRESS] effective [CANCELLATION_DATE];
-  - Provide a final bill and confirm the closing balance;
-  - Return any deposit on file to the estate at the executor address above.
-
-If transferring to a new account holder:
-  - Please transfer service to [NEW_ACCOUNT_HOLDER_NAME];
-  - New billing address: [NEW_BILLING_ADDRESS];
-  - Contact: [NEW_CONTACT_PHONE].
-
-Enclosed please find:
-  - Certified Death Certificate
-
-Please confirm receipt of this request and advise of next steps. I can be reached at [EXECUTOR_EMAIL] or [EXECUTOR_PHONE].
-
-Sincerely,
-
-[EXECUTOR_NAME]
-[EXECUTOR_RELATIONSHIP], Estate of [DECEASED_FULL_NAME]
-[EXECUTOR_ADDRESS]
-[EXECUTOR_EMAIL]
-[EXECUTOR_PHONE]
-
-Enclosure: Certified Death Certificate',
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]$TPL$,
   ARRAY['utility', 'services', 'cancellation', 'electricity', 'gas', 'water']
-),
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
 
-(
-  'Subscription Cancellation Letter',
-  'Personal & Memberships',
-  'letter',
-  'Account Cancellation Due to Death — [DECEASED_FULL_NAME] — Account [ACCOUNT_NUMBER]',
-  '[EXECUTOR_NAME]
-[EXECUTOR_ADDRESS]
-[DATE]
 
-[COMPANY_NAME]
-[COMPANY_ADDRESS]
+-- ──────────────────────────────────────────────────────────────────────────────
+-- PERSONAL & MEMBERSHIPS — letters
+-- ──────────────────────────────────────────────────────────────────────────────
 
-Re: Account Cancellation Due to Death — [DECEASED_FULL_NAME]
-Account Number / Username: [ACCOUNT_NUMBER]
-Date of Death: [DATE_OF_DEATH]
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
+  'Employer HR Death Notification and Benefits Inquiry',
+  'Personal & Memberships', 'letter',
+$TPL$[DATE]
 
-Dear [COMPANY_NAME] Customer Service:
+[COMPANY NAME]
+Human Resources Department
+[ADDRESS]
+[CITY, STATE, ZIP]
 
-I am writing to request cancellation of all accounts, subscriptions, and services held by [DECEASED_FULL_NAME], who passed away on [DATE_OF_DEATH].
+Re: Death Notification — Employee [DECEASED FULL NAME]
+Employee ID: [EMPLOYEE ID, if known]
+Department: [DEPARTMENT, if known]
 
-I, [EXECUTOR_NAME], am the [EXECUTOR_RELATIONSHIP] of [DECEASED_FULL_NAME].
+Dear Human Resources Team:
 
-Please:
-  1. Cancel Account No. [ACCOUNT_NUMBER] immediately;
-  2. Stop all recurring charges and automatic payments effective [DATE_OF_DEATH];
-  3. Refund any prepaid or unused subscription amounts to the estate;
-  4. Delete or memorialize the account in accordance with your bereavement policy;
-  5. Provide written confirmation of the cancellation.
+I am writing to notify [COMPANY NAME] of the death of [DECEASED FULL NAME], [JOB TITLE], who passed away on [DATE OF DEATH]. [DECEASED FIRST NAME] was [actively employed / most recently employed from DATE to DATE].
 
-Please issue any applicable refund by check to "Estate of [DECEASED_FULL_NAME]" at the executor address above.
+I am the [EXECUTOR OF THE ESTATE / SURVIVING SPOUSE / NEXT OF KIN].
 
-Enclosed please find:
-  - Certified Death Certificate
-  - My government-issued photo ID (if required)
+I request information and guidance on all of the following, as applicable:
+
+PAYROLL & WAGES
+  1. Final paycheck for wages earned through [DATE OF DEATH], including any accrued and unpaid paid time off.
+  2. Any outstanding expense reimbursements.
+
+BENEFITS
+  3. Group life insurance — carrier name, policy number, and claim process.
+  4. Accidental death and dismemberment (AD&D) insurance — if applicable.
+  5. COBRA continuation coverage — election notice for surviving dependents.
+  6. Flexible Spending Account (FSA) or Health Savings Account (HSA) balance.
+
+RETIREMENT
+  7. 401(k) plan — account balance as of [DATE OF DEATH] and beneficiary claim process.
+  8. Pension or defined benefit plan — survivor benefit information.
+  9. Employee stock purchase plan (ESPP) or unvested equity (RSUs, options) — disposition process.
+
+OTHER
+  10. Any other benefits, incentive pay, or compensation that may be owed to the estate.
+
+Please direct responses to:
+  Name:    [YOUR FULL NAME]
+  Relationship: [RELATIONSHIP]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
+  Email:   [YOUR EMAIL]
+
+Enclosed: Certified copy of death certificate.
 
 Sincerely,
 
-[EXECUTOR_NAME]
-[EXECUTOR_RELATIONSHIP], Estate of [DECEASED_FULL_NAME]
-[EXECUTOR_ADDRESS]
-[EXECUTOR_EMAIL]
-[EXECUTOR_PHONE]
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]$TPL$,
+  ARRAY['employer', 'HR', 'benefits', 'payroll', 'notification']
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
 
-Enclosure: Certified Death Certificate',
+
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
+  'Subscription Service Cancellation Letter',
+  'Personal & Memberships', 'letter',
+$TPL$[DATE]
+
+[SERVICE / COMPANY NAME]
+Customer Support / Account Services
+[EMAIL OR MAILING ADDRESS]
+
+Re: Account Cancellation — Death of Account Holder
+Account Email: [DECEASED'S EMAIL ADDRESS]
+Account Name:  [DECEASED FULL NAME]
+
+Dear Customer Support:
+
+I am writing to request cancellation of the [SERVICE NAME] account belonging to [DECEASED FULL NAME], who passed away on [DATE OF DEATH].
+
+I am the [EXECUTOR OF THE ESTATE / NEXT OF KIN / FAMILY MEMBER] managing the estate.
+
+Please:
+
+1. Cancel the account and all associated subscriptions effective immediately.
+2. Stop all future billing to the payment method on file.
+3. Issue a refund for any unused prepaid subscription period to the original payment method [or the estate, if the card has been cancelled].
+4. Confirm cancellation in writing to this email address: [YOUR EMAIL].
+
+If you require additional documentation, please let me know and I will provide a copy of the death certificate.
+
+Thank you for handling this promptly.
+
+Sincerely,
+
+[YOUR FULL NAME]
+[YOUR RELATIONSHIP TO DECEASED]
+[YOUR EMAIL]
+[YOUR PHONE]
+[DATE]$TPL$,
   ARRAY['subscription', 'membership', 'cancellation', 'services']
-),
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
 
-(
-  'Alumni Association Membership Letter',
-  'Personal & Memberships',
-  'letter',
-  'Notification of Member''s Death — [DECEASED_FULL_NAME]',
-  '[EXECUTOR_NAME]
-[EXECUTOR_ADDRESS]
-[DATE]
 
-[ALUMNI_ASSOCIATION_NAME]
-[ALUMNI_ASSOCIATION_ADDRESS]
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
+  'Facebook Meta Account Memorialization or Removal Request',
+  'Digital Estate', 'letter',
+$TPL$[DATE]
 
-Re: Notification of Member''s Death — [DECEASED_FULL_NAME]
-Graduation Year: [GRADUATION_YEAR]
-Member ID (if known): [MEMBER_ID]
+Meta Platforms, Inc.
+Attn: Special Request Team
+1 Meta Way
+Menlo Park, CA 94025
 
-Dear [ALUMNI_ASSOCIATION_NAME]:
+Re: [MEMORIALIZATION / REMOVAL] Request — Deceased User Account
+Platform: [FACEBOOK / INSTAGRAM]
+Account Name: [DECEASED'S DISPLAY NAME]
+Profile URL: [PROFILE URL, if known]
+Account Email: [DECEASED'S EMAIL, if known]
 
-I am writing to notify [ALUMNI_ASSOCIATION_NAME] of the death of [DECEASED_FULL_NAME], a proud alumnus/alumna of the Class of [GRADUATION_YEAR], who passed away on [DATE_OF_DEATH].
+Dear Meta Support Team:
 
-I, [EXECUTOR_NAME], am the [EXECUTOR_RELATIONSHIP] of [DECEASED_FULL_NAME].
+I am writing to request [memorialization / permanent removal] of the [Facebook / Instagram] account belonging to [DECEASED FULL NAME], who passed away on [DATE OF DEATH].
 
-I am requesting that you:
-  1. Update your records to reflect the passing of [DECEASED_FULL_NAME];
-  2. Cancel any recurring membership dues or magazine subscriptions associated with the account;
-  3. Provide information regarding any memorial or tribute programs available through the association.
+I am the [IMMEDIATE FAMILY MEMBER / EXECUTOR OF THE ESTATE] of the deceased.
 
-Any outstanding balance or refund due may be addressed to the estate at the executor address above.
+My request: Please [memorialize this account, preserving it as a place of remembrance for friends and family / permanently remove this account and all associated data from your platform].
 
-We are grateful for the connection [DECEASED_FULL_NAME] maintained with [INSTITUTION_NAME] throughout the years.
+My information:
+  Name:         [YOUR FULL NAME]
+  Relationship: [RELATIONSHIP TO DECEASED]
+  Email:        [YOUR EMAIL]
+  Phone:        [YOUR PHONE]
 
-Sincerely,
+Enclosed: Copy of death certificate, and a copy of the document establishing my relationship to the deceased.
 
-[EXECUTOR_NAME]
-[EXECUTOR_RELATIONSHIP], Estate of [DECEASED_FULL_NAME]
-[EXECUTOR_ADDRESS]
-[EXECUTOR_EMAIL]
-[EXECUTOR_PHONE]
-
-Enclosure: Certified Death Certificate',
-  ARRAY['alumni', 'membership', 'association', 'notification']
-),
-
-(
-  'Professional Association Membership Cancellation Letter',
-  'Personal & Memberships',
-  'letter',
-  'Notification of Member''s Death and Membership Cancellation — [DECEASED_FULL_NAME]',
-  '[EXECUTOR_NAME]
-[EXECUTOR_ADDRESS]
-[DATE]
-
-[ASSOCIATION_NAME]
-[ASSOCIATION_ADDRESS]
-
-Re: Notification of Member''s Death — [DECEASED_FULL_NAME]
-Member ID (if known): [MEMBER_ID]
-Date of Death: [DATE_OF_DEATH]
-
-Dear [ASSOCIATION_NAME]:
-
-I am writing to notify [ASSOCIATION_NAME] of the death of [DECEASED_FULL_NAME], a member of your organization, who passed away on [DATE_OF_DEATH].
-
-I, [EXECUTOR_NAME], am the [EXECUTOR_RELATIONSHIP] of [DECEASED_FULL_NAME].
-
-Please:
-  1. Update your records to reflect [DECEASED_FULL_NAME]''s passing;
-  2. Cancel the membership and any associated dues, publications, or benefits effective [DATE_OF_DEATH];
-  3. Refund any prepaid dues for the period following [DATE_OF_DEATH] to the estate.
-
-Please issue any applicable refund by check to "Estate of [DECEASED_FULL_NAME]" at the executor address above.
-
-Enclosed please find a certified copy of the Death Certificate.
+Please confirm receipt of this request and provide an estimated timeline for completion.
 
 Sincerely,
 
-[EXECUTOR_NAME]
-[EXECUTOR_RELATIONSHIP], Estate of [DECEASED_FULL_NAME]
-[EXECUTOR_ADDRESS]
-[EXECUTOR_EMAIL]
-[EXECUTOR_PHONE]
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]$TPL$,
+  ARRAY['social media', 'Facebook', 'Instagram', 'digital', 'account']
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
 
-Enclosure: Certified Death Certificate',
-  ARRAY['professional association', 'membership', 'cancellation', 'notification']
-),
 
-(
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
+  'Cell Phone Carrier Notification Letter',
+  'Personal & Memberships', 'letter',
+$TPL$[DATE]
+
+[CARRIER NAME]
+Customer Service — Estate / Bereavement Department
+[CARRIER ADDRESS]
+[CITY, STATE, ZIP]
+
+Re: Account [CANCELLATION / NUMBER TRANSFER REQUEST]
+Account Holder: [DECEASED FULL NAME]
+Account Number: [ACCOUNT NUMBER]
+Phone Number(s): [PHONE NUMBER(S)]
+
+Dear Customer Service:
+
+I am writing regarding the wireless account of [DECEASED FULL NAME], who passed away on [DATE OF DEATH]. I am the [executor of the estate / spouse / authorized representative].
+
+SELECT ONE — DELETE THE OTHER:
+
+OPTION A — CANCELLATION:
+Please cancel all lines associated with this account, effective [DATE]. I request that you waive all early termination fees and any remaining device payment plan balances as a bereavement accommodation — a certified death certificate is enclosed. Please issue a final billing statement and confirm cancellation in writing.
+
+OPTION B — NUMBER TRANSFER:
+I would like to transfer the phone number [PHONE NUMBER] to a new account in my name before cancelling the remaining account. My information for the new account:
+  Name:    [YOUR FULL NAME]
+  Address: [YOUR BILLING ADDRESS]
+  SSN (last 4): [XXXX]
+Please contact me to complete the port request and advise on any required steps.
+
+Please note: No family member has assumed personal liability for device payment plan balances — these are obligations of the estate. Any early termination fees should be waived per your standard bereavement policy.
+
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Relationship: [RELATIONSHIP]
+  Phone:   [YOUR PHONE]
+  Email:   [YOUR EMAIL]
+
+Enclosed: Certified copy of death certificate.
+
+Sincerely,
+
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]$TPL$,
+  ARRAY['cell phone', 'wireless', 'carrier', 'cancellation', 'services']
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
+
+
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
+  'Loyalty Program Airline Miles Points Transfer Request',
+  'Personal & Memberships', 'letter',
+$TPL$[DATE]
+
+[LOYALTY PROGRAM NAME]
+Customer Service — Estate / Bereavement Department
+[MAILING ADDRESS OR EMAIL]
+
+Re: Estate Claim — Loyalty Account of Deceased Member
+Account Holder: [DECEASED FULL NAME]
+Member Number / Account ID: [ACCOUNT NUMBER, if known]
+Approximate Point / Mile Balance: [BALANCE, if known]
+
+Dear [PROGRAM NAME] Customer Service Team:
+
+I am writing to notify you of the death of [DECEASED FULL NAME], who passed away on [DATE OF DEATH], and to request information about the status and disposition of their loyalty account.
+
+I am the executor of the Estate of [DECEASED FULL NAME], appointed by [COURT NAME], [COUNTY], [STATE] on [DATE OF APPOINTMENT].
+
+I am requesting the following:
+
+  1. Confirmation of the current account balance as of the date of death;
+  2. Information about your policy for transferring or redeeming points or miles belonging to a deceased member;
+  3. The steps required to either transfer the balance to [BENEFICIARY NAME / the estate] or redeem the balance on behalf of the estate;
+  4. Any forms or documentation required to process this request.
+
+My contact information:
+  Name:         [YOUR FULL NAME]
+  Relationship: Executor, Estate of [DECEASED FULL NAME]
+  Address:      [YOUR ADDRESS]
+  Phone:        [YOUR PHONE]
+  Email:        [YOUR EMAIL]
+
+Enclosed: Certified copy of death certificate and Letters Testamentary.
+
+Please confirm receipt of this request and advise on next steps at your earliest convenience.
+
+Sincerely,
+
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+Executor, Estate of [DECEASED FULL NAME]
+[DATE]$TPL$,
+  ARRAY['airline miles', 'loyalty program', 'rewards', 'personal']
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
+
+
+-- ──────────────────────────────────────────────────────────────────────────────
+-- LEGAL & PROBATE — letters
+-- ──────────────────────────────────────────────────────────────────────────────
+
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
+  'Beneficiary Notification Letter',
+  'Legal & Probate', 'letter',
+$TPL$[DATE]
+
+[BENEFICIARY FULL NAME]
+[BENEFICIARY ADDRESS]
+[CITY, STATE, ZIP]
+
+Re: Notice of Estate Administration — Estate of [DECEASED FULL NAME]
+
+Dear [BENEFICIARY FIRST NAME]:
+
+I am writing to notify you of the death of [DECEASED FULL NAME], who passed away on [DATE OF DEATH] in [CITY, STATE].
+
+I, [EXECUTOR FULL NAME], have been named as Executor of the Estate of [DECEASED FULL NAME] pursuant to [his/her/their] Last Will and Testament dated [WILL DATE]. Letters Testamentary were issued to me by [COURT NAME], [COUNTY], [STATE] on [DATE OF LETTERS TESTAMENTARY].
+
+The Will has been filed with [COURT NAME] in [COUNTY], [STATE], where it is available for public inspection during regular court hours.
+
+You are receiving this notice because you are [named as a beneficiary in the Will / a legal heir of the deceased].
+
+The estate is currently in the process of administration, which includes:
+  • Inventorying all estate assets
+  • Settling all outstanding debts, taxes, and expenses
+  • Distributing the remaining assets in accordance with the Will
+
+I will keep you informed of the progress of the estate. Please understand that distributions cannot be made until all debts and obligations of the estate are fully resolved.
+
+You have the right to contest the Will within the time period allowed by [STATE] law. If you have concerns, please consult an attorney promptly, as this period is strictly limited.
+
+For questions, please contact me at:
+  Name:    [EXECUTOR FULL NAME]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
+  Email:   [YOUR EMAIL]
+
+Sincerely,
+
+[EXECUTOR SIGNATURE]
+
+[EXECUTOR PRINTED NAME], Executor
+Estate of [DECEASED FULL NAME]
+[DATE]$TPL$,
+  ARRAY['beneficiary', 'probate', 'legal', 'estate', 'notification']
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
+
+
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
+  'Creditor Notification Letter',
+  'Legal & Probate', 'letter',
+$TPL$[DATE]
+
+[CREDITOR NAME]
+[CREDITOR ADDRESS / BILLING DEPARTMENT]
+[CITY, STATE, ZIP]
+
+Re: Notice of Death — Account Holder [DECEASED FULL NAME]
+Account Number: [ACCOUNT NUMBER]
+
+Dear Account Services:
+
+I am writing to notify you of the death of [DECEASED FULL NAME], who passed away on [DATE OF DEATH].
+
+I am the [EXECUTOR OF THE ESTATE / LEGAL REPRESENTATIVE] of the deceased.
+
+The estate of [DECEASED FULL NAME] is currently under administration. I request that you:
+
+1. Note the death in your records and direct all future correspondence to me at the address below.
+2. Provide a current account statement showing the balance as of [DATE OF DEATH] and any interest or charges that have accrued since.
+3. Advise me of the process for filing a creditor claim against the estate, if applicable.
+4. Cease collection activities directed at family members or other persons who are not personally liable for this debt.
+
+Outstanding individual debts are obligations of the estate and will be addressed through the estate administration process in accordance with [STATE] law. I will contact you once the estate is able to process creditor claims.
+
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Role:    [EXECUTOR / REPRESENTATIVE]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
+  Email:   [YOUR EMAIL]
+
+Enclosed: Certified copy of death certificate.
+
+Sincerely,
+
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]$TPL$,
+  ARRAY['creditor', 'debt', 'legal', 'probate', 'notification']
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
+
+
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
   'Professional License Cancellation Letter',
-  'Personal & Memberships',
-  'letter',
-  'Notification of Licensee''s Death — [DECEASED_FULL_NAME] — License No. [LICENSE_NUMBER]',
-  '[EXECUTOR_NAME]
-[EXECUTOR_ADDRESS]
-[DATE]
+  'Legal & Probate', 'letter',
+$TPL$[DATE]
 
-[LICENSING_BOARD_NAME]
-[LICENSING_BOARD_ADDRESS]
+[LICENSING BOARD / PROFESSIONAL ASSOCIATION NAME]
+[ADDRESS]
+[CITY, STATE, ZIP]
 
-Re: Notification of Licensee''s Death — [DECEASED_FULL_NAME]
-License Type: [LICENSE_TYPE]
-License Number: [LICENSE_NUMBER]
-Date of Death: [DATE_OF_DEATH]
+Re: Notice of Death — Licensed Professional [DECEASED FULL NAME]
+License Number: [LICENSE NUMBER]
+License Type: [TYPE OF LICENSE / CREDENTIAL]
 
-Dear [LICENSING_BOARD_NAME]:
+Dear [LICENSING AUTHORITY]:
 
-I am writing to formally notify [LICENSING_BOARD_NAME] of the death of [DECEASED_FULL_NAME], holder of [LICENSE_TYPE] License No. [LICENSE_NUMBER], who passed away on [DATE_OF_DEATH].
+I am writing to inform [ORGANIZATION NAME] of the death of [DECEASED FULL NAME], a [PROFESSION] licensed by your board, who passed away on [DATE OF DEATH]. I am the [executor of the estate / spouse / authorized representative].
 
-I, [EXECUTOR_NAME], am the [EXECUTOR_RELATIONSHIP] of [DECEASED_FULL_NAME].
+I respectfully request the following actions:
 
-I am requesting that you:
-  1. Inactivate or retire License No. [LICENSE_NUMBER] in your records effective [DATE_OF_DEATH];
-  2. Cancel any pending license renewal obligations;
-  3. Advise me of any actions required by the estate in connection with this license (e.g., business records retention, client notification requirements if applicable).
+1. Record the death and formally retire License Number [LICENSE NUMBER], effective [DATE OF DEATH].
+2. Confirm that the license has been closed to prevent unauthorized use.
+3. Advise whether any formal resignation, notice, or filing is required under [STATE] law or your organization's rules.
+4. Provide information about any refund of prepaid membership dues or licensing fees for the period following [DATE OF DEATH].
+5. Advise whether your organization issues any memorial recognition or acknowledgment for deceased members.
 
-Enclosed please find:
-  - Certified Death Certificate
-  - Certified copy of Letters Testamentary (if required)
+A certified copy of the death certificate is enclosed for your records.
 
-Please confirm receipt and advise of any further steps required. I can be reached at [EXECUTOR_EMAIL] or [EXECUTOR_PHONE].
+Please direct all correspondence to me at the address below. Thank you for your assistance.
 
 Sincerely,
 
-[EXECUTOR_NAME]
-[EXECUTOR_RELATIONSHIP], Estate of [DECEASED_FULL_NAME]
-[EXECUTOR_ADDRESS]
-[EXECUTOR_EMAIL]
-[EXECUTOR_PHONE]
+[YOUR SIGNATURE]
 
-Enclosures: As listed above',
+[YOUR PRINTED NAME]
+[YOUR RELATIONSHIP / ROLE]
+[YOUR ADDRESS]
+[CITY, STATE, ZIP]
+[PHONE / EMAIL]
+
+Enclosed: Certified copy of death certificate.
+Sent via: Certified Mail, Return Receipt Requested.$TPL$,
   ARRAY['professional license', 'license', 'notification', 'cancellation']
 )
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
 
-ON CONFLICT (name) DO NOTHING;
-
--- ──────────────────────────────────────────────────────────────────────────────
--- GUIDES (7)
--- ──────────────────────────────────────────────────────────────────────────────
-
-INSERT INTO public.templates (name, category, type, content, tags) VALUES
-
-(
-  'How to Obtain a Certified Death Certificate',
-  'Government & Benefits',
-  'guide',
-  'HOW TO OBTAIN A CERTIFIED DEATH CERTIFICATE
-Guide for Executors and Family Members
-
-OVERVIEW
-A certified death certificate is a legal document issued by the state vital records office confirming an individual''s death. You will need multiple certified copies to administer the estate. This guide explains how many to order, where to order them, and what to expect.
-
-HOW MANY TO ORDER
-Order at least 15–20 certified copies. Most families under-order and then wait weeks for more copies while estate tasks stall. Each institution typically requires its own original certified copy (not a photocopy). Some institutions will return originals; many will not.
-
-Plan for one certified copy for each of the following:
-- Social Security Administration
-- Each bank or credit union
-- Each investment or brokerage account
-- Each life insurance policy
-- Probate court filing
-- Medicare / Medicaid
-- Veterans Affairs (if applicable)
-- DMV / vehicle title transfer
-- Each credit card company (one copy may be shared)
-- IRS (for EIN application)
-- Mortgage servicer
-- 3–5 spares
-
-WHERE TO ORDER
-The death certificate is issued by the state where the death occurred (not necessarily where the deceased lived).
-
-Option 1 — Funeral Home (most common): The funeral home typically orders death certificates on your behalf as part of their services. Ask how many they will order and confirm before the funeral.
-
-Option 2 — State Vital Records Office: Contact the vital records office of the state where the death occurred. Most states allow online, mail, or in-person ordering.
-
-Option 3 — VitalChek (vitacheck.com): A nationally recognized third-party service authorized by most states. Adds a convenience fee of $10–20 in addition to state fees.
-
-COST AND TIMELINE
-Standard fee: $5–$25 per certified copy, depending on the state.
-Processing time: 1–4 weeks for mail orders; same-day at some in-person offices.
-Expedited processing is often available for an additional fee.
-
-IMPORTANT NOTES
-- Only certified copies (with a raised or embossed seal) are accepted by government agencies and most institutions. Photocopies are not sufficient.
-- Keep all originals in a secure, fireproof location.
-- You can order more copies at any time, but it takes time and requires additional payment. Order generously at the outset.',
-  ARRAY['death certificate', 'government', 'vital records', 'guide']
-),
-
-(
-  'How to Open Probate Court Proceedings',
-  'Legal & Probate',
-  'guide',
-  'HOW TO OPEN PROBATE COURT PROCEEDINGS
-Guide for Executors and Administrators
-
-OVERVIEW
-Probate is the legal process by which a deceased person''s estate is administered under court supervision. Not all estates require probate. This guide explains when probate is needed, how to open it, and what to expect.
-
-DO YOU NEED PROBATE?
-Probate is generally required when:
-- The deceased owned assets titled solely in their name (not joint tenancy or community property)
-- The total value of those assets exceeds your state''s small estate threshold (typically $10,000–$200,000 depending on state)
-- There is no trust or other non-probate transfer mechanism in place
-
-Probate is generally NOT required for:
-- Assets with named beneficiaries (life insurance, retirement accounts, POD/TOD accounts)
-- Jointly held property passing to the surviving owner
-- Assets held in a living trust
-- Assets below the small estate threshold (may use affidavit instead)
-
-STEP 1: LOCATE AND REVIEW THE WILL
-Find the original signed will. File it with the probate court even if you believe probate is not necessary — most states require it.
-
-STEP 2: DETERMINE THE CORRECT COURT
-Probate is filed in the county where the deceased was domiciled at the time of death (principal residence). This is usually the probate court, surrogate''s court, or circuit court depending on your state.
-
-STEP 3: GATHER REQUIRED DOCUMENTS
-- Original will (not a copy)
-- Certified death certificate (typically 1–2 copies for the court)
-- Petition for Probate form (available from the court or court website)
-- List of heirs and beneficiaries with contact information
-- Estimated value of estate assets
-
-STEP 4: FILE THE PETITION
-File the petition with the probate court in the appropriate county. Pay the filing fee ($150–$400 typical, varies by state and estate size). The court will schedule a hearing.
-
-STEP 5: RECEIVE LETTERS TESTAMENTARY
-After the court approves the petition, it issues "Letters Testamentary" (if there is a will) or "Letters of Administration" (if there is no will). These are your legal authority to act on behalf of the estate.
-
-STEP 6: PUBLISH CREDITOR NOTICE
-Most states require you to publish notice to creditors in a local newspaper and/or mail notice to known creditors. This starts the creditor claim period (typically 3–6 months).
-
-WHAT TO EXPECT
-Timeline: Simple estates may close in 6–12 months. Complex estates can take years.
-Cost: Court fees, attorney fees (if used), and accounting fees vary widely.
-Attorney: Probate is complex. Many executors retain a probate attorney, especially for larger estates, contested wills, or estates with significant real property.',
-  ARRAY['probate', 'court', 'legal', 'executor', 'guide']
-),
-
-(
-  'How to File a Life Insurance Claim',
-  'Financial Accounts',
-  'guide',
-  'HOW TO FILE A LIFE INSURANCE CLAIM
-Guide for Beneficiaries and Executors
-
-OVERVIEW
-Life insurance benefits are paid directly to named beneficiaries and generally do not pass through probate. This guide explains how to locate policies, submit claims, and receive payment.
-
-STEP 1: LOCATE ALL POLICIES
-Check the following sources:
-- The deceased''s personal files, filing cabinets, and safe deposit box
-- Email inbox (search for "life insurance" or insurer names)
-- Bank statements (look for premium deductions)
-- Employer HR department (group life insurance is often provided as a workplace benefit)
-- Financial advisor records
-- The MIB (Medical Information Bureau) Life Insurance Policy Locator: report.mib.com
-- NAIC Policy Locator Service: eapps.naic.org
-
-Common types of policies to look for:
-- Individual life insurance (term, whole, universal)
-- Employer-provided group life insurance
-- Mortgage life insurance
-- Accidental death and dismemberment (AD&D)
-- Burial / final expense policies
-
-STEP 2: CONTACT EACH INSURER
-Call the insurance company''s claims department. Provide:
-- Policyholder name and date of birth
-- Policy number (if known)
-- Date of death
-- Your name and relationship to the deceased
-
-The insurer will send you a claim packet.
-
-STEP 3: COMPLETE AND SUBMIT THE CLAIM FORM
-Each insurer has its own claim form. You will typically need to provide:
-- Completed claim form (signed by all beneficiaries)
-- Certified death certificate (most insurers require their own original copy)
-- Proof of identity (government-issued photo ID)
-- The original policy document (if you have it; not always required)
-
-STEP 4: CHOOSE A PAYOUT OPTION
-Most insurers offer multiple payout options:
-- Lump sum (most common)
-- Installment payments
-- Interest income option
-- Annuity
-
-For most beneficiaries, a lump sum paid to a dedicated savings or investment account is the simplest and most flexible option.
-
-STEP 5: RECEIVE PAYMENT AND REPORT TAXES
-Life insurance death benefits are generally income-tax-free to the beneficiary. However, any interest earned on the benefit after the date of death is taxable. Keep records of all payments received and consult a tax professional if the estate is complex.
-
-TIMELINE
-Most insurers pay claims within 30–60 days of receiving a complete claim package. Delays occur when:
-- Documentation is incomplete
-- The death occurred within the first two years of the policy (contestability period)
-- The cause of death triggers investigation',
-  ARRAY['life insurance', 'claim', 'guide', 'financial', 'beneficiary']
-),
-
-(
-  'How to Close Financial Accounts and Transfer Assets',
-  'Financial Accounts',
-  'guide',
-  'HOW TO CLOSE FINANCIAL ACCOUNTS AND TRANSFER ASSETS
-Guide for Executors and Administrators
-
-OVERVIEW
-Closing financial accounts and transferring assets is one of the most time-consuming parts of estate administration. This guide covers banks, investment accounts, retirement accounts, and other financial assets.
-
-BEFORE YOU START
-You will need:
-- Letters Testamentary or Letters of Administration (your legal authority as executor)
-- Multiple certified death certificates (one per institution)
-- Estate EIN from the IRS (for opening an estate account)
-- Government-issued photo ID
-
-STEP 1: OPEN AN ESTATE BANK ACCOUNT
-Open a dedicated checking account in the name of the estate ("Estate of [Name]") at a bank of your choosing. This account:
-- Receives incoming estate funds (final paycheck, insurance proceeds, liquidated assets)
-- Pays estate expenses (debts, taxes, funeral costs)
-- Holds funds for distribution to beneficiaries
-
-To open the account you will need: Letters Testamentary, certified death certificate, estate EIN, and your ID.
-
-STEP 2: INVENTORY ALL ACCOUNTS
-Create a complete list of all financial accounts:
-- Checking and savings accounts
-- Investment and brokerage accounts
-- Retirement accounts (401k, IRA, pension)
-- CDs and savings bonds
-- Cryptocurrency accounts
-- PayPal, Venmo, and other payment accounts
-
-For each account, note: institution name, account number, approximate balance, whether it has a named beneficiary or TOD/POD designation, and whether it is joint.
-
-STEP 3: ACCOUNTS WITH NAMED BENEFICIARIES OR TOD/POD
-These accounts pass directly to the named beneficiary and do NOT go through probate:
-- Life insurance policies
-- Retirement accounts (401k, IRA) with named beneficiaries
-- Bank accounts with payable-on-death (POD) designations
-- Investment accounts with transfer-on-death (TOD) designations
-
-Beneficiaries claim these assets directly by contacting the institution with a death certificate and their own ID.
-
-STEP 4: ACCOUNTS THAT GO THROUGH PROBATE
-Accounts held solely in the deceased''s name without TOD/POD designations are probate assets. To close and transfer these:
-1. Contact each institution with your Letters Testamentary and a certified death certificate
-2. Request a statement of account as of the date of death
-3. Transfer funds to the estate account
-4. Close the account and obtain written confirmation
-
-STEP 5: JOINT ACCOUNTS
-Accounts held jointly with right of survivorship pass directly to the surviving owner. The surviving owner presents a death certificate to the institution to have the deceased''s name removed.
-
-STEP 6: RETIREMENT ACCOUNTS
-Retirement accounts are claimed by the named beneficiary, not the estate. See the "How to File a Retirement Account Beneficiary Claim" guide.',
-  ARRAY['financial accounts', 'bank', 'assets', 'executor', 'guide']
-),
-
-(
-  'How to Handle Digital Assets and Online Accounts',
-  'Digital Estate',
-  'guide',
-  'HOW TO HANDLE DIGITAL ASSETS AND ONLINE ACCOUNTS
-Guide for Executors and Family Members
-
-OVERVIEW
-Digital assets — online accounts, cryptocurrency, domain names, digital files — are increasingly significant parts of an estate. This guide explains how to locate, access, and properly manage them.
-
-WHAT ARE DIGITAL ASSETS?
-- Financial: Cryptocurrency (Bitcoin, Ethereum, etc.), PayPal, Venmo, Cash App balances, online banking accounts
-- Income-generating: Monetized YouTube/social media accounts, Etsy shops, Amazon seller accounts, domain names and websites
-- Stored value: Apple/Google/Amazon store credit, airline miles, hotel points, gift card balances
-- Personal: Email accounts, photos, documents stored in cloud services (iCloud, Google Drive, Dropbox)
-- Social media: Facebook, Instagram, Twitter/X, LinkedIn profiles
-
-STEP 1: LOCATE ACCOUNTS
-Check the following:
-- Password manager (1Password, LastPass, Bitwarden) — if the deceased used one, this may contain a complete list
-- Browser saved passwords (Chrome, Safari, Firefox)
-- Email inbox (search for "welcome," "account," "subscription," "receipt")
-- Bank statements (for recurring charges from online services)
-- App store purchase history
-
-Note: Unauthorized access to someone''s accounts — even after death — may violate the Computer Fraud and Abuse Act in some situations. Most platforms have formal deceased user processes.
-
-STEP 2: CRYPTOCURRENCY
-Cryptocurrency is a critical asset that can be permanently lost if not handled correctly.
-- Hardware wallets (Ledger, Trezor): The "seed phrase" or private key is required to access funds. Without it, the funds may be unrecoverable.
-- Software wallets / exchanges (Coinbase, Kraken): Contact the exchange directly with death certificate and Letters Testamentary to initiate an account access or transfer request.
-- NEVER share seed phrases digitally — handle in person only.
-
-STEP 3: SOCIAL MEDIA ACCOUNTS
-Major platforms offer bereavement options:
-- Facebook: Memorialize or remove the account at facebook.com/help/contact/234739089954300
-- Instagram: Memorialize or remove at help.instagram.com
-- Google/Gmail: Submit an Inactive Account Manager request at myaccount.google.com, or use the formal deceased user request form
-- LinkedIn: Request removal at linkedin.com/help
-- Twitter/X: Request account deactivation at help.twitter.com
-
-STEP 4: EMAIL ACCOUNTS
-Email access may contain critical estate-related communications. Options:
-- Gmail: Google allows authorized representatives to request content access or deletion. Requires documentation.
-- Apple iCloud: Apple does not grant password access but may allow a Digital Legacy contact (if set up) to access data.
-- Consider whether to download/archive important emails before closing the account.
-
-STEP 5: DOMAIN NAMES AND WEBSITES
-Domain names are transferable property. Contact the domain registrar (GoDaddy, Namecheap, etc.) with Letters Testamentary to transfer or allow a domain to expire.
-
-STEP 6: AIRLINE MILES AND HOTEL POINTS
-Many loyalty programs allow surviving family members to claim points. Contact each program''s bereavement services line. Some programs allow transfer; others do not.',
-  ARRAY['digital assets', 'online accounts', 'cryptocurrency', 'social media', 'guide']
-),
-
-(
-  'How to Transfer or Sell Real Property',
-  'Property & Home',
-  'guide',
-  'HOW TO TRANSFER OR SELL REAL PROPERTY
-Guide for Executors and Heirs
-
-OVERVIEW
-Real estate is often the largest asset in an estate. How it is transferred depends on how the property was titled and whether probate is required. This guide covers the main transfer methods and the sale process.
-
-HOW PROPERTY MAY BE TITLED
-1. Sole ownership: Requires probate. The executor transfers title per the terms of the will.
-2. Joint tenancy with right of survivorship: Passes automatically to the surviving owner. File an Affidavit of Survivorship and certified death certificate with the county recorder.
-3. Community property (in AZ, CA, ID, LA, NM, NV, TX, WA, WI): Generally passes to the surviving spouse. Specific rules vary by state.
-4. Revocable living trust: The successor trustee transfers title without probate per the trust terms.
-5. Beneficiary deed / transfer-on-death deed (where available): Property passes directly to the named beneficiary. Record the death certificate with the county.
-
-IF PROBATE IS REQUIRED
-1. The property becomes a probate asset. The executor has authority over it under the Letters Testamentary.
-2. You must notify the mortgage servicer and continue making payments to protect the estate''s equity.
-3. You may need court approval to sell the property, depending on state law.
-
-STEP 1: LOCATE ALL PROPERTY DOCUMENTS
-- Original deed (shows how property is titled)
-- Mortgage documents and statement
-- Title insurance policy
-- HOA governing documents and payment records
-- Property tax statements
-- Home insurance policy
-
-STEP 2: APPRAISE THE PROPERTY
-Obtain a certified appraisal for:
-- Determining the step-up in cost basis for capital gains tax purposes (the basis "steps up" to fair market value at date of death)
-- Setting a realistic sale price
-- Required filings with the probate court
-
-STEP 3: MAINTAIN THE PROPERTY
-During estate administration, the executor is responsible for:
-- Continuing mortgage and HOA payments
-- Maintaining property insurance
-- Basic upkeep to preserve value
-
-STEP 4: SELLING THE PROPERTY
-If heirs agree to sell:
-1. Engage a licensed real estate agent experienced in estate sales
-2. Obtain court approval if required in your state
-3. Complete the sale; proceeds go to the estate account
-4. Pay off any mortgage and liens from proceeds
-5. Report the sale on the estate''s income tax return (Form 1041) if there is a gain above the stepped-up basis
-
-STEP 5: TRANSFERRING TO A BENEFICIARY
-If heirs agree to keep the property:
-1. Prepare a deed transferring title from "Estate of [Name]" to the beneficiary
-2. Have the deed signed by the executor and notarized
-3. Record the deed with the county recorder''s office
-4. Transfer insurance and utility accounts to the new owner
-
-TAX CONSIDERATIONS
-Property receives a "step-up" in cost basis at the date of death, meaning heirs who sell soon after inheriting generally owe little or no capital gains tax. Consult a CPA for complex situations.',
-  ARRAY['real property', 'real estate', 'sale', 'transfer', 'property', 'guide']
-),
-
-(
-  'How to File the Final Federal Income Tax Return',
-  'Government & Benefits',
-  'guide',
-  'HOW TO FILE THE FINAL FEDERAL INCOME TAX RETURN
-Guide for Executors and Surviving Spouses
-
-OVERVIEW
-As executor, you are responsible for filing the deceased''s final federal income tax return (Form 1040) and, if the estate earns income, an estate income tax return (Form 1041). This guide explains both.
-
-THE FINAL PERSONAL RETURN (FORM 1040)
-Who must file: The executor, on behalf of the deceased.
-What it covers: All income from January 1 of the year of death through the date of death.
-Filing deadline: Same as normal — April 15 of the following year. Extensions are available (Form 4868).
-Write "DECEASED" and the date of death across the top of the return.
-
-JOINT FILING WITH SURVIVING SPOUSE
-The surviving spouse may file a joint return with the deceased for the year of death. The surviving spouse signs the return. If another person is the executor, both the surviving spouse and executor must sign.
-
-INCOME TO INCLUDE
-- Wages and salary earned through the date of death
-- Self-employment income
-- Social Security benefits received
-- Investment income (dividends, interest, capital gains)
-- Retirement distributions received
-- Any other income received or constructively received by the date of death
-
-Note: Under the "IRD" (income in respect of a decedent) rules, certain income earned but not yet received at death (final paycheck, deferred compensation, IRA distributions) is taxable income — but reported on the estate return or the beneficiary''s return, not the final 1040.
-
-CLAIMING A REFUND
-If a refund is due to the deceased, file Form 1310 (Statement of Person Claiming Refund Due a Deceased Taxpayer) — unless you are the surviving spouse filing jointly, in which case Form 1310 is not required.
-
-ESTATE INCOME TAX RETURN (FORM 1041)
-Who must file: The executor, on behalf of the estate.
-When required: If the estate earns more than $600 in gross income during administration (interest, dividends, rental income, gains on sale of estate assets, etc.)
-Tax year: The estate can choose a fiscal year (e.g., 12 months ending in any month) to allow flexibility in timing.
-Get an EIN: The estate must have its own EIN before filing Form 1041.
-
-ESTATE TAX (FORM 706)
-Federal estate tax applies only to estates with a gross value exceeding the federal exemption ($13.61 million in 2024, adjusted annually). Very few estates owe federal estate tax. Many states have their own estate or inheritance taxes with lower thresholds — consult a tax professional.
-
-RECOMMEND PROFESSIONAL HELP
-Estate tax situations are complex. A CPA or enrolled agent with estate experience is strongly recommended, especially if:
-- The estate includes a business
-- There is significant investment income
-- The estate may owe state estate or inheritance tax
-- The deceased had significant deferred compensation or IRD items',
-  ARRAY['tax', 'IRS', 'Form 1040', 'Form 1041', 'estate tax', 'guide']
+
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
+  'Heir Receipt and Release',
+  'Legal & Probate', 'letter',
+$TPL$RECEIPT AND RELEASE OF EXECUTOR
+
+Estate of [DECEASED FULL NAME], Deceased
+
+Date of Death: [DATE OF DEATH]
+State of Administration: [STATE]
+
+I, [HEIR FULL NAME], residing at [HEIR ADDRESS], hereby acknowledge and agree as follows:
+
+1. RECEIPT OF DISTRIBUTION
+
+I have received from [EXECUTOR FULL NAME], Executor of the Estate of [DECEASED FULL NAME], the following distribution in full satisfaction of my interest in the estate:
+
+  [DESCRIBE DISTRIBUTION IN DETAIL]
+  Examples:
+    • Cash payment of $[AMOUNT], received by wire transfer / check on [DATE]
+    • Transfer of [PROPERTY DESCRIPTION] as described in the Will
+    • Transfer of [SPECIFIC PERSONAL PROPERTY ITEMS]
+
+2. ACKNOWLEDGMENT
+
+I acknowledge that this distribution represents my full and complete share of the estate as provided under the Will of [DECEASED FULL NAME] dated [WILL DATE] / under the laws of intestacy of [STATE].
+
+3. RELEASE
+
+In consideration of the above distribution, I hereby release and discharge [EXECUTOR FULL NAME], as Executor of the Estate of [DECEASED FULL NAME], and the estate itself, from any and all claims, demands, or causes of action that I may have or claim to have arising from the administration of the estate, to the extent permitted by law.
+
+4. AGREEMENT
+
+I agree that if it is subsequently determined that any additional assets exist, or that any distributions were made in error, I will cooperate in good faith to rectify the matter.
+
+Signed:
+
+______________________________
+[HEIR FULL NAME]
+
+Date: _________________________
+
+Address: [HEIR ADDRESS]
+
+[NOTARY BLOCK — RECOMMENDED]
+
+State of ________________, County of ________________
+
+Subscribed and sworn to before me this _____ day of __________, 20____.
+
+Notary Public: ___________________________
+My commission expires: ___________________
+
+————————————————————————————
+FOR EXECUTOR USE ONLY:
+
+Distribution made by: [EXECUTOR FULL NAME]
+Date of distribution: [DATE]
+Witnessed by: [WITNESS NAME, if any]$TPL$,
+  ARRAY['heir', 'distribution', 'release', 'executor', 'legal']
 )
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
 
-ON CONFLICT (name) DO NOTHING;
+
+-- ──────────────────────────────────────────────────────────────────────────────
+-- ADDITIONAL TASK-LINKED TEMPLATES (not in template_library.html)
+-- Used by tasks.template column — must exist for the portal modal to work
+-- ──────────────────────────────────────────────────────────────────────────────
+
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
+  'Probate Petition Cover Letter',
+  'Legal & Probate', 'letter',
+$TPL$[DATE]
+
+[PROBATE COURT NAME]
+[COURT ADDRESS]
+[CITY, STATE, ZIP]
+
+Re: Petition to Open Probate — Estate of [DECEASED FULL NAME]
+Date of Death: [DATE OF DEATH]
+County of Filing: [COUNTY], [STATE]
+
+Dear Clerk of the [PROBATE COURT NAME]:
+
+I am submitting this petition and the enclosed documents to formally open probate proceedings for the Estate of [DECEASED FULL NAME], who passed away on [DATE OF DEATH] in [CITY, STATE].
+
+[DECEASED FULL NAME] died [testate (with a Will) / intestate (without a Will)]. The original Last Will and Testament, dated [WILL DATE], is enclosed herewith. The estimated gross value of the probate estate is approximately $[ESTATE VALUE].
+
+I, [YOUR FULL NAME], am named [Executor / Administrator] in the Will and respectfully request that this Court:
+  1. Accept the Will for probate and admit it as the valid Last Will and Testament;
+  2. Formally appoint me as Executor of the estate;
+  3. Issue Letters Testamentary authorizing me to act on behalf of the estate.
+
+Enclosed for your review:
+  [ ] Original Last Will and Testament
+  [ ] Certified Death Certificate (2 copies)
+  [ ] Petition for Probate (Form [FORM NUMBER])
+  [ ] Filing fee of $[FILING FEE]
+  [ ] List of heirs and beneficiaries with current addresses
+
+I respectfully request that this matter be scheduled at the Court's earliest convenience. Please contact me with any questions or requests for additional documentation.
+
+Respectfully submitted,
+
+[YOUR SIGNATURE]
+
+[YOUR FULL NAME], Petitioner
+[YOUR ADDRESS]
+[YOUR PHONE]
+[YOUR EMAIL]
+
+Enclosures: As listed above$TPL$,
+  ARRAY['probate', 'court', 'petition', 'legal', 'executor']
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
+
+
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
+  'Vehicle Lease Termination Letter',
+  'Property & Home', 'letter',
+$TPL$[DATE]
+
+[LEASE COMPANY NAME]
+[CUSTOMER SERVICE / ESTATE DEPARTMENT]
+[ADDRESS]
+[CITY, STATE, ZIP]
+
+Re: Early Lease Termination Due to Death of Lessee
+Account Holder: [DECEASED FULL NAME]
+Lease Account Number: [ACCOUNT NUMBER]
+Vehicle: [YEAR] [MAKE] [MODEL], VIN [VIN NUMBER]
+
+Dear [LEASE COMPANY NAME]:
+
+I am writing to request early termination of the above vehicle lease agreement due to the death of the lessee, [DECEASED FULL NAME], who passed away on [DATE OF DEATH].
+
+I am the [EXECUTOR OF THE ESTATE / NEXT OF KIN] of the deceased.
+
+I understand that early termination may result in a fee or remaining balance obligation under the lease terms. Many lease agreements contain provisions allowing early termination without penalty upon the death of the lessee — please advise whether this provision applies here.
+
+Please provide:
+  1. The payoff amount or remaining obligations to terminate the lease;
+  2. Any early termination fees applicable under the agreement;
+  3. Instructions for returning the vehicle in good condition;
+  4. Confirmation of the final settlement amount owed by the estate.
+
+The vehicle is currently located at [VEHICLE CURRENT LOCATION] and is available for return at your convenience.
+
+Enclosed: Certified copy of death certificate.
+
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Role:    [EXECUTOR / NEXT OF KIN]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
+  Email:   [YOUR EMAIL]
+
+Sincerely,
+
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]$TPL$,
+  ARRAY['vehicle', 'lease', 'car', 'property', 'termination']
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
+
+
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
+  'Health Insurance Cancellation Letter',
+  'Personal & Memberships', 'letter',
+$TPL$[DATE]
+
+[INSURANCE COMPANY NAME]
+Member Services / Policy Administration
+[ADDRESS]
+[CITY, STATE, ZIP]
+
+Re: Policy Cancellation Due to Death of Insured — [DECEASED FULL NAME]
+Policy Number: [POLICY NUMBER]
+Group Number: [GROUP NUMBER, if applicable]
+Date of Death: [DATE OF DEATH]
+
+Dear Member Services:
+
+I am writing to request cancellation of the health insurance policy held by [DECEASED FULL NAME], who passed away on [DATE OF DEATH].
+
+I am the [EXECUTOR OF THE ESTATE / SURVIVING SPOUSE / NEXT OF KIN] of the deceased.
+
+Please cancel Policy No. [POLICY NUMBER] effective [DATE OF DEATH] and:
+
+  1. Confirm in writing that the policy has been cancelled and all future premium drafts have been stopped;
+  2. Provide a final premium statement and confirm any refund due to the estate;
+  3. Continue processing any outstanding claims for dates of service prior to [DATE OF DEATH] and remit payment to the estate;
+  4. If dependents are covered under this policy, advise regarding COBRA continuation coverage or conversion options available to them — the COBRA election deadline is 60 days from the qualifying event.
+
+Please issue any premium refund by check to "Estate of [DECEASED FULL NAME]" at the address below.
+
+Enclosed: Certified copy of death certificate.
+
+My contact information:
+  Name:    [YOUR FULL NAME]
+  Role:    [EXECUTOR / REPRESENTATIVE]
+  Address: [YOUR ADDRESS]
+  Phone:   [YOUR PHONE]
+  Email:   [YOUR EMAIL]
+
+Sincerely,
+
+[YOUR SIGNATURE]
+[YOUR PRINTED NAME]
+[DATE]$TPL$,
+  ARRAY['health insurance', 'insurance', 'cancellation', 'policy']
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
+
+
+-- ──────────────────────────────────────────────────────────────────────────────
+-- GUIDES (7 — from template_library.html)
+-- ──────────────────────────────────────────────────────────────────────────────
+
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
+  'IRS Form 1310 — Claiming a Refund for a Deceased Taxpayer',
+  'Government & Benefits', 'guide',
+$TPL$IRS FORM 1310 — CLAIMING A REFUND FOR A DECEASED TAXPAYER
+Step-by-Step Guide
+
+WHEN YOU NEED THIS FORM
+1. Use Form 1310 when the deceased is owed a federal tax refund and you are NOT the surviving spouse filing a joint return.
+2. A surviving spouse filing a joint return does NOT need Form 1310 — sign the return as usual.
+3. An executor or administrator appointed by a court should check Box B on the form.
+4. A person other than a spouse or court-appointed representative should check Box C.
+
+HOW TO COMPLETE THE FORM
+1. Line 1 — Enter the deceased's name, SSN, and date of death exactly as shown on the final 1040.
+2. Line 2 — Check the appropriate box: Box A (surviving spouse), Box B (court-appointed executor), or Box C (other claimant).
+3. Box C claimants must also check "Yes" or "No" to the probate question and attach a copy of the death certificate.
+4. Sign and date the form as the claimant — not as the deceased.
+5. Attach Form 1310 to the front of the final Form 1040 before mailing.
+
+WHERE TO FILE
+1. Mail the completed Form 1040 with Form 1310 attached to the IRS address shown in the 1040 instructions for the deceased's state.
+2. Do not e-file if submitting Form 1310 — the IRS requires a paper return in most cases involving deceased taxpayers.
+3. Processing time: 6–12 weeks for paper returns. The refund check will be made out to the estate or the claimant as you indicate on the form.
+
+TIP: If the deceased used a tax professional in prior years, contact that professional — they will have prior returns on file and can prepare the final return efficiently.
+
+WARNING: Do not cash a refund check made out to the deceased. It must be deposited into the estate bank account or reissued — contact the IRS if this happens.$TPL$,
+  ARRAY['IRS', 'tax', 'refund', 'Form 1310', 'guide']
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
+
+
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
+  'IRS EIN Application — Estate Tax ID Number',
+  'Government & Benefits', 'guide',
+$TPL$IRS EIN APPLICATION — ESTATE TAX ID NUMBER
+Step-by-Step Guide for Executors
+
+BEFORE YOU BEGIN
+1. You need an EIN if: the estate goes through probate, earns any income after death, or requires a separate estate bank account.
+2. Only the executor or court-appointed administrator can apply — you'll need your own SSN for the application.
+3. The online application is free and takes about 5 minutes. The EIN is issued immediately.
+
+STEP-BY-STEP ONLINE APPLICATION
+1. Go to irs.gov and search "EIN online application" or navigate directly to the EIN Assistant.
+2. Select "Estate" as the entity type when prompted.
+3. Enter the deceased's full legal name and SSN, their date of death, and the estate's legal name: "Estate of [DECEASED FULL NAME]".
+4. Enter your (the executor's) name, SSN, and address as the responsible party.
+5. Select the reason: choose "Banking purpose" or "Estate administration" — do NOT select "Started a new business."
+6. Review and submit. The EIN appears immediately on screen — print or screenshot this page.
+7. The IRS also mails a confirmation letter (CP 575) within 4 weeks. Keep this letter permanently.
+
+USING THE EIN
+1. Use the EIN (not the deceased's SSN) for: opening the estate bank account, filing Form 1041, and any financial transactions made on behalf of the estate after death.
+2. The estate's tax year can be a fiscal year — consult a CPA for the most tax-efficient choice.
+
+TIP: The EIN application cannot be submitted more than once per day for the same estate. If the session times out, wait until the next day to try again.$TPL$,
+  ARRAY['IRS', 'EIN', 'tax', 'estate', 'executor', 'guide']
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
+
+
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
+  'IRS Form 1041 — Estate Income Tax Return Guide',
+  'Government & Benefits', 'guide',
+$TPL$IRS FORM 1041 — ESTATE INCOME TAX RETURN
+Guide for Executors
+
+WHAT FORM 1041 IS — AND HOW IT DIFFERS FROM THE FINAL 1040
+1. Form 1040 is the deceased's final personal income tax return, covering income earned from January 1 of the year of death through the date of death. This is filed once.
+2. Form 1041 is a separate return for the estate itself. After death, the estate becomes its own legal and tax entity. If that entity earns income — interest, dividends, rental income, proceeds from asset sales — the estate must report and potentially pay tax on that income.
+3. The two returns cover different time periods and different income. Both may be required. A CPA handles both.
+
+WHEN FORM 1041 IS REQUIRED
+1. A Form 1041 must be filed if the estate has gross income of $600 or more during the tax year.
+2. Common sources of estate income: interest in the estate bank account, dividends paid after the date of death, rental income from property still owned by the estate, capital gains from selling estate assets, and business income.
+3. If the estate earns less than $600 total, no 1041 is required — confirm this with a CPA.
+
+KEY DEADLINES AND TAX YEAR
+1. Unlike individuals, an estate can use either a calendar year or a fiscal year. This choice is made on the first Form 1041 filed and cannot be changed.
+2. A fiscal year can be advantageous for tax planning — consult a CPA before the first return is due.
+3. The 1041 is due on the 15th day of the fourth month after the end of the estate's tax year.
+4. Extensions are available — Form 7004 extends the deadline by five months.
+5. The estate's tax year begins the day after the date of death.
+
+WHAT THE EXECUTOR NEEDS TO PREPARE
+1. The estate's EIN — required to file. See the IRS EIN Application guide.
+2. All statements showing income earned by the estate after the date of death.
+3. Records of estate administration expenses that may be deductible: executor fees, attorney fees, CPA fees, court costs.
+4. If the estate sold any assets, you will need the date-of-death value to calculate capital gains.
+
+K-1s — WHAT THEY ARE AND WHY BENEFICIARIES NEED THEM
+1. If the estate distributes income to beneficiaries during the year, those distributions are reported on a Schedule K-1, issued to each beneficiary.
+2. The K-1 tells each beneficiary what portion of estate income they received and must report on their own personal tax return.
+3. Beneficiaries cannot file their own taxes accurately until they receive their K-1.
+
+WHY A CPA IS REQUIRED FOR THIS RETURN
+1. Form 1041 is significantly more complex than a standard personal return.
+2. Errors can result in penalties, overpayment of tax, or incorrect K-1s.
+3. A CPA experienced in estate taxation will also advise on timing of distributions and choice of tax year.
+4. Engage a CPA as early in the administration as possible.
+
+TIP: If the estate earns any income at all after the date of death — even a small amount of bank interest — consult a CPA immediately. The decision about the estate's tax year must be made before the first return is due and cannot be undone.$TPL$,
+  ARRAY['IRS', 'Form 1041', 'tax', 'estate income', 'executor', 'guide']
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
+
+
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
+  'VitalChek — How to Order Certified Death Certificates',
+  'Government & Benefits', 'guide',
+$TPL$VITALCHEK — HOW TO ORDER CERTIFIED DEATH CERTIFICATES
+Guide for Executors and Family Members
+
+HOW MANY COPIES TO ORDER
+1. Simple estate (1 bank, no property, few accounts): order 15 certified copies.
+2. Typical estate (2–3 banks, 1 home, retirement accounts, insurance): order 20–25 copies.
+3. Complex estate (multiple properties, many accounts, business interests, VA, multi-state): order 30–35 copies.
+4. Rule of thumb: each bank requires 1 copy, each insurance policy requires 1 copy, each government agency requires 1 copy, probate court requires 1–2 copies. Add 5 spare copies to whatever total you calculate.
+5. Under-ordering is a serious mistake — reorders from some states take 2–4 weeks, stalling insurance claims, bank transfers, and probate filings in the meantime.
+6. The cost of an extra copy ($10–$25) is trivial compared to the cost of a delayed estate.
+
+STANDARD VS. EXPEDITED DELIVERY
+1. Standard processing: 2–6 weeks depending on state. Acceptable if the death was months ago and there is no urgency.
+2. Expedited processing: 3–7 business days. Costs an extra $10–$30 per order. Strongly recommended for all new engagements.
+3. In-person at the county vital records office: same-day or next-day in many counties. Best option when speed is critical.
+4. Funeral homes can often order on your behalf and have them within a week — ask at the time of arrangement.
+
+ORDERING VIA VITALCHEK (vitalchek.com)
+1. Go to vitalchek.com and click "Order Vital Records," then select "Death Certificate."
+2. Select the state where the death OCCURRED (not where the deceased lived, if different).
+3. Enter: deceased's full legal name, date of birth, date of death, county of death, and your name and relationship.
+4. Select the quantity and delivery method. Provide a shipping address — use the executor's address.
+5. Payment: credit or debit card. Total = (state fee × number of copies) + VitalChek convenience fee ($10–$20 flat).
+6. You may be asked to upload a photo ID and a document proving your relationship to the deceased.
+7. Save your order confirmation number. VitalChek's customer service is at 1-800-255-2414.
+
+WHEN CERTIFICATES ARRIVE — WHAT TO DO
+1. Count the copies immediately upon arrival and confirm they are certified (raised seal or colored security paper).
+2. Store all originals together in a labeled folder in a fireproof location. Do not fold, hole-punch, or write on them.
+3. Keep a tracking log: record which institution received which copy, the date sent, and whether it was returned.
+4. Some institutions return originals after review; most financial institutions retain them permanently.
+5. If you run out: reorder immediately through VitalChek or directly through the state vital records office.
+
+STATE-SPECIFIC NOTES
+1. New York City deaths: order through the NYC Office of Vital Records. Same-day service available in person at 125 Worth Street, Manhattan.
+2. California: order through CDPH Vital Records or the county registrar. Fee: $21/copy. Expedited available via VitalChek.
+3. Texas: order through DSHS or county clerk. Fee: $20/copy. 10–15 business day standard processing.
+4. Florida: order through FDOH Bureau of Vital Statistics. Fee: $10 first copy, $4 each additional.
+5. Pennsylvania: mail orders take 6–8 weeks. Consider ordering in person at the county courthouse for recent deaths.
+
+TIP: Social media platforms and some subscription services accept a scanned death certificate for account closure. Reserve physical certified copies for banks, insurers, government agencies, and courts — these institutions require originals and rarely make exceptions.
+
+WARNING: Do not write on, fold, or laminate death certificates. Institutions may reject certificates that appear altered. Keep all originals in a secure, fireproof location.$TPL$,
+  ARRAY['death certificate', 'VitalChek', 'vital records', 'government', 'guide']
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
+
+
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
+  'Inherited IRA and 401k — Beneficiary Claim Guide',
+  'Financial Accounts', 'guide',
+$TPL$INHERITED IRA & 401(k) — BENEFICIARY CLAIM GUIDE
+How to claim inherited retirement accounts without triggering an immediate tax bill.
+
+BEFORE YOU DO ANYTHING — THREE RULES
+1. Never take a direct distribution from the account without advice. A lump-sum distribution of a large IRA pushes all of it into ordinary income in a single tax year, often at the highest bracket.
+2. Never roll it directly into your own existing IRA without confirming the correct rollover type — doing this wrong can trigger immediate taxation on the full balance.
+3. Contact the account custodian (Fidelity, Vanguard, Schwab, etc.) before taking any action and ask specifically for the "estate services" or "inherited account" team.
+
+STEP 1 — CONTACT THE CUSTODIAN
+1. Call the brokerage's main number and ask for the estate services or inherited account department — not general customer service.
+2. Tell them you are the beneficiary of a deceased account holder and need to initiate a beneficiary claim.
+3. They will mail or email a claim packet specific to your situation.
+4. Documents typically required: certified death certificate, completed beneficiary claim form, your government-issued photo ID, and your Social Security number.
+5. Processing time after submission: typically 2–6 weeks.
+
+OPTIONS FOR SURVIVING SPOUSES
+1. Spousal rollover: roll the deceased's IRA into your own IRA. No taxes due at rollover. RMDs are based on your own age. This is the most flexible option and generally the most tax-efficient — recommended in most cases.
+2. Inherited IRA: treat the account as an inherited IRA. Allows penalty-free withdrawals before age 59½ if you need income now.
+3. Lump sum: take the entire balance as a distribution. The full amount is taxable as ordinary income in the year received. Rarely the best option — consult a financial advisor first.
+
+OPTIONS FOR NON-SPOUSE BENEFICIARIES (SECURE 2.0 ACT, 2022)
+1. 10-year rule: most non-spouse beneficiaries must fully distribute the inherited account within 10 years of the owner's death. Annual distributions are NOT required — the account just must be emptied by the end of year 10.
+2. Eligible Designated Beneficiaries get a longer window: minor children of the deceased, disabled individuals, chronically ill individuals, and individuals not more than 10 years younger than the deceased.
+3. For the 10-year rule, spread withdrawals across 10 years to keep each distribution in a lower tax bracket.
+
+WHEN NO BENEFICIARY WAS NAMED
+1. If the beneficiary designation is missing, outdated, or names "the estate," the account typically passes through probate.
+2. A probate asset loses the tax-advantaged transfer rules.
+3. The executor (with Letters Testamentary) can claim the account on behalf of the estate, but distribution rules are compressed — often requiring full distribution within 5 years.
+
+TIP: The stepped-up cost basis does NOT apply to IRAs and 401(k)s — all distributions are fully taxable as ordinary income regardless of when the assets were purchased.
+
+WARNING: Community property states (AZ, CA, ID, LA, NM, NV, TX, WA, WI): a surviving spouse may have a community property interest in a retirement account even if they are not the named beneficiary. Do not take any action on retirement accounts in these states without consulting an estate attorney.$TPL$,
+  ARRAY['IRA', '401k', 'inherited', 'retirement', 'beneficiary', 'guide']
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
+
+
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
+  'How to Open Probate — Step-by-Step Process Guide',
+  'Legal & Probate', 'guide',
+$TPL$HOW TO OPEN PROBATE — STEP-BY-STEP PROCESS GUIDE
+Plain-language overview for executors and administrators.
+
+FIRST: DETERMINE WHETHER PROBATE IS EVEN REQUIRED
+1. Assets that AVOID probate entirely: joint tenancy assets pass automatically to the surviving owner; assets with named beneficiaries (life insurance, retirement accounts, POD/TOD bank accounts) pass directly; assets held in a living trust pass through the trust.
+2. Assets that typically REQUIRE probate: real property owned solely by the deceased, bank accounts in the deceased's name only with no beneficiary designation, personal property above state thresholds.
+3. If the entire estate consists of non-probate assets, no court involvement is needed at all.
+4. Many states have simplified small-estate procedures that avoid full probate — check your state's threshold (California: $184,500 / Texas: $75,000 / New York: $50,000 / Florida: $75,000).
+5. If in doubt: a 30-minute consultation with an estate attorney is the most efficient way to answer this question.
+
+DOCUMENTS YOU WILL NEED TO OPEN PROBATE
+1. Original will — not a copy. Courts will not accept photocopies in most states.
+2. Certified death certificate — typically 1–2 copies for the initial filing.
+3. Petition to Admit Will to Probate and to Appoint Executor — obtained from the county court or your attorney.
+4. List of all heirs at law and beneficiaries named in the will — full legal names and current addresses.
+5. Filing fee — typically $50–$400 payable to the court by check or money order.
+
+STEP-BY-STEP: OPENING PROBATE
+1. Step 1 — File the petition at the correct court. File at the Probate Court in the COUNTY where the deceased was domiciled at death.
+2. Step 2 — Pay the filing fee. Get a file-stamped copy of the petition for your records.
+3. Step 3 — The court schedules a hearing — typically 2–8 weeks after filing. In some states, an uncontested will can be approved without a hearing.
+4. Step 4 — Notify all heirs and beneficiaries of the hearing date. Most states require certified mail with return receipt.
+5. Step 5 — Publish a creditor notice in a newspaper of general circulation. Most states require 3–4 consecutive weeks of publication.
+6. Step 6 — Attend the hearing. The court admits the will to probate and formally appoints the executor.
+7. Step 7 — Receive Letters Testamentary. Order 10–15 certified copies immediately ($5–$20 each). These are your legal authority to act.
+
+AFTER PROBATE IS OPENED — ONGOING OBLIGATIONS
+1. File the estate asset inventory with the court (required within 60–90 days in most states).
+2. Maintain an estate bank account — all income and expenses of the estate flow through it.
+3. Keep detailed records of every financial transaction made on behalf of the estate.
+4. At the conclusion, file a final accounting and petition for distribution.
+
+STATE FILING TIMES AND COMPLEXITY
+1. California: 18–24 months typical. Attorney fees are statutory (~4% of estate value). Court confirmation required for most real estate sales.
+2. Texas: 6–12 months typical with Independent Administration. Muniment of Title available for some simple estates.
+3. Florida: 6–12 months typical for formal administration. Summary Administration available for estates under $75,000.
+4. New York: 12–18 months typical. NYC Surrogate's Court can be slower. Attorney representation strongly recommended.
+5. Illinois, Pennsylvania, Michigan: 9–15 months typical.
+
+TIP: If the deceased had a living trust that was properly funded, the trust assets do not go through probate at all — they are distributed by the trustee according to the trust document. This can save 12–24 months and significant legal fees.
+
+WARNING: Only the named executor can file the probate petition.$TPL$,
+  ARRAY['probate', 'court', 'legal', 'executor', 'guide']
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
+
+
+INSERT INTO public.templates (name, category, type, content, tags)
+VALUES (
+  'Estate Asset Inventory — How to Compile All Four Categories',
+  'Legal & Probate', 'guide',
+$TPL$ESTATE ASSET INVENTORY — HOW TO COMPILE ALL FOUR CATEGORIES
+A structured approach to documenting every estate asset. Required for probate court, estate taxes, and equitable distribution.
+
+WHY THIS MATTERS — AND THE DATE-OF-DEATH RULE
+1. The estate asset inventory is the foundation of probate: the court requires it, the IRS uses it for estate taxes, and heirs need it for equitable distribution.
+2. Every value in the inventory must reflect fair market value as of the DATE OF DEATH — not the current date, not the purchase price.
+3. For tax purposes, inherited assets receive a "stepped-up cost basis" to the date-of-death value. This eliminates capital gains that accrued during the deceased's lifetime — a significant tax benefit.
+4. Begin the inventory immediately. Values as of the date of death can be documented retroactively.
+
+CATEGORY 1 — REAL PROPERTY
+1. List every property: address, legal description (from the deed), and ownership type (sole, joint tenancy, tenancy in common, community property).
+2. Value: obtain a formal appraisal from a certified residential appraiser for each property. Cost: $300–$600 for a home. Required for probate and estate taxes.
+3. Note any mortgages, liens, or encumbrances — the net equity (value minus mortgage) enters the estate.
+4. Out-of-state real property requires ancillary probate in that state — flag these for your attorney immediately.
+
+CATEGORY 2 — FINANCIAL ACCOUNTS
+1. For each account: institution name, account type, account number (last 4 digits), and balance as of the date of death.
+2. Request a "date of death statement" from each institution.
+3. For brokerage accounts: record each security holding and its closing price on the date of death.
+4. For retirement accounts: record the balance and note the named beneficiary.
+5. For life insurance: record the policy number, insurer, death benefit amount, and named beneficiary.
+6. Savings bonds: check current value at treasurydirect.gov.
+
+CATEGORY 3 — PERSONAL PROPERTY
+1. Personal property includes: vehicles, jewelry, art, furniture, electronics, clothing, tools, sporting equipment, collections, and all household contents.
+2. High-value items ($500+): obtain a written appraisal. Required for jewelry, art, antiques, and collectibles.
+3. Vehicles: use Kelley Blue Book private party value as of the date of death.
+4. Firearms: document carefully. Transfers are subject to federal law. Flag for attorney before any transfer.
+5. Photograph everything of significant value — timestamps on photos serve as documentation.
+
+CATEGORY 4 — DIGITAL AND INTANGIBLE ASSETS
+1. Cryptocurrency: document type, quantity held, and closing price on the date of death. Note where held.
+2. Domain names and websites: document each domain, registrar, and estimated value.
+3. Online business accounts (Etsy, Amazon seller, YouTube): document revenue and estimated value.
+4. Loyalty points and airline miles: document each program, balance, and estimated cash value.
+5. Intellectual property (patents, copyrights, royalties): requires specialized valuation.
+
+DEBTS AND LIABILITIES — THE OTHER SIDE OF THE LEDGER
+1. The inventory must also document all debts: mortgages, car loans, credit cards, personal loans, medical bills.
+2. Debts are paid from estate assets before any distribution to heirs. Net estate = total assets minus total liabilities.
+3. Do not pay debts from personal funds. All payments must flow through the estate bank account.
+4. If liabilities exceed assets (insolvent estate): consult an attorney immediately.
+
+TIP: Use a spreadsheet with four tabs — one per category. Include columns for: item description, institution/location, account number (last 4), date-of-death value, source of valuation, and notes.
+
+WARNING: The inventory is a legal document filed with the probate court. Intentional omission of assets is a serious legal violation that can expose the executor to personal liability.$TPL$,
+  ARRAY['asset inventory', 'probate', 'estate', 'executor', 'guide']
+)
+ON CONFLICT (name) DO UPDATE
+  SET content = EXCLUDED.content, category = EXCLUDED.category,
+      type = EXCLUDED.type, tags = EXCLUDED.tags;
