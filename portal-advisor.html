@@ -582,9 +582,9 @@ async function loadClients() {
 
   if (!res.ok) {
     let detail = ''
-    try { const body = await res.json(); detail = body.error || body.detail || '' } catch {}
+    try { const body = await res.json(); detail = [body.error, body.detail].filter(Boolean).join(' — ') || '' } catch {}
     document.getElementById('clients-error').querySelector('p').textContent =
-      `Could not load clients (${res.status}${detail ? ': ' + detail : ''}). Check Cloudflare logs for details.`
+      `Could not load clients (${res.status}${detail ? ': ' + detail : ''})`
     document.getElementById('clients-error').style.display = ''
     return
   }
