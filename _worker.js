@@ -12,6 +12,12 @@ export default {
     if (request.method === 'GET' && url.pathname === '/api/clients') {
       return handleClients(request, env)
     }
+    if (request.method === 'PATCH' && url.pathname === '/api/update-plan') {
+      return handleUpdatePlan(request, env)
+    }
+    if (url.pathname === '/api/messages') {
+      return handleMessages(request, env, url)
+    }
 
     // ── Static asset serving + env-var injection ────────────────────────────────
     const response = await env.ASSETS.fetch(request)
@@ -395,6 +401,87 @@ async function handleClients(request, env) {
   }
   const clients = await res.json()
   return jsonResponse(clients)
+}
+
+
+// ── /api/update-plan ─────────────────────────────────────────────────────────
+// Advisor-only. Updates a client's plan using service role (bypasses RLS).
+async function handleUpdatePlan(request, env) {
+  const authHeader = request.headers.get('Authorization') || ''
+  if (!authHeader.startsWith('Bearer ')) return jsonResponse({ error: 'Unauthorized' }, 401)
+  const jwt = authHeader.slice(7)
+  const userRes = await fetch(`${env.SUPABASE_URL}/auth/v1/user`, {
+    headers: { 'Authorization': `Bearer ${jwt}`, 'apikey': env.SUPABASE_ANON_KEY },
+  })
+  if (!userRes.ok) return jsonResponse({ error: 'Invalid session' }, 401)
+
+  let body
+  try { body = await request.json() } catch { return jsonResponse({ error: 'Invalid JSON' }, 400) }
+  const { client_id, plan } = body
+  if (!client_id || !plan) return jsonResponse({ error: 'client_id and plan required' }, 400)
+  if (!['guided', 'supported', 'full_service'].includes(plan)) return jsonResponse({ error: 'Invalid plan value' }, 400)
+
+  const res = await fetch(
+    `${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(client_id)}`,
+    {
+      method: 'PATCH',
+      headers: { ...serviceHeaders(env), 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ plan }),
+    }
+  )
+  if (!res.ok) {
+    const detail = await res.text()
+    return jsonResponse({ error: 'Failed to update plan', detail }, 500)
+  }
+  return jsonResponse({ success: true })
+}
+
+
+// ── /api/messages ─────────────────────────────────────────────────────────────
+// Advisor-only. GET lists messages for a client; POST sends a message.
+// Both use service role to bypass RLS.
+async function handleMessages(request, env, url) {
+  const authHeader = request.headers.get('Authorization') || ''
+  if (!authHeader.startsWith('Bearer ')) return jsonResponse({ error: 'Unauthorized' }, 401)
+  const jwt = authHeader.slice(7)
+  const userRes = await fetch(`${env.SUPABASE_URL}/auth/v1/user`, {
+    headers: { 'Authorization': `Bearer ${jwt}`, 'apikey': env.SUPABASE_ANON_KEY },
+  })
+  if (!userRes.ok) return jsonResponse({ error: 'Invalid session' }, 401)
+
+  if (request.method === 'GET') {
+    const clientId = url.searchParams.get('client_id')
+    if (!clientId) return jsonResponse({ error: 'client_id required' }, 400)
+    const res = await fetch(
+      `${env.SUPABASE_URL}/rest/v1/advisor_messages?client_id=eq.${encodeURIComponent(clientId)}&order=created_at.asc`,
+      { headers: serviceHeaders(env) }
+    )
+    if (!res.ok) {
+      const detail = await res.text()
+      return jsonResponse({ error: 'Failed to load messages', detail }, 500)
+    }
+    return jsonResponse(await res.json())
+  }
+
+  if (request.method === 'POST') {
+    let body
+    try { body = await request.json() } catch { return jsonResponse({ error: 'Invalid JSON' }, 400) }
+    const { client_id, message_body } = body
+    if (!client_id || !message_body) return jsonResponse({ error: 'client_id and message_body required' }, 400)
+    const res = await fetch(`${env.SUPABASE_URL}/rest/v1/advisor_messages`, {
+      method: 'POST',
+      headers: { ...serviceHeaders(env), 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+      body: JSON.stringify({ client_id, sender_role: 'advisor', body: message_body }),
+    })
+    if (!res.ok) {
+      const detail = await res.text()
+      return jsonResponse({ error: 'Failed to send message', detail }, 500)
+    }
+    const rows = await res.json()
+    return jsonResponse(rows[0] || {})
+  }
+
+  return jsonResponse({ error: 'Method not allowed' }, 405)
 }
 
 

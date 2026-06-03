@@ -671,14 +671,16 @@ async function loadClients() {
     planSelect.addEventListener('change', async e => {
       e.stopPropagation()
       const newPlan = planSelect.value
-      const { data: updatedRows, error } = await supabase
-        .from('profiles').update({ plan: newPlan }).eq('id', c.id).select('id,plan')
-      if (error) {
+      const { data: { session } } = await supabase.auth.getSession()
+      const res = await fetch('/api/update-plan', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+        body: JSON.stringify({ client_id: c.id, plan: newPlan }),
+      })
+      const json = await res.json()
+      if (!res.ok) {
         planSelect.value = currentPlan
-        alert('Could not update plan: ' + error.code + ' — ' + error.message)
-      } else if (!updatedRows?.length) {
-        planSelect.value = currentPlan
-        alert('Plan update matched 0 rows — RLS may be blocking this update.')
+        alert('Could not update plan: ' + (json.error || 'Unknown error') + (json.detail ? '\n' + json.detail : ''))
       } else {
         currentPlan = newPlan
         subtitle.textContent = `${c.email || ''} · ${planLabel()} · Joined ${formatDate(c.created_at)}`
@@ -819,19 +821,22 @@ async function loadClientMessages(clientId, row) {
   _loadedMessages.add(clientId)
 
   const thread = row.querySelector('.adv-msg-thread')
+  const { data: { session } } = await supabase.auth.getSession()
 
-  const { data: msgs, error } = await supabase
-    .from('advisor_messages')
-    .select('*')
-    .eq('client_id', clientId)
-    .order('created_at', { ascending: true })
+  const res = await fetch(`/api/messages?client_id=${encodeURIComponent(clientId)}`, {
+    headers: { 'Authorization': `Bearer ${session.access_token}` },
+  })
 
   thread.innerHTML = ''
 
-  if (error) {
-    thread.innerHTML = `<p class="tasks-loading-msg" style="color:var(--terracotta);">Could not load messages (${error.code}: ${error.message}).</p>`
+  if (!res.ok) {
+    let detail = ''
+    try { const b = await res.json(); detail = b.error || b.detail || '' } catch {}
+    thread.innerHTML = `<p class="tasks-loading-msg" style="color:var(--terracotta);">Could not load messages (${res.status}${detail ? ': ' + detail : ''}).</p>`
     return
   }
+
+  const msgs = await res.json()
 
   if (!msgs?.length) {
     const p = document.createElement('p')
@@ -848,27 +853,29 @@ async function loadClientMessages(clientId, row) {
   const input   = row.querySelector('.adv-msg-input')
 
   sendBtn.addEventListener('click', async () => {
-    const body = input.value.trim()
-    if (!body) return
+    const msgBody = input.value.trim()
+    if (!msgBody) return
     sendBtn.disabled = true
     const origHTML = sendBtn.innerHTML
     sendBtn.textContent = 'Sending…'
 
-    const { data: newMsg, error: sendErr } = await supabase
-      .from('advisor_messages')
-      .insert({ client_id: clientId, sender_role: 'advisor', body })
-      .select()
-      .single()
+    const { data: { session: sess } } = await supabase.auth.getSession()
+    const sendRes = await fetch('/api/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${sess.access_token}` },
+      body: JSON.stringify({ client_id: clientId, message_body: msgBody }),
+    })
+    const sendJson = await sendRes.json()
 
     sendBtn.disabled = false
     sendBtn.innerHTML = origHTML
 
-    if (sendErr) { alert('Could not send: ' + sendErr.message); return }
+    if (!sendRes.ok) { alert('Could not send: ' + (sendJson.error || 'Unknown error')); return }
 
     input.value = ''
     const emptyEl = thread.querySelector('[data-empty]')
     if (emptyEl) emptyEl.remove()
-    thread.appendChild(buildAdvMsgBubble(newMsg))
+    thread.appendChild(buildAdvMsgBubble(sendJson))
     thread.scrollTop = thread.scrollHeight
   })
 }
