@@ -258,6 +258,22 @@ async function handleInvite(request, env) {
     }),
   })
 
+  // Seed all tasks for the new client so the advisor can manage them immediately
+  const tasksRes = await fetch(`${env.SUPABASE_URL}/rest/v1/tasks?select=id&is_template=eq.true`, {
+    headers: serviceHeaders(env),
+  })
+  if (tasksRes.ok && userId) {
+    const allTasks = await tasksRes.json()
+    const seed = allTasks.map(t => ({
+      client_id: userId, task_id: t.id, done: false, excluded: false, notes: '',
+    }))
+    await fetch(`${env.SUPABASE_URL}/rest/v1/client_tasks`, {
+      method: 'POST',
+      headers: { ...serviceHeaders(env), 'Content-Type': 'application/json', 'Prefer': 'resolution=ignore-duplicates' },
+      body: JSON.stringify(seed),
+    })
+  }
+
   // Mark the intake submission as 'client' and link the profile
   await fetch(
     `${env.SUPABASE_URL}/rest/v1/intake_submissions?id=eq.${encodeURIComponent(intake_id)}`,

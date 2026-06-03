@@ -430,7 +430,7 @@
         <div id="hero-bar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--sage),var(--forest));border-radius:100px;transition:width 0.55s ease;"></div>
       </div>
       <div style="font-size:0.72rem;color:var(--charcoal);opacity:0.45;">
-        <span id="hero-count">—</span> of 59 tasks complete
+        <span id="hero-count">—</span> of <span id="hero-total">—</span> tasks complete
       </div>
     </div>
   </div>
@@ -797,9 +797,10 @@ async function initChecklist() {
       console.log('[checklist] Seeded, count:', ctRows.length)
     }
 
-    // Step 4: build map
+    // Step 4: build map — exclude tasks the advisor has hidden
     ctMap = {}
     for (const ct of ctRows) ctMap[ct.task_id] = ct
+    allTasks = allTasks.filter(t => !ctMap[t.id]?.excluded)
 
     // Step 5: plan
     const plan = auth.profile?.plan || 'guided'
@@ -1062,6 +1063,7 @@ function updateHeroProgress() {
   const done  = allTasks.filter(t => ctMap[t.id]?.done).length
   const pct   = total > 0 ? Math.round((done / total) * 100) : 0
   document.getElementById('hero-count').textContent = done
+  document.getElementById('hero-total').textContent = total
   document.getElementById('hero-pct').textContent   = `${pct}%`
   document.getElementById('hero-bar').style.width   = `${pct}%`
 }

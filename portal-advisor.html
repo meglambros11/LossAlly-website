@@ -70,18 +70,6 @@
     }
     .btn-logout:hover { border-color: var(--sage); background: rgba(141,157,106,0.06); opacity: 1; }
     .btn-logout:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
-    .client-card {
-      background: #fff;
-      border-radius: 14px;
-      padding: 1.5rem;
-      border: 1px solid rgba(226,221,212,0.6);
-      box-shadow: 0 2px 16px rgba(44,44,42,0.05), 0 1px 4px rgba(44,44,42,0.04);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .client-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(44,44,42,0.1), 0 2px 8px rgba(44,44,42,0.06);
-    }
     .status-pill {
       display: inline-flex;
       align-items: center;
@@ -94,8 +82,6 @@
     .status-active { background: rgba(141,157,106,0.12); color: var(--forest); }
     @keyframes fade-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
     .fade-up { animation: fade-up 0.5s ease forwards; }
-    @media (min-width: 640px)  { #clients-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (min-width: 1024px) { #clients-grid { grid-template-columns: repeat(3, 1fr); } }
     @media (min-width: 1024px) { #desk-nav { display: flex !important; } #mob-ham { display: none  !important; } }
     @media (max-width: 1023px) { #desk-nav { display: none  !important; } #mob-ham { display: flex  !important; } }
 
@@ -156,6 +142,46 @@
     .status-badge-consultation_scheduled { background:#F5EEF5; color:#6A3A7A; }
     .status-badge-client { background:rgba(141,157,106,0.12); color:var(--forest); }
     .status-badge-not_proceeding { background:rgba(226,221,212,0.5); color:var(--charcoal); opacity:0.6; }
+
+    /* ── Client task management ── */
+    .client-row {
+      background:#fff; border-radius:12px; border:1px solid rgba(226,221,212,0.6);
+      box-shadow:0 2px 12px rgba(44,44,42,0.05); overflow:hidden;
+      transition:box-shadow 0.2s;
+    }
+    .client-row-head {
+      padding:1.25rem 1.25rem 1rem; cursor:pointer; user-select:none;
+      display:flex; align-items:center; justify-content:space-between; gap:1rem;
+    }
+    .client-row-head:hover { background:rgba(141,157,106,0.03); }
+    .client-row-body { display:none; border-top:1px solid var(--mist); }
+    .client-row.open .client-row-body { display:block; }
+    .client-row-chevron { transition:transform 0.2s; flex-shrink:0; opacity:0.4; }
+    .client-row.open .client-row-chevron { transform:rotate(180deg); }
+    .task-cat-header {
+      font-size:0.63rem; font-weight:500; letter-spacing:0.12em; text-transform:uppercase;
+      color:var(--sage); padding:0.875rem 1.25rem 0.5rem;
+    }
+    .task-cat-header:not(:first-child) { border-top:1px solid var(--mist); }
+    .adv-task-row {
+      display:flex; align-items:center; gap:0.75rem; padding:0.45rem 1.25rem;
+      transition:background 0.1s;
+    }
+    .adv-task-row:hover { background:rgba(141,157,106,0.04); }
+    .adv-task-toggle {
+      width:18px; height:18px; border-radius:5px; border:1.5px solid var(--mist);
+      background:#fff; cursor:pointer; flex-shrink:0; display:flex; align-items:center;
+      justify-content:center; transition:border-color 0.15s, background 0.15s;
+    }
+    .adv-task-toggle.included { border-color:var(--forest); background:var(--forest); }
+    .adv-task-toggle:hover { border-color:var(--sage); }
+    .adv-task-toggle:focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+    .adv-task-label {
+      font-size:0.82rem; color:var(--charcoal); line-height:1.4;
+      transition:opacity 0.15s;
+    }
+    .adv-task-label.excluded { opacity:0.35; text-decoration:line-through; }
+    .tasks-loading-msg { padding:1.5rem 1.25rem; font-size:0.82rem; color:var(--charcoal); opacity:0.4; }
   </style>
 </head>
 <body style="visibility:hidden;">
@@ -240,7 +266,7 @@
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="animation:spin 1s linear infinite;display:inline-block;margin-bottom:0.6rem;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
       <p style="font-size:0.82rem;">Loading clients…</p>
     </div>
-    <div id="clients-grid" style="display:none;grid-template-columns:1fr;gap:1.25rem;"></div>
+    <div id="clients-list" style="display:none;flex-direction:column;gap:0.875rem;"></div>
     <div id="clients-empty" style="display:none;text-align:center;padding:4rem 1.75rem;">
       <h3 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;font-weight:400;color:var(--charcoal);margin-bottom:0.5rem;">No active clients yet</h3>
       <p style="font-size:0.85rem;line-height:1.65;color:var(--charcoal);opacity:0.5;max-width:380px;margin:0 auto;">
@@ -483,41 +509,167 @@ async function loadClients() {
   if (error) { document.getElementById('clients-error').style.display = ''; return }
   if (!clients?.length) { document.getElementById('clients-empty').style.display = ''; return }
 
-  const grid = document.getElementById('clients-grid')
-  grid.style.display = 'grid'
-  grid.innerHTML = clients.map((c, i) => `
-    <div class="client-card" style="animation:fade-up 0.45s ease ${i * 0.05}s forwards;opacity:0;">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem;">
+  // Also load all template tasks once for use in every client panel
+  const { data: allTasks } = await supabase
+    .from('tasks').select('id,title,category,sort_order').order('sort_order')
+
+  const list = document.getElementById('clients-list')
+  list.style.display = 'flex'
+
+  clients.forEach((c, i) => {
+    const row = document.createElement('div')
+    row.className = 'client-row'
+    row.style.cssText = `animation:fade-up 0.45s ease ${i * 0.05}s forwards;opacity:0;`
+
+    const planLabel = { guided: 'Guided', supported: 'Supported', full_service: 'Full Service' }[c.plan] || c.plan || 'Guided'
+
+    row.innerHTML = `
+      <div class="client-row-head">
         <div style="display:flex;align-items:center;gap:0.75rem;">
-          <div style="width:38px;height:38px;border-radius:50%;background:${avatarColor(c.full_name)};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1rem;font-weight:500;color:#fff;">${initials(c.full_name)}</span>
+          <div style="width:36px;height:36px;border-radius:50%;background:${avatarColor(c.full_name)};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:0.95rem;font-weight:500;color:#fff;">${initials(c.full_name)}</span>
           </div>
           <div>
-            <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.15rem;font-weight:500;color:var(--charcoal);line-height:1.2;">${esc(c.full_name || 'Unnamed Client')}</div>
-            <div style="font-size:0.75rem;color:var(--charcoal);opacity:0.48;margin-top:0.1rem;">${esc(c.email || '')}</div>
+            <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.05rem;font-weight:500;color:var(--charcoal);line-height:1.2;">${esc(c.full_name || 'Unnamed Client')}</div>
+            <div style="font-size:0.72rem;color:var(--charcoal);opacity:0.45;margin-top:0.1rem;">${esc(c.email || '')} · ${planLabel} · Joined ${formatDate(c.created_at)}</div>
           </div>
         </div>
-        <span class="status-pill status-active"><span style="width:5px;height:5px;border-radius:50%;background:var(--sage);"></span>Active</span>
-      </div>
-      <div style="height:1px;background:var(--mist);margin-bottom:0.875rem;"></div>
-      <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">
-        <div>
-          <div style="font-size:0.65rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.2rem;">Joined</div>
-          <div style="font-size:0.8rem;color:var(--charcoal);opacity:0.65;">${formatDate(c.created_at)}</div>
-        </div>
-        <div>
-          <div style="font-size:0.65rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.2rem;">Plan</div>
-          <div style="font-size:0.8rem;color:var(--charcoal);opacity:0.65;">${esc(c.plan || 'guided')}</div>
+        <div style="display:flex;align-items:center;gap:0.75rem;flex-shrink:0;">
+          <span style="font-size:0.72rem;color:var(--charcoal);opacity:0.4;" class="task-summary-label"></span>
+          <svg class="client-row-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
       </div>
-      ${c.notes ? `
-      <div style="margin-top:0.875rem;padding-top:0.875rem;border-top:1px solid var(--mist);">
-        <div style="font-size:0.65rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);margin-bottom:0.35rem;">Notes</div>
-        <p style="font-size:0.8rem;line-height:1.65;color:var(--charcoal);opacity:0.65;font-family:'Lora',Georgia,serif;">${esc(c.notes)}</p>
-      </div>` : ''}
-    </div>
-  `).join('')
+      <div class="client-row-body">
+        <div class="task-panel" data-client-id="${esc(c.id)}">
+          <p class="tasks-loading-msg">Loading checklist…</p>
+        </div>
+      </div>`
+
+    row.querySelector('.client-row-head').addEventListener('click', () => {
+      const wasOpen = row.classList.contains('open')
+      row.classList.toggle('open', !wasOpen)
+      if (!wasOpen) loadClientTaskPanel(c.id, row, allTasks || [])
+    })
+
+    list.appendChild(row)
+  })
 }
+
+const _loadedPanels = new Set()
+
+async function loadClientTaskPanel(clientId, row, allTasks) {
+  if (_loadedPanels.has(clientId)) return
+  _loadedPanels.add(clientId)
+
+  const panel = row.querySelector('.task-panel')
+
+  const { data: ctRows, error } = await supabase
+    .from('client_tasks')
+    .select('id,task_id,excluded')
+    .eq('client_id', clientId)
+
+  if (error) {
+    panel.innerHTML = `<p class="tasks-loading-msg" style="color:var(--terracotta);">Could not load tasks.</p>`
+    return
+  }
+
+  if (!ctRows?.length) {
+    panel.innerHTML = `<p class="tasks-loading-msg">No tasks yet — tasks are created when the invite is sent.</p>`
+    return
+  }
+
+  const ctMap = {}
+  for (const ct of ctRows) ctMap[ct.task_id] = ct
+
+  const totalCount    = allTasks.length
+  const excludedCount = allTasks.filter(t => ctMap[t.id]?.excluded).length
+  const summaryEl     = row.querySelector('.task-summary-label')
+  const updateSummary = () => {
+    const excl = allTasks.filter(t => ctMap[t.id]?.excluded).length
+    summaryEl.textContent = excl > 0 ? `${totalCount - excl} of ${totalCount} tasks active` : `${totalCount} tasks`
+  }
+  updateSummary()
+
+  // Group by category in sort_order
+  const categories = []
+  const seen = new Set()
+  for (const t of allTasks) {
+    if (!seen.has(t.category)) { categories.push(t.category); seen.add(t.category) }
+  }
+
+  panel.innerHTML = `
+    <div style="padding:0.625rem 1.25rem 0.75rem;background:rgba(141,157,106,0.05);border-bottom:1px solid var(--mist);">
+      <p style="font-size:0.75rem;line-height:1.6;color:var(--charcoal);opacity:0.55;">
+        Check or uncheck tasks below to include or exclude them from this client's checklist.
+        Unchecked tasks are hidden from the client's view.
+      </p>
+    </div>` +
+    categories.map(cat => {
+      const tasks = allTasks.filter(t => t.category === cat)
+      return `<div class="task-cat-header">${esc(cat)}</div>` +
+        tasks.map(t => {
+          const ct       = ctMap[t.id]
+          const included = !ct?.excluded
+          return `
+          <div class="adv-task-row">
+            <button
+              class="adv-task-toggle${included ? ' included' : ''}"
+              data-ct-id="${ct?.id || ''}"
+              data-task-id="${t.id}"
+              data-client-id="${clientId}"
+              aria-pressed="${included}"
+              aria-label="${included ? 'Exclude' : 'Include'}: ${esc(t.title)}"
+            >${included ? CHECK_SVG_SMALL : ''}</button>
+            <span class="adv-task-label${included ? '' : ' excluded'}">${esc(t.title)}</span>
+          </div>`
+        }).join('')
+    }).join('')
+
+  panel.querySelectorAll('.adv-task-toggle').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const ctId     = btn.dataset.ctId
+      const taskId   = btn.dataset.taskId
+      const cId      = btn.dataset.clientId
+      const nowExcl  = btn.classList.contains('included') // currently included → will become excluded
+      const label    = btn.nextElementSibling
+
+      // Optimistic UI
+      btn.classList.toggle('included', !nowExcl)
+      btn.innerHTML  = nowExcl ? '' : CHECK_SVG_SMALL
+      label.classList.toggle('excluded', nowExcl)
+      btn.setAttribute('aria-pressed', String(!nowExcl))
+      if (ctMap[taskId]) ctMap[taskId].excluded = nowExcl
+      updateSummary()
+
+      let err
+      if (ctId) {
+        const { error } = await supabase
+          .from('client_tasks').update({ excluded: nowExcl }).eq('id', ctId)
+        err = error
+      } else {
+        // Row doesn't exist yet — insert it
+        const { data, error } = await supabase
+          .from('client_tasks')
+          .insert({ client_id: cId, task_id: taskId, excluded: nowExcl, done: false, notes: '' })
+          .select('id').single()
+        if (data?.id) { btn.dataset.ctId = data.id; if (ctMap[taskId]) ctMap[taskId].id = data.id }
+        err = error
+      }
+
+      if (err) {
+        // Revert on failure
+        btn.classList.toggle('included', nowExcl)
+        btn.innerHTML = nowExcl ? CHECK_SVG_SMALL : ''
+        label.classList.toggle('excluded', !nowExcl)
+        if (ctMap[taskId]) ctMap[taskId].excluded = !nowExcl
+        updateSummary()
+        alert('Could not update task: ' + err.message)
+      }
+    })
+  })
+}
+
+const CHECK_SVG_SMALL = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`
 
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
