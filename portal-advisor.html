@@ -369,7 +369,10 @@ async function loadIntake() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${session.access_token}`,
         },
-        body: JSON.stringify({ intake_id: btn.dataset.id }),
+        body: JSON.stringify({
+          intake_id: btn.dataset.id,
+          intake: JSON.parse(btn.closest('.intake-card').dataset.intake || '{}'),
+        }),
       })
       const json = await res.json()
 
@@ -409,7 +412,7 @@ function buildIntakeCard(r, i) {
        </button>`
 
   return `
-  <div class="intake-card" style="animation:fade-up 0.4s ease ${i * 0.04}s forwards;opacity:0;">
+  <div class="intake-card" data-intake="${esc(JSON.stringify(r))}" style="animation:fade-up 0.4s ease ${i * 0.04}s forwards;opacity:0;">
     <div class="intake-card-head">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
         <div>

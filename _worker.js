@@ -196,29 +196,12 @@ async function handleInvite(request, env) {
   })
   if (!userRes.ok) return jsonResponse({ error: 'Invalid session' }, 401)
 
-  // Parse request body
+  // Parse request body — the frontend passes the full intake row it already has loaded
   let body
   try { body = await request.json() } catch { return jsonResponse({ error: 'Invalid JSON' }, 400) }
-  const { intake_id } = body
+  const { intake_id, intake } = body
   if (!intake_id) return jsonResponse({ error: 'intake_id required' }, 400)
-
-  // Fetch the intake submission
-  const intakeRes = await fetch(
-    `${env.SUPABASE_URL}/rest/v1/intake_submissions?id=eq.${encodeURIComponent(intake_id)}&select=*`,
-    { headers: serviceHeaders(env) }
-  )
-  const intakeRaw = await intakeRes.text()
-  if (!intakeRes.ok) {
-    return jsonResponse({ error: 'Supabase query failed', http_status: intakeRes.status, detail: intakeRaw }, 500)
-  }
-  let intakes
-  try { intakes = JSON.parse(intakeRaw) } catch { return jsonResponse({ error: 'Supabase returned invalid JSON', raw: intakeRaw }, 500) }
-  if (!Array.isArray(intakes) || !intakes.length) {
-    return jsonResponse({ error: 'Intake submission not found', intake_id_received: intake_id }, 404)
-  }
-  const intake = intakes[0]
-
-  if (!intake.email) return jsonResponse({ error: 'Intake submission has no email address' }, 422)
+  if (!intake || !intake.email) return jsonResponse({ error: 'intake data with email is required' }, 400)
 
   // Generate the invite link via Supabase Admin API — this creates the auth user
   // and returns the invite URL without relying on Supabase's unreliable shared SMTP.
