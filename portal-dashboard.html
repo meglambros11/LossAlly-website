@@ -1117,19 +1117,21 @@ async function initMessages() {
   const statusEl = document.getElementById('client-msg-status')
 
   sendBtn.addEventListener('click', async () => {
-    const body = input.value.trim()
-    if (!body) return
+    const msgBody = input.value.trim()
+    if (!msgBody) return
     sendBtn.disabled = true
 
-    const { data: newMsg, error: sendErr } = await supabase
-      .from('advisor_messages')
-      .insert({ client_id: clientId, sender_role: 'client', body })
-      .select()
-      .single()
+    const { data: { session } } = await supabase.auth.getSession()
+    const sendRes = await fetch('/api/client-message', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+      body: JSON.stringify({ message_body: msgBody }),
+    })
+    const sendJson = await sendRes.json()
 
     sendBtn.disabled = false
 
-    if (sendErr) {
+    if (!sendRes.ok) {
       statusEl.textContent = 'Could not send. Please try again.'
       statusEl.style.display = ''
       setTimeout(() => { statusEl.style.display = 'none' }, 4000)
@@ -1139,7 +1141,7 @@ async function initMessages() {
     input.value = ''
     const emptyEl = document.getElementById('msg-empty')
     if (emptyEl) emptyEl.remove()
-    thread.appendChild(buildMsgBubble(newMsg))
+    thread.appendChild(buildMsgBubble(sendJson))
     thread.scrollTop = thread.scrollHeight
   })
 }

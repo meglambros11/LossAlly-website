@@ -18,6 +18,12 @@ export default {
     if (url.pathname === '/api/messages') {
       return handleMessages(request, env, url)
     }
+    if (request.method === 'POST' && url.pathname === '/api/client-message') {
+      return handleClientMessage(request, env)
+    }
+    if (request.method === 'POST' && url.pathname === '/api/mark-read') {
+      return handleMarkRead(request, env)
+    }
 
     // ── Static asset serving + env-var injection ────────────────────────────────
     const response = await env.ASSETS.fetch(request)
@@ -400,7 +406,17 @@ async function handleClients(request, env) {
     return jsonResponse({ error: 'Failed to load clients', detail }, 500)
   }
   const clients = await res.json()
-  return jsonResponse(clients)
+
+  // Attach unread-message counts so the advisor portal can show badges
+  const unreadRes = await fetch(
+    `${env.SUPABASE_URL}/rest/v1/advisor_messages?is_read_by_advisor=eq.false&sender_role=eq.client&select=client_id`,
+    { headers: serviceHeaders(env) }
+  )
+  const unreadMap = {}
+  if (unreadRes.ok) {
+    for (const r of await unreadRes.json()) unreadMap[r.client_id] = (unreadMap[r.client_id] || 0) + 1
+  }
+  return jsonResponse(clients.map(c => ({ ...c, unread_count: unreadMap[c.id] || 0 })))
 }
 
 
@@ -478,10 +494,149 @@ async function handleMessages(request, env, url) {
       return jsonResponse({ error: 'Failed to send message', detail }, 500)
     }
     const rows = await res.json()
-    return jsonResponse(rows[0] || {})
+    const newMsg = rows[0] || {}
+
+    // Email the client so they know to check their portal
+    const profileRes = await fetch(
+      `${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(client_id)}&select=full_name,email`,
+      { headers: serviceHeaders(env) }
+    )
+    if (profileRes.ok) {
+      const cp = (await profileRes.json())[0]
+      if (cp?.email) {
+        const firstName = (cp.full_name || '').split(' ')[0] || 'there'
+        await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            from: 'Loss Ally <support@lossally.com>',
+            to: [cp.email],
+            subject: 'A new message from your advisor',
+            html: `
+<div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;color:#2C2C28;">
+  <div style="background:#f6f1e6;padding:24px 28px 16px;border-bottom:2px solid #E2DDD4;">
+    <p style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#8D9D6A;margin:0 0 8px;">Loss Ally</p>
+    <h1 style="font-family:Georgia,serif;font-size:22px;font-weight:400;margin:0;">Your advisor left you a message, ${firstName}.</h1>
+  </div>
+  <div style="padding:24px 28px;">
+    <div style="background:#f6f1e6;border-left:3px solid #5b6e5b;padding:14px 18px;border-radius:0 8px 8px 0;margin-bottom:24px;font-size:14px;line-height:1.75;color:#2C2C28;font-family:Georgia,serif;">${message_body}</div>
+    <div style="text-align:center;margin-bottom:20px;">
+      <a href="https://lossally.com/portal-dashboard.html" style="display:inline-block;background:#5b6e5b;color:#fff;text-decoration:none;font-size:14px;font-family:Georgia,serif;padding:12px 28px;border-radius:8px;">View in My Portal →</a>
+    </div>
+    <p style="font-size:12px;color:#2C2C28;opacity:0.4;text-align:center;margin:0;">Reply directly in your portal at lossally.com</p>
+  </div>
+</div>`,
+          }),
+        }).catch(err => console.error('[messages] client email failed:', err))
+      }
+    }
+
+    return jsonResponse(newMsg)
   }
 
   return jsonResponse({ error: 'Method not allowed' }, 405)
+}
+
+
+// ── /api/client-message ───────────────────────────────────────────────────────
+// Client sends a message. Emails the advisor only if this is the first unread
+// message from this client (avoids spamming for back-to-back messages).
+async function handleClientMessage(request, env) {
+  const authHeader = request.headers.get('Authorization') || ''
+  if (!authHeader.startsWith('Bearer ')) return jsonResponse({ error: 'Unauthorized' }, 401)
+  const jwt = authHeader.slice(7)
+  const userRes = await fetch(`${env.SUPABASE_URL}/auth/v1/user`, {
+    headers: { 'Authorization': `Bearer ${jwt}`, 'apikey': env.SUPABASE_ANON_KEY },
+  })
+  if (!userRes.ok) return jsonResponse({ error: 'Invalid session' }, 401)
+  const user = await userRes.json()
+  const clientId = user.id
+
+  let body
+  try { body = await request.json() } catch { return jsonResponse({ error: 'Invalid JSON' }, 400) }
+  const msgBody = (body.message_body || '').trim()
+  if (!msgBody) return jsonResponse({ error: 'message_body required' }, 400)
+
+  // Check for existing unread messages before inserting (to decide whether to email advisor)
+  const unreadCheckRes = await fetch(
+    `${env.SUPABASE_URL}/rest/v1/advisor_messages?client_id=eq.${encodeURIComponent(clientId)}&sender_role=eq.client&is_read_by_advisor=eq.false&select=id&limit=1`,
+    { headers: serviceHeaders(env) }
+  )
+  const alreadyUnread = unreadCheckRes.ok && (await unreadCheckRes.json()).length > 0
+
+  // Insert the message
+  const insertRes = await fetch(`${env.SUPABASE_URL}/rest/v1/advisor_messages`, {
+    method: 'POST',
+    headers: { ...serviceHeaders(env), 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+    body: JSON.stringify({ client_id: clientId, sender_role: 'client', body: msgBody }),
+  })
+  if (!insertRes.ok) {
+    const detail = await insertRes.text()
+    return jsonResponse({ error: 'Failed to send message', detail }, 500)
+  }
+  const newMsg = (await insertRes.json())[0] || {}
+
+  // Email advisor only for the first unread message in a batch
+  if (!alreadyUnread) {
+    const profileRes = await fetch(
+      `${env.SUPABASE_URL}/rest/v1/profiles?id=eq.${encodeURIComponent(clientId)}&select=full_name`,
+      { headers: serviceHeaders(env) }
+    )
+    const clientName = profileRes.ok ? ((await profileRes.json())[0]?.full_name || 'A client') : 'A client'
+
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: 'Loss Ally <support@lossally.com>',
+        to: ['support@lossally.com'],
+        subject: `${clientName} sent you a message`,
+        html: `
+<div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;color:#2C2C28;">
+  <div style="background:#f6f1e6;padding:24px 28px 16px;border-bottom:2px solid #E2DDD4;">
+    <p style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#8D9D6A;margin:0 0 8px;">Loss Ally — Client Message</p>
+    <h1 style="font-family:Georgia,serif;font-size:22px;font-weight:400;margin:0;">${clientName} sent you a message</h1>
+  </div>
+  <div style="padding:24px 28px;">
+    <div style="background:#f6f1e6;border-left:3px solid #C9A870;padding:14px 18px;border-radius:0 8px 8px 0;margin-bottom:24px;font-size:14px;line-height:1.75;color:#2C2C28;font-family:Georgia,serif;">${msgBody}</div>
+    <div style="text-align:center;margin-bottom:20px;">
+      <a href="https://lossally.com/portal-advisor.html" style="display:inline-block;background:#5b6e5b;color:#fff;text-decoration:none;font-size:14px;font-family:Georgia,serif;padding:12px 28px;border-radius:8px;">View in Advisor Portal →</a>
+    </div>
+  </div>
+</div>`,
+      }),
+    }).catch(err => console.error('[client-message] advisor email failed:', err))
+  }
+
+  return jsonResponse(newMsg)
+}
+
+
+// ── /api/mark-read ────────────────────────────────────────────────────────────
+// Advisor-only. Marks all client messages as read for a given client.
+async function handleMarkRead(request, env) {
+  const authHeader = request.headers.get('Authorization') || ''
+  if (!authHeader.startsWith('Bearer ')) return jsonResponse({ error: 'Unauthorized' }, 401)
+  const jwt = authHeader.slice(7)
+  const userRes = await fetch(`${env.SUPABASE_URL}/auth/v1/user`, {
+    headers: { 'Authorization': `Bearer ${jwt}`, 'apikey': env.SUPABASE_ANON_KEY },
+  })
+  if (!userRes.ok) return jsonResponse({ error: 'Invalid session' }, 401)
+
+  let body
+  try { body = await request.json() } catch { return jsonResponse({ error: 'Invalid JSON' }, 400) }
+  const { client_id } = body
+  if (!client_id) return jsonResponse({ error: 'client_id required' }, 400)
+
+  await fetch(
+    `${env.SUPABASE_URL}/rest/v1/advisor_messages?client_id=eq.${encodeURIComponent(client_id)}&sender_role=eq.client&is_read_by_advisor=eq.false`,
+    {
+      method: 'PATCH',
+      headers: { ...serviceHeaders(env), 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ is_read_by_advisor: true }),
+    }
+  )
+  return jsonResponse({ success: true })
 }
 
 
