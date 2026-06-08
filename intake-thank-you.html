@@ -173,6 +173,14 @@
     .card { animation: fade-up 0.55s ease forwards; }
   </style></head>
 <body>
+<script>
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'qualify_lead', {
+      'event_category': 'intake_form',
+      'event_label': 'consultation_request'
+    });
+  }
+</script>
 
 <nav>
   <a href="/" style="display:flex;align-items:center;gap:0.625rem;text-decoration:none;">
