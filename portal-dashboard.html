@@ -1114,6 +1114,12 @@ async function handleCheck(e) {
     updateSidebarCounts()
     updateHeroProgress()
     console.error('[checklist] update failed:', error)
+  } else if (newDone && typeof gtag !== 'undefined') {
+    const taskTitle = allTasks.find(t => t.id === taskId)?.title || ''
+    gtag('event', 'task_complete', {
+      'event_category': 'checklist',
+      'event_label': taskTitle
+    })
   }
 }
 

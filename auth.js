@@ -166,6 +166,9 @@ export async function getProfile() {
 export async function signIn(email, password) {
   const { data, error } = await supabase.auth.signInWithPassword({ email, password })
   if (!error && data.session) {
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'login', { 'method': 'email' })
+    }
     window.location.href = 'portal-dashboard.html'
   }
   return { data, error }
