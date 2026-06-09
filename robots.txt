@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /portal.html
+Disallow: /portal-dashboard.html
+Disallow: /portal-advisor.html
+Disallow: /api/
+
+Sitemap: https://lossally.com/sitemap.xml
