@@ -7,3 +7,4 @@ screenshot-sections.mjs
 serve.mjs
 package-lock.json
 config.js
+config.mjs
